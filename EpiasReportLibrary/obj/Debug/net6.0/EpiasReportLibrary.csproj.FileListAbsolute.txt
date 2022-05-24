@@ -1,0 +1,12 @@
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\bin\Debug\net6.0\EpiasReportLibrary.deps.json
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\bin\Debug\net6.0\EpiasReportLibrary.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\bin\Debug\net6.0\EpiasReportLibrary.pdb
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.csproj.AssemblyReference.cache
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.AssemblyInfoInputs.cache
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.AssemblyInfo.cs
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.csproj.CoreCompileInputs.cache
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\refint\EpiasReportLibrary.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\EpiasReportLibrary.pdb
+C:\Users\onury\source\repos\EpiasReport\EpiasReportLibrary\obj\Debug\net6.0\ref\EpiasReportLibrary.dll

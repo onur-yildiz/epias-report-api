@@ -1,0 +1,15 @@
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.csproj.AssemblyReference.cache
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.AssemblyInfoInputs.cache
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.AssemblyInfo.cs
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.csproj.CoreCompileInputs.cache
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\bin\Debug\net6.0\EpiasReportHttp.deps.json
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\bin\Debug\net6.0\EpiasReportHttp.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\bin\Debug\net6.0\EpiasReportHttp.pdb
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\bin\Debug\net6.0\EpiasReportLibrary.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\bin\Debug\net6.0\EpiasReportLibrary.pdb
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.csproj.CopyComplete
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\refint\EpiasReportHttp.dll
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\EpiasReportHttp.pdb
+C:\Users\onury\source\repos\EpiasReport\EpiasReportHttp\obj\Debug\net6.0\ref\EpiasReportHttp.dll
