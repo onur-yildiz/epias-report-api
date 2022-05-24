@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Reports.Models", "SP.Reports.Models\SP.Reports.Models.csproj", "{A24E0C18-6A25-4869-8759-5E62EDADAAA9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Reports.Service", "SP.Reports.Service\SP.Reports.Service.csproj", "{70C4BB98-9222-4426-A1EF-07C7B0D112E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.User.Service", "SP.User.Service\SP.User.Service.csproj", "{73540677-A437-4D2C-9285-53231E873FC1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.User.Models", "SP.User.Models\SP.User.Models.csproj", "{659A653D-A12C-4EAE-B199-DF7CEB275877}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Authorization", "SP.Authorization\SP.Authorization.csproj", "{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.EpiasReports", "SP.EpiasReports\SP.EpiasReports.csproj", "{D5CB4518-BED9-4E75-AC76-3B71712A9D59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A24E0C18-6A25-4869-8759-5E62EDADAAA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24E0C18-6A25-4869-8759-5E62EDADAAA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24E0C18-6A25-4869-8759-5E62EDADAAA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24E0C18-6A25-4869-8759-5E62EDADAAA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C4BB98-9222-4426-A1EF-07C7B0D112E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C4BB98-9222-4426-A1EF-07C7B0D112E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C4BB98-9222-4426-A1EF-07C7B0D112E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C4BB98-9222-4426-A1EF-07C7B0D112E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73540677-A437-4D2C-9285-53231E873FC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73540677-A437-4D2C-9285-53231E873FC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73540677-A437-4D2C-9285-53231E873FC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73540677-A437-4D2C-9285-53231E873FC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{659A653D-A12C-4EAE-B199-DF7CEB275877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{659A653D-A12C-4EAE-B199-DF7CEB275877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{659A653D-A12C-4EAE-B199-DF7CEB275877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{659A653D-A12C-4EAE-B199-DF7CEB275877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {420C9411-A7DC-4174-9CB5-682EF778C6F4}
+	EndGlobalSection
+EndGlobal
