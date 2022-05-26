@@ -20,6 +20,20 @@ namespace SP.User.Service
             _jwtUtils = jwtUtils;
         }
 
+        public UserInfo? GetById(ObjectId id)
+        {
+            try
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
+                var userBson = _users.Find(filter).FirstOrDefault();
+                return BsonSerializer.Deserialize<UserInfo>(userBson);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public string Register(UserRegisterRequestParams r)
         {
             var filter = Builders<BsonDocument>.Filter.Eq("email", r.Email);
@@ -41,20 +55,6 @@ namespace SP.User.Service
 
             _users.InsertOne(user.ToBsonDocument());
             return _jwtUtils.GenerateToken(user);
-        }
-
-        public UserInfo? GetById(ObjectId id)
-        {
-            try
-            {
-                var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
-                var userBson = _users.Find(filter).FirstOrDefault();
-                return BsonSerializer.Deserialize<UserInfo>(userBson);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
         }
 
         public string Login(UserLoginRequestParams r)
