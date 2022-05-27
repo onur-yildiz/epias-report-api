@@ -15,10 +15,9 @@ namespace SP.Authorization
             if (allowAnonymous)
                 return;
 
-            // authorization
-            var user = (UserInfo?)context.HttpContext.Items["User"];
-            if (user == null)
-                context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            // check if authorized by JwtMiddleware
+            var isAuthorized = (bool)context.HttpContext.Items["isAuthorized"];
+            if (!isAuthorized) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
         }
     }
 }

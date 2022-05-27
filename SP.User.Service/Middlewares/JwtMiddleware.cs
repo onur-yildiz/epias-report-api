@@ -24,7 +24,7 @@ namespace SP.User.Service.Middlewares
                 var userId = jwtUtils.ValidateToken(token);
                 if (userId != null)
                 {
-                    context.Items["User"] = userService.GetById((ObjectId)userId);
+                    context.Items["isAuthorized"] = userService.IsAccountExisting((ObjectId)userId);
                 }
             }
 

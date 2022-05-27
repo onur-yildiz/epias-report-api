@@ -20,26 +20,37 @@ namespace SP.User.Service
             _jwtUtils = jwtUtils;
         }
 
-        public UserInfo? GetById(ObjectId id)
+        public bool IsAccountExisting(ObjectId id)
         {
             try
             {
                 var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
-                var userBson = _users.Find(filter).FirstOrDefault();
-                return BsonSerializer.Deserialize<UserInfo>(userBson);
+                var count = _users.Find(filter).CountDocuments();
+                return count > 0;
             }
             catch (Exception)
             {
-                return null;
+                return false;
+            }
+        }
+
+        public bool IsAccountExisting(string email)
+        {
+            try
+            {
+                var filter = Builders<BsonDocument>.Filter.Eq("email", email);
+            var count = _users.Find(filter).CountDocuments();
+                return count > 0;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
         public string Register(UserRegisterRequestParams r)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("email", r.Email);
-            var count = _users.Find(filter).CountDocuments();
-            if (count > 0) throw new Exception { }; // TODO: HANDLE ACCOUNT ALREADY EXISTS 
-
+            if (IsAccountExisting(r.Email)) throw new Exception { }; // TODO: HANDLE ACCOUNT ALREADY EXISTS
             var (hashedPassword, salt) = CryptographyUtils.Encrypt(r.Password);
             var user = new Account
             {
