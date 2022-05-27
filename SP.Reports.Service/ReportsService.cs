@@ -27,7 +27,6 @@ namespace SP.Reports.Service
         public async Task<T?> GetContent<T>(string pathAndQueries)
         {
             var httpClient = _httpClientFactory.CreateClient("EpiasAPI");
-            Console.WriteLine(httpClient.BaseAddress + pathAndQueries);
             var response = await httpClient.GetAsync(pathAndQueries);
             response.EnsureSuccessStatusCode();
             return await ReportsResponseUtils.ExtractContent<T>(response);
