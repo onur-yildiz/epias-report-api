@@ -1,6 +1,8 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using SP.Exceptions;
 using SP.User.Models;
 using SP.User.Models.RequestParams;
 using SP.User.Service.Jwt;
@@ -58,7 +60,8 @@ namespace SP.User.Service
 
         public string Register(UserRegisterRequestParams r)
         {
-            if (IsAccountExisting(r.Email)) throw new Exception { }; // TODO: HANDLE ACCOUNT ALREADY EXISTS
+            if (IsAccountExisting(r.Email))
+                throw new HttpResponseException(statusCode: StatusCodes.Status409Conflict, new { message = "Account already exists." });
             var (hashedPassword, salt) = CryptographyUtils.Encrypt(r.Password);
             var user = new Account
             {
@@ -80,10 +83,14 @@ namespace SP.User.Service
         {
             var filter = Builders<BsonDocument>.Filter.Eq("email", r.Email);
             var userBson = _users.Find(filter).FirstOrDefault();
-            if (userBson == null) throw new Exception { }; // TODO: ACCOUNT DOES NOT EXIST
+
+            if (userBson == null)
+                throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+
             var user = BsonSerializer.Deserialize<Account>(userBson);
 
-            if (!CryptographyUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt)) throw new Exception { }; // TODO: HANDLE INCORRECT PASSWORD
+            if (!CryptographyUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt))
+                throw new HttpResponseException(statusCode: 401, new { message = "Incorrect password." });
 
             return _jwtUtils.GenerateToken(user);
         }
@@ -94,7 +101,9 @@ namespace SP.User.Service
             var filter = Builders<BsonDocument>.Filter.Eq("email", r.AssigneeEmail);
             var update = Builders<BsonDocument>.Update.Push("roles", r.Role);
             var result = _users.UpdateOne(filter, update);
-            if (!result.IsAcknowledged) throw new Exception { }; // TODO: COULD NOT ASSIGN ROLE
+
+            if (!result.IsAcknowledged)
+                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
         public void RemoveRole(UpdateRoleRequestParams r)
@@ -102,7 +111,9 @@ namespace SP.User.Service
             var filter = Builders<BsonDocument>.Filter.Eq("email", r.AssigneeEmail);
             var update = Builders<BsonDocument>.Update.Pull("roles", r.Role);
             var result = _users.UpdateOne(filter, update);
-            if (!result.IsAcknowledged) throw new Exception { }; // TODO: COULD NOT ASSIGN ROLE
+
+            if (!result.IsAcknowledged)
+                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not remove role." });
         }
 
         public void UpdateIsActive(UpdateIsActiveRequestParams r)
@@ -110,7 +121,9 @@ namespace SP.User.Service
             var filter = Builders<BsonDocument>.Filter.Eq("email", r.AssigneeEmail);
             var update = Builders<BsonDocument>.Update.Set("isActive", r.IsActive);
             var result = _users.UpdateOne(filter, update);
-            if (!result.IsAcknowledged) throw new Exception { }; // TODO: COULD NOT UPDATE ACTIVE STATE
+
+            if (!result.IsAcknowledged)
+                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
         }
     }
 }
