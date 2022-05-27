@@ -32,7 +32,7 @@ namespace SP.EpiasReport.Controllers
             return Ok(_repository.Login(r));
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" })]
+        [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
         [HttpPost("AssignRole")]
         public ActionResult<String> AssignRole([FromBody] UpdateRoleRequestParams r)
         {
@@ -40,7 +40,7 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" })]
+        [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
         [HttpPost("RemoveRole")]
         public ActionResult<String> RemoveRole([FromBody] UpdateRoleRequestParams r)
         {
@@ -48,7 +48,7 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" })]
+        [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
         [HttpPost("UpdateIsActive")]
         public ActionResult<String> UpdateIsActive([FromBody] UpdateIsActiveRequestParams r)
         {
