@@ -30,9 +30,10 @@ builder.Services.AddSingleton(_ =>
 {
     var mongoClient = new MongoClient(mongoDbConnString);
     var loggingDb = mongoClient.GetDatabase("cluster0");
+    var collectionName = builder.Environment.IsDevelopment() ? "logs-development" : "logs";
     Log.Logger = new LoggerConfiguration()
         .MinimumLevel.Debug()
-        .WriteTo.MongoDB(loggingDb, collectionName: "logs", period: TimeSpan.FromSeconds(1))
+        .WriteTo.MongoDB(loggingDb, collectionName: collectionName, period: TimeSpan.FromSeconds(1))
         .CreateLogger();
 
     Serilog.Debugging.SelfLog.Enable(output => Console.WriteLine(output));
