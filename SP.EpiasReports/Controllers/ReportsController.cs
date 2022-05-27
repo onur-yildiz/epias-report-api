@@ -85,6 +85,7 @@ namespace SP.EpiasReport.Controllers
 
             var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
 
+            _logger.Error("{@error}", exceptionHandlerFeature.Error);
             return Problem(
                 detail: exceptionHandlerFeature.Error.StackTrace,
                 title: exceptionHandlerFeature.Error.Message
@@ -93,6 +94,11 @@ namespace SP.EpiasReport.Controllers
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("/error")]
-        public IActionResult HandleError() => Problem();
+        public IActionResult HandleError()
+        {
+            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+            _logger.Error("{@error}", exceptionHandlerFeature.Error);
+            return Problem();
+        }
     }
 }
