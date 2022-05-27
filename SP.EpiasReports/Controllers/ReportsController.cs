@@ -29,8 +29,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("McpSmp")]
         public async Task<ActionResult<McpSmpContainer?>> GetMcpSmp([FromBody] DateIntervalRequestParams r)
         {
-            var result = await _repository.GetMcpSmps(r);
-            return Ok(result);
+            return Ok(await _repository.GetMcpSmps(r));
         }
 
         [HttpGet("RealTimeGeneration")]
