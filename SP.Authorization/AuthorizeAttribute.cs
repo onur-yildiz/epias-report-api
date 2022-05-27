@@ -32,7 +32,8 @@ namespace SP.Authorization
             var hasRoles = Roles.All(role => accountRoles.Contains(role));
             var isActive = (bool)context.HttpContext.Items["IsActive"];
             var isTokenValid = (bool)context.HttpContext.Items["IsTokenValid"];
-            if (!isTokenValid || !isActive || !hasRoles) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            if (!isTokenValid) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            else if (!isActive || !hasRoles) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
         }
     }
 }
