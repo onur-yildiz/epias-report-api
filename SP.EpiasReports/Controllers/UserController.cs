@@ -5,7 +5,6 @@ using SP.User.Service;
 
 namespace SP.EpiasReport.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserController : Controller
@@ -33,6 +32,7 @@ namespace SP.EpiasReport.Controllers
             return Ok(_repository.Login(r));
         }
 
+        [Authorize(Roles = new string[] {"ADMIN"})]
         [HttpPost("AssignRole")]
         public ActionResult<String> AssignRole([FromBody] UpdateRoleRequestParams r)
         {
@@ -40,6 +40,7 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = new string[] { "ADMIN" })]
         [HttpPost("RemoveRole")]
         public ActionResult<String> RemoveRole([FromBody] UpdateRoleRequestParams r)
         {
@@ -47,6 +48,7 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = new string[] { "ADMIN" })]
         [HttpPost("UpdateIsActive")]
         public ActionResult<String> UpdateIsActive([FromBody] UpdateIsActiveRequestParams r)
         {
