@@ -61,7 +61,7 @@ namespace SP.User.Service
                 Salt = salt,
                 LanguageCode = r.LanguageCode,
                 IsActive = true,
-                Roles = Array.Empty<string>()
+                Roles = new HashSet<string>()
             };
 
             _users.InsertOne(user.ToBsonDocument());

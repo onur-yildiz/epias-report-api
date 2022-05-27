@@ -22,7 +22,7 @@ namespace SP.User.Models
 
         [BsonRequired]
         [BsonElement("roles")]
-        public string[] Roles { get; set; }
+        public HashSet<string> Roles { get; set; }
 
         [BsonRequired]
         [BsonElement("isActive")]
