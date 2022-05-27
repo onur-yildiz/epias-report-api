@@ -17,10 +17,10 @@ namespace SP.EpiasReport.Controllers
     [Route("[controller]")]
     public class ReportsController : ControllerBase
     {
-        private readonly ILogger<ReportsController> _logger;
+        private readonly Serilog.ILogger _logger;
         private readonly IReportsService _repository;
 
-        public ReportsController(ILogger<ReportsController> logger, IReportsService repository)
+        public ReportsController(Serilog.ILogger logger, IReportsService repository)
         {
             _logger = logger;
             _repository = repository;

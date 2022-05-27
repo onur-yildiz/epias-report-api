@@ -9,10 +9,10 @@ namespace SP.EpiasReport.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly Serilog.ILogger _logger;
         private readonly IUserService _repository;
 
-        public UserController(ILogger<UserController> logger, IUserService repository)
+        public UserController(Serilog.ILogger logger, IUserService repository)
         {
             _logger = logger;
             _repository = repository;
