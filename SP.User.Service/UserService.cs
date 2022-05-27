@@ -30,20 +30,6 @@ namespace SP.User.Service
             return BsonSerializer.Deserialize<Account>(bsonUser);
         }
 
-        public bool IsAccountExisting(ObjectId id)
-        {
-            try
-            {
-                var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
-                var count = _users.Find(filter).CountDocuments();
-                return count > 0;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
         public bool IsAccountExisting(string email)
         {
             try

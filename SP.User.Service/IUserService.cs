@@ -7,7 +7,7 @@ namespace SP.User.Service
     public interface IUserService
     {
         Account? GetAccountById(ObjectId id);
-        bool IsAccountExisting(ObjectId id);
+        bool IsAccountExisting(string email);
         void AssignRole(UpdateRoleRequestParams r);
         string Login(UserLoginRequestParams r);
         string Register(UserRegisterRequestParams r);
