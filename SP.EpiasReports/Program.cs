@@ -1,10 +1,10 @@
-using SP.EpiasReport.Exceptions;
 using MongoDB.Driver;
 using SP.Reports.Service;
 using SP.Reports.Models.Api;
 using SP.User.Service;
 using SP.User.Service.Jwt;
 using SP.User.Service.Middlewares;
+using SP.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 

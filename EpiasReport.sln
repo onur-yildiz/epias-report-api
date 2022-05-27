@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.User.Service", "SP.User.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.User.Models", "SP.User.Models\SP.User.Models.csproj", "{659A653D-A12C-4EAE-B199-DF7CEB275877}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Authorization", "SP.Authorization\SP.Authorization.csproj", "{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Authorization", "SP.Authorization\SP.Authorization.csproj", "{72FAFBC0-C61A-41E5-AE20-F6288F9ECDB5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.EpiasReports", "SP.EpiasReports\SP.EpiasReports.csproj", "{D5CB4518-BED9-4E75-AC76-3B71712A9D59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Exceptions", "SP.Exceptions\SP.Exceptions.csproj", "{AA55E9F2-3835-448E-A131-5ED68C9E2683}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5CB4518-BED9-4E75-AC76-3B71712A9D59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA55E9F2-3835-448E-A131-5ED68C9E2683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA55E9F2-3835-448E-A131-5ED68C9E2683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA55E9F2-3835-448E-A131-5ED68C9E2683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA55E9F2-3835-448E-A131-5ED68C9E2683}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
