@@ -6,6 +6,7 @@ namespace SP.User.Service
 {
     public interface IUserService
     {
+        Account? GetAccountById(ObjectId id);
         bool IsAccountExisting(ObjectId id);
         void AssignRole(UpdateRoleRequestParams r);
         string Login(UserLoginRequestParams r);

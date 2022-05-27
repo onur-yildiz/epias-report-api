@@ -1,23 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using SP.User.Service.Jwt;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SP.User.Service.Middlewares
 {
-    public class RoleMiddleware
+    public class AuthMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly JwtSettings _jwtSettings;
 
-        public RoleMiddleware(RequestDelegate next, IOptions<JwtSettings> jwtSettings)
+        public AuthMiddleware(RequestDelegate next)
         {
             _next = next;
-            _jwtSettings = jwtSettings.Value;
         }
 
         public async Task Invoke(HttpContext context, IUserService userService, IJwtUtils jwtUtils)
@@ -28,7 +22,13 @@ namespace SP.User.Service.Middlewares
                 var userId = jwtUtils.ValidateToken(token);
                 if (userId != null)
                 {
-                    //context.Items["User"] = userService.GetById((ObjectId)userId);
+                    var account = userService.GetAccountById((ObjectId)userId);
+                    if (account != null)
+                    {
+                        context.Items["IsTokenValid"] = true;
+                        context.Items["Roles"] = account.Roles;
+                        context.Items["IsActive"] = account.IsActive;
+                    }
                 }
             }
 

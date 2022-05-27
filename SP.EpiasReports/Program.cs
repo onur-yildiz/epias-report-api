@@ -47,7 +47,7 @@ else
     app.UseExceptionHandler("/error");
 }
 
-app.UseMiddleware<JwtMiddleware>();
+app.UseMiddleware<AuthMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 

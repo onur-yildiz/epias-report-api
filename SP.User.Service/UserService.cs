@@ -20,6 +20,14 @@ namespace SP.User.Service
             _jwtUtils = jwtUtils;
         }
 
+        public Account? GetAccountById(ObjectId id)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
+            var bsonUser = _users.Find(filter).FirstOrDefault();
+            if (bsonUser == null) return null;
+            return BsonSerializer.Deserialize<Account>(bsonUser);
+        }
+
         public bool IsAccountExisting(ObjectId id)
         {
             try
@@ -39,7 +47,7 @@ namespace SP.User.Service
             try
             {
                 var filter = Builders<BsonDocument>.Filter.Eq("email", email);
-            var count = _users.Find(filter).CountDocuments();
+                var count = _users.Find(filter).CountDocuments();
                 return count > 0;
             }
             catch (Exception)
