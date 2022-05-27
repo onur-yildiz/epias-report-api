@@ -11,9 +11,8 @@ namespace SP.Authorization
         public void OnAuthorization(AuthorizationFilterContext context)
         {
             // skip authorization if action is decorated with [AllowAnonymous] attribute
-            var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
-            if (allowAnonymous)
-                return;
+            var isAllowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
+            if (isAllowAnonymous) return;
 
             // check if authorized by JwtMiddleware
             var isAuthorized = (bool)context.HttpContext.Items["isAuthorized"];
