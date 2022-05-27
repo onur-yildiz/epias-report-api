@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Authorization", "SP.Auth
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.EpiasReports", "SP.EpiasReports\SP.EpiasReports.csproj", "{D5CB4518-BED9-4E75-AC76-3B71712A9D59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Exceptions", "SP.Exceptions\SP.Exceptions.csproj", "{AA55E9F2-3835-448E-A131-5ED68C9E2683}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Exceptions", "SP.Exceptions\SP.Exceptions.csproj", "{AA55E9F2-3835-448E-A131-5ED68C9E2683}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
