@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SP.Reports.Service;
 using SP.Reports.Models.DppInjectionUnitName;
 using SP.Reports.Models.IdmVolume;
 using SP.Reports.Models.IntraDayAof;
@@ -9,6 +8,7 @@ using SP.Reports.Models.Organizations;
 using SP.Reports.Models.RealTimeGeneration;
 using SP.Reports.Models.RequestParams;
 using SP.Reports.Models.Smp;
+using SP.Reports.Service;
 
 namespace SP.EpiasReport.Controllers
 {
@@ -29,7 +29,8 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("McpSmp")]
         public async Task<ActionResult<McpSmpContainer?>> GetMcpSmp([FromBody] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetMcpSmps(r));
+            var result = await _repository.GetMcpSmps(r);
+            return Ok(result);
         }
 
         [HttpGet("RealTimeGeneration")]

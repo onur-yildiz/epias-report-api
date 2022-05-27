@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using SP.User.Service.Jwt;
 

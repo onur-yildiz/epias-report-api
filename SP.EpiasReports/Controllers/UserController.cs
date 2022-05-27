@@ -32,7 +32,7 @@ namespace SP.EpiasReport.Controllers
             return Ok(_repository.Login(r));
         }
 
-        [Authorize(Roles = new string[] {"ADMIN"})]
+        [Authorize(Roles = new string[] { "ADMIN" })]
         [HttpPost("AssignRole")]
         public ActionResult<String> AssignRole([FromBody] UpdateRoleRequestParams r)
         {

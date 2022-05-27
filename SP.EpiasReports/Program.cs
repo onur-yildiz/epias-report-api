@@ -1,11 +1,11 @@
 using MongoDB.Driver;
-using SP.Reports.Service;
+using Serilog;
+using SP.Exceptions;
 using SP.Reports.Models.Api;
+using SP.Reports.Service;
 using SP.User.Service;
 using SP.User.Service.Jwt;
 using SP.User.Service.Middlewares;
-using SP.Exceptions;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,19 +25,20 @@ builder.Services.AddHttpClient("EpiasAPI", httpClient =>
     httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("EPIAS_API_BASE_URL") ?? builder.Configuration.GetValue<string>("Api:BaseUrl"));
 });
 
-// LOGGER
 var mongoDbConnString = builder.Configuration.GetValue<string>("MongoDbConnectionString");
-var mongoClient = new MongoClient(mongoDbConnString);
-var loggingDb = mongoClient.GetDatabase("cluster0");
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .WriteTo.MongoDB(loggingDb, collectionName: "logs", period: TimeSpan.FromSeconds(1))
-    .CreateLogger();
+builder.Services.AddSingleton(_ =>
+{
+    var mongoClient = new MongoClient(mongoDbConnString);
+    var loggingDb = mongoClient.GetDatabase("cluster0");
+    Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Debug()
+        .WriteTo.MongoDB(loggingDb, collectionName: "logs", period: TimeSpan.FromSeconds(1))
+        .CreateLogger();
 
-Serilog.Debugging.SelfLog.Enable(output => Console.WriteLine(output));
-Log.Information("Starting up");
-// LOGGER
-
+    Serilog.Debugging.SelfLog.Enable(output => Console.WriteLine(output));
+    Log.Information("Starting up");
+    return Log.Logger;
+});
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoDbConnString));
 builder.Services.AddTransient<IReportsService, ReportsService>();
 builder.Services.AddTransient<IUserService, UserService>();

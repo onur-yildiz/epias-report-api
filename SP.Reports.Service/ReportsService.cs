@@ -9,7 +9,6 @@ using SP.Reports.Models.Organizations;
 using SP.Reports.Models.RealTimeGeneration;
 using SP.Reports.Models.RequestParams;
 using SP.Reports.Models.Smp;
-using SP.Reports.Service;
 
 namespace SP.Reports.Service
 {
