@@ -22,14 +22,18 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("Register")]
         public ActionResult<String> Register([FromBody] UserRegisterRequestParams r)
         {
-            return Ok(_repository.Register(r));
+            var token = _repository.Register(r);
+            _logger.Information("{action}: {email}", "REGISTER", r.Email);
+            return Ok(token);
         }
 
         [AllowAnonymous]
         [HttpPost("Login")]
         public ActionResult<String> Login([FromBody] UserLoginRequestParams r)
         {
-            return Ok(_repository.Login(r));
+            var token = _repository.Login(r);
+            _logger.Information("{action}: {email}", "LOGIN", r.Email);
+            return Ok(token);
         }
 
         [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
