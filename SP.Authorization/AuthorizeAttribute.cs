@@ -9,25 +9,11 @@ namespace SP.Authorization
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        private string[] roles;
-        private bool logBody;
+        public virtual string[] Roles { get; set; }
 
         public AuthorizeAttribute()
         {
-            this.roles = Array.Empty<string>();
-            this.logBody = false;
-        }
-
-        public virtual string[] Roles
-        {
-            get { return roles; }
-            set { roles = value; }
-        }
-
-        public virtual bool LogBody
-        {
-            get { return logBody; }
-            set { logBody = value; }
+            this.Roles = Array.Empty<string>();
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
