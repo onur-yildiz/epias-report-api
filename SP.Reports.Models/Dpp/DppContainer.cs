@@ -7,7 +7,7 @@ namespace SP.Reports.Models.Dpp
         [JsonPropertyName("dppList")]
         public Dpp[]? DppList { get; set; }
 
-        [JsonPropertyName("dppStatistics")]
+        [JsonPropertyName("statistics")]
         public DppStatistic[]? Statistics { get; set; }
     }
 
