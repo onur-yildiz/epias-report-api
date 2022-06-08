@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddCors();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
@@ -43,6 +44,7 @@ builder.Services.AddSingleton(_ =>
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoDbConnString));
 builder.Services.AddTransient<IReportsService, ReportsService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ISettingsService, SettingsService>();
 builder.Services.AddTransient<IJwtUtils, JwtUtils>();
 
 builder.Services.Configure<ApiPaths>(builder.Configuration.GetSection("Api").GetSection("Paths"));
@@ -50,6 +52,12 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.AddOptions();
 
 var app = builder.Build();
+
+app.UseCors(builder =>
+    builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
