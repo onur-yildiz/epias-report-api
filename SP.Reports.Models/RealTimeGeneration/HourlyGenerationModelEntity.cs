@@ -55,10 +55,14 @@ namespace SP.Reports.Models.RealTimeGeneration
         [JsonPropertyName("sun")]
         public double Sun { get; set; }
 
+        [JsonPropertyName("wind")]
+        public double Wind { get; set; }
+
+        [JsonPropertyName("wasteheat")]
+        public double Wasteheat { get; set; }
+
         [JsonPropertyName("total")]
         public double Total { get; set; }
 
-        [JsonPropertyName("wind")]
-        public double Wind { get; set; }
     }
 }
