@@ -5,7 +5,7 @@ namespace SP.User.Service.Jwt
 {
     public interface IJwtUtils
     {
-        public string GenerateToken(IUserInfo user);
+        public string GenerateToken(ObjectId userId);
         public ObjectId? ValidateToken(string token);
     }
 }

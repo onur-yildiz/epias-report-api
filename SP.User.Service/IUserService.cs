@@ -7,10 +7,11 @@ namespace SP.User.Service
     public interface IUserService
     {
         Account? GetAccountById(ObjectId id);
+        AuthUserData GetUserDataByToken(string token);
         bool IsAccountExisting(string email);
         void AssignRole(UpdateRoleRequestParams r);
-        string Login(UserLoginRequestParams r);
-        string Register(UserRegisterRequestParams r);
+        AuthUserData Login(UserLoginRequestParams r);
+        AuthUserData Register(UserRegisterRequestParams r);
         void RemoveRole(UpdateRoleRequestParams r);
         void UpdateIsActive(UpdateIsActiveRequestParams r);
     }

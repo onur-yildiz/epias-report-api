@@ -30,6 +30,20 @@ namespace SP.User.Service
             return BsonSerializer.Deserialize<Account>(bsonUser);
         }
 
+        public AuthUserData GetUserDataByToken(string token)
+        {
+            var userId = _jwtUtils.ValidateToken(token);
+            if (userId == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
+
+            var account = GetAccountById((ObjectId)userId);
+            if (account == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+
+            var refreshedToken = _jwtUtils.GenerateToken(account.Id);
+            return new AuthUserData(account, refreshedToken);
+        }
+
         public bool IsAccountExisting(string email)
         {
             try
@@ -44,7 +58,7 @@ namespace SP.User.Service
             }
         }
 
-        public string Register(UserRegisterRequestParams r)
+        public AuthUserData Register(UserRegisterRequestParams r)
         {
             if (IsAccountExisting(r.Email))
                 throw new HttpResponseException(statusCode: StatusCodes.Status409Conflict, new { message = "Account already exists." });
@@ -62,10 +76,11 @@ namespace SP.User.Service
             };
 
             _users.InsertOne(user.ToBsonDocument());
-            return _jwtUtils.GenerateToken(user);
+            var token = _jwtUtils.GenerateToken(user.Id);
+            return new AuthUserData(user, token);
         }
 
-        public string Login(UserLoginRequestParams r)
+        public AuthUserData Login(UserLoginRequestParams r)
         {
             var filter = Builders<BsonDocument>.Filter.Eq("email", r.Email);
             var userBson = _users.Find(filter).FirstOrDefault();
@@ -78,15 +93,20 @@ namespace SP.User.Service
             if (!CryptographyUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt))
                 throw new HttpResponseException(statusCode: 401, new { message = "Incorrect password." });
 
-            return _jwtUtils.GenerateToken(user);
+            var token = _jwtUtils.GenerateToken(user.Id);
+            return new AuthUserData(user, token);
         }
 
         // TODO DRY
         public void AssignRole(UpdateRoleRequestParams r)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("email", r.AssigneeEmail);
+            var builder = Builders<BsonDocument>.Filter;
+            var emailFilter = builder.Eq("email", r.AssigneeEmail);
+            var roleFilter = builder.And(emailFilter, builder.Eq("roles", r.Role));
+            var isRoleExisting = _users.Find(roleFilter).Any();
+            if (isRoleExisting) return;
             var update = Builders<BsonDocument>.Update.Push("roles", r.Role);
-            var result = _users.UpdateOne(filter, update);
+            var result = _users.UpdateOne(emailFilter, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
@@ -94,9 +114,13 @@ namespace SP.User.Service
 
         public void RemoveRole(UpdateRoleRequestParams r)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("email", r.AssigneeEmail);
+            var builder = Builders<BsonDocument>.Filter;
+            var emailFilter = builder.Eq("email", r.AssigneeEmail);
+            var roleFilter = builder.And(emailFilter, builder.Eq("roles", r.Role));
+            var isRoleExisting = _users.Find(roleFilter).Any();
+            if (!isRoleExisting) return;
             var update = Builders<BsonDocument>.Update.Pull("roles", r.Role);
-            var result = _users.UpdateOne(filter, update);
+            var result = _users.UpdateOne(emailFilter, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not remove role." });
