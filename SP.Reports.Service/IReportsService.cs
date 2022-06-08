@@ -1,4 +1,5 @@
-﻿using SP.Reports.Models.Dpp;
+﻿using SP.Reports.Models;
+using SP.Reports.Models.Dpp;
 using SP.Reports.Models.DppInjectionUnitName;
 using SP.Reports.Models.IdmVolume;
 using SP.Reports.Models.IntraDayAof;
@@ -12,14 +13,6 @@ namespace SP.Reports.Service
 {
     public interface IReportsService
     {
-        Task<T?> GetContent<T>(string pathAndQueries);
-        Task<McpSmpContainer?> GetMcpSmps(DateIntervalRequestParams r);
-        Task<HourlyGenerationContainer?> GetRealTimeGeneration(DateIntervalRequestParams r);
-        Task<DppContainer?> GetDpp(DppRequestParams r);
-        Task<IdmAofContainer?> GetIntraDayAof(DateIntervalRequestParams r);
-        Task<IdmVolumeContainer?> GetIntraDayVolumeSummary(IdmVolumeSummaryRequestParams r);
-        Task<SmpContainer?> GetSmp(DateIntervalRequestParams r);
-        Task<OrganizationContainer?> GetDppOrganization();
-        Task<DppInjectionUnitNameContainer?> GetDppInjectionUnitName(DppInjectionUnitNameRequestParams r);
+        Task<T?> GetData<T, V>(object? r, string endpoint) where T : class where V: IResponseBase<T>;
     }
 }

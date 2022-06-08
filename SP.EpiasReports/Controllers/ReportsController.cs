@@ -1,8 +1,14 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SP.Authorization;
+using SP.Reports.Models.Api;
+using SP.Reports.Models.DayAheadMcp;
+using SP.Reports.Models.Dpp;
 using SP.Reports.Models.DppInjectionUnitName;
 using SP.Reports.Models.IdmVolume;
 using SP.Reports.Models.IntraDayAof;
+using SP.Reports.Models.IntraDaySummary;
 using SP.Reports.Models.McpSmps;
 using SP.Reports.Models.Organizations;
 using SP.Reports.Models.RealTimeGeneration;
@@ -19,59 +25,74 @@ namespace SP.EpiasReport.Controllers
     {
         private readonly Serilog.ILogger _logger;
         private readonly IReportsService _repository;
+        private readonly ApiPaths _paths;
 
-        public ReportsController(Serilog.ILogger logger, IReportsService repository)
+        public ReportsController(Serilog.ILogger logger, IReportsService repository, IOptions<ApiPaths> option)
         {
             _logger = logger;
             _repository = repository;
+            _paths = option.Value;
         }
 
         [HttpGet("McpSmp")]
-        public async Task<ActionResult<McpSmpContainer?>> GetMcpSmp([FromBody] DateIntervalRequestParams r)
+        public async Task<ActionResult<McpSmpContainer?>> GetMcpSmp([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetMcpSmps(r));
+            return Ok(await _repository.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp));
+        }
+
+        [HttpGet("DayAheadMcp")]
+        public async Task<ActionResult<DayAheadMcpContainer?>> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
+        {
+            return Ok(await _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp));
         }
 
         [HttpGet("RealTimeGeneration")]
-        public async Task<ActionResult<HourlyGenerationContainer?>> GetRealTimeGeneration([FromBody] DateIntervalRequestParams r)
+        public async Task<ActionResult<HourlyGenerationContainer?>> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetRealTimeGeneration(r));
+            return Ok(await _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration));
         }
 
         [HttpGet("Dpp")]
-        public async Task<ActionResult<HourlyGenerationContainer?>> GetDpp([FromBody] DppRequestParams r)
+        public async Task<ActionResult<DppContainer?>> GetDpp([FromQuery] DppRequestParams r)
         {
-            return Ok(await _repository.GetDpp(r));
+            return Ok(await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp));
         }
 
         [HttpGet("IntraDayAof")]
-        public async Task<ActionResult<IdmAofContainer?>> GetIntraDayAof([FromBody] DateIntervalRequestParams r)
+        public async Task<ActionResult<IdmAofContainer?>> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetIntraDayAof(r));
+            return Ok(await _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof));
+        }
+
+        [Authorize]
+        [HttpGet("IntraDaySummary")]
+        public async Task<ActionResult<IntraDaySummaryContainer?>> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
+        {
+            return Ok(await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary));
         }
 
         [HttpGet("IntraDayVolumeSummary")]
-        public async Task<ActionResult<IdmVolumeContainer?>> GetIntraDayVolumeSummary([FromBody] IdmVolumeSummaryRequestParams r)
+        public async Task<ActionResult<IdmVolumeContainer?>> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
         {
-            return Ok(await _repository.GetIntraDayVolumeSummary(r));
+            return Ok(await _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary));
         }
 
         [HttpGet("Smp")]
-        public async Task<ActionResult<SmpContainer?>> GetSmp([FromBody] DateIntervalRequestParams r)
+        public async Task<ActionResult<SmpContainer?>> GetSmp([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetSmp(r));
+            return Ok(await _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp));
         }
 
         [HttpGet("DppOrganization")]
         public async Task<ActionResult<OrganizationContainer?>> GetDppOrganization()
         {
-            return Ok(await _repository.GetDppOrganization());
+            return Ok(await _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization));
         }
 
         [HttpGet("DppInjectionUnitName")]
-        public async Task<ActionResult<DppInjectionUnitNameContainer?>> GetDppInjectionUnitName([FromBody] DppInjectionUnitNameRequestParams r)
+        public async Task<ActionResult<DppInjectionUnitNameContainer?>> GetDppInjectionUnitName([FromQuery] DppInjectionUnitNameRequestParams r)
         {
-            return Ok(await _repository.GetDppInjectionUnitName(r));
+            return Ok(await _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName));
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
