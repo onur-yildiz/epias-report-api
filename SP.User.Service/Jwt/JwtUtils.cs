@@ -10,17 +10,17 @@ namespace SP.User.Service.Jwt
 {
     public class JwtUtils : IJwtUtils
     {
-        private readonly JwtSettings _jwtSettings;
+        private readonly string _secret;
 
-        public JwtUtils(IOptions<JwtSettings> jwtSettings)
+        public JwtUtils()
         {
-            _jwtSettings = jwtSettings.Value;
+            _secret = Environment.GetEnvironmentVariable("JWT_SECRET")!;
         }
 
         public string GenerateToken(ObjectId userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret!);
+            var key = Encoding.ASCII.GetBytes(_secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", userId.ToString()) }),
@@ -37,7 +37,7 @@ namespace SP.User.Service.Jwt
                 return null;
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret!);
+            var key = Encoding.ASCII.GetBytes(_secret);
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters

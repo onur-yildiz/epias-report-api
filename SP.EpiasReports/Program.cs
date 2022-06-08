@@ -7,6 +7,18 @@ using SP.User.Service;
 using SP.User.Service.Jwt;
 using SP.User.Service.Middlewares;
 
+var root = Directory.GetCurrentDirectory();
+var dotenv = Path.Combine(root, ".env");
+if (File.Exists(dotenv))
+{
+    foreach(var line in File.ReadAllLines(dotenv))
+    {
+        var parts = line.Split("=", StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length != 2) continue;
+        Environment.SetEnvironmentVariable(parts[0], parts[1]);
+    }
+}
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -48,7 +60,6 @@ builder.Services.AddTransient<ISettingsService, SettingsService>();
 builder.Services.AddTransient<IJwtUtils, JwtUtils>();
 
 builder.Services.Configure<ApiPaths>(builder.Configuration.GetSection("Api").GetSection("Paths"));
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddOptions();
 
 var app = builder.Build();
