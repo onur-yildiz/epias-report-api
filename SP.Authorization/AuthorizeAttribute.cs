@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using MongoDB.Bson;
 using Serilog;
 using SP.User.Models;
 
@@ -23,17 +24,17 @@ namespace SP.Authorization
             if (isAllowAnonymous) return;
 
             // check if authorized by JwtMiddleware, account is active, and has required roles
-            var accountRoles = (HashSet<string>)context.HttpContext.Items["Roles"];
-            var hasRoles = Roles.All(role => accountRoles.Contains(role));
-            var isActive = (bool)context.HttpContext.Items["IsActive"];
-            var isTokenValid = (bool)context.HttpContext.Items["IsTokenValid"];
-            if (!isTokenValid) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
-            else if (!isActive || !hasRoles) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
+            var isTokenValid = (bool?)context.HttpContext.Items["IsTokenValid"];
+            if (isTokenValid != true) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            var accountRoles = (HashSet<string>?)context.HttpContext.Items["Roles"];
+            var hasRoles = (accountRoles != null) && Roles.All(role => accountRoles.Contains(role));
+            var isActive = (bool?)context.HttpContext.Items["IsActive"];
+            if (isActive != true || hasRoles) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
 
             // Logging
-            var userInfo = (UserInfo)context.HttpContext.Items["UserInfo"];
+            var userId = (ObjectId?)context.HttpContext.Items["UserId"];
             var logger = (ILogger)context.HttpContext.RequestServices.GetService(typeof(ILogger))!;
-            logger.Information("{path} {@requester}", context.HttpContext.Request.Path.Value, userInfo);
+            logger.Information("{path} {@requester}", context.HttpContext.Request.Path.Value, userId);
         }
     }
 }
