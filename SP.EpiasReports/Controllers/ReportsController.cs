@@ -64,7 +64,6 @@ namespace SP.EpiasReport.Controllers
             return Ok(await _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof));
         }
 
-        [Authorize]
         [HttpGet("IntraDaySummary")]
         public async Task<ActionResult<IntraDaySummaryContainer?>> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
         {
