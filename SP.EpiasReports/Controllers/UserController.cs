@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP.Authorization;
+using SP.User.Models;
 using SP.User.Models.RequestParams;
 using SP.User.Service;
 
@@ -20,23 +21,32 @@ namespace SP.EpiasReport.Controllers
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        public ActionResult<String> Register([FromBody] UserRegisterRequestParams r)
+        public ActionResult<IAuthUserData> Register([FromBody] UserRegisterRequestParams r)
         {
-            var token = _repository.Register(r);
+            var user = _repository.Register(r);
             _logger.Information("{action}: {email}", "REGISTER", r.Email);
-            return Ok(token);
+            return Ok(user);
         }
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public ActionResult<String> Login([FromBody] UserLoginRequestParams r)
+        public ActionResult<IAuthUserData> Login([FromBody] UserLoginRequestParams r)
         {
-            var token = _repository.Login(r);
+            var user = _repository.Login(r);
             _logger.Information("{action}: {email}", "LOGIN", r.Email);
-            return Ok(token);
+            return Ok(user);
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
+        [Authorize()]
+        [HttpPost("RefreshToken")]
+        public ActionResult<IAuthUserData> RefreshToken([FromHeader] string authorization)
+        {
+            var userData = _repository.GetUserDataByToken(authorization);
+            _logger.Information("{action}: {email}", "REFRESH TOKEN", userData.Email);
+            return Ok(userData);
+        }
+
+        [Authorize(Roles = new string[] { "ADMIN" })]
         [HttpPost("AssignRole")]
         public ActionResult<String> AssignRole([FromBody] UpdateRoleRequestParams r)
         {
@@ -44,7 +54,7 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
+        [Authorize(Roles = new string[] { "ADMIN" })]
         [HttpPost("RemoveRole")]
         public ActionResult<String> RemoveRole([FromBody] UpdateRoleRequestParams r)
         {
@@ -52,7 +62,7 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" }, LogBody = true)]
+        [Authorize(Roles = new string[] { "ADMIN" })]
         [HttpPost("UpdateIsActive")]
         public ActionResult<String> UpdateIsActive([FromBody] UpdateIsActiveRequestParams r)
         {
