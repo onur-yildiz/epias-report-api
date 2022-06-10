@@ -13,6 +13,7 @@ using SP.Reports.Models.RequestParams;
 using SP.Reports.Models.Smp;
 using SP.Reports.Service;
 using SP.Settings.Models;
+using SP.Settings.Service;
 using SP.User.Service;
 using System.ComponentModel.DataAnnotations;
 

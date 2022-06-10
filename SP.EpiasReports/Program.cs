@@ -4,6 +4,7 @@ using SP.Exceptions;
 using SP.Middlewares;
 using SP.Reports.Models.Api;
 using SP.Reports.Service;
+using SP.Settings.Service;
 using SP.User.Service;
 using SP.Utils.Jwt;
 

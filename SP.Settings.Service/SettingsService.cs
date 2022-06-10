@@ -9,7 +9,7 @@ using SP.Settings.Models;
 using SP.User.Models;
 using SP.Utils.Jwt;
 
-namespace SP.User.Service
+namespace SP.Settings.Service
 {
     public class SettingsService : ISettingsService
     {

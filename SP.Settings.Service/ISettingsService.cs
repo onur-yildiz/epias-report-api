@@ -1,6 +1,6 @@
 ﻿using SP.Settings.Models;
 
-namespace SP.User.Service
+namespace SP.Settings.Service
 {
     public interface ISettingsService
     {
