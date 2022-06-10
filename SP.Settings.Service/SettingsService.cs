@@ -23,7 +23,7 @@ namespace SP.User.Service
         {
             var db = client.GetDatabase("cluster0");
             this._roles = db.GetCollection<BsonDocument>("roles");
-            this._reports = db.GetCollection<BsonDocument>("reports");
+            this._reports = db.GetCollection<BsonDocument>("report-listing-info");
             this._users = db.GetCollection<Account>("users");
             this._jwtUtils = jwtUtils;
         }
