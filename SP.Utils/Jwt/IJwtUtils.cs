@@ -1,7 +1,6 @@
 ﻿using MongoDB.Bson;
-using SP.User.Models;
 
-namespace SP.User.Service.Jwt
+namespace SP.Utils.Jwt
 {
     public interface IJwtUtils
     {

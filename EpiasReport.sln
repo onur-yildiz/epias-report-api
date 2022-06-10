@@ -17,9 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.EpiasReports", "SP.Epias
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Exceptions", "SP.Exceptions\SP.Exceptions.csproj", "{AA55E9F2-3835-448E-A131-5ED68C9E2683}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Settings.Service", "SP.Settings.Service\SP.Settings.Service.csproj", "{E33CF4D8-37BD-424D-9779-B0C221ACEF1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Settings.Service", "SP.Settings.Service\SP.Settings.Service.csproj", "{E33CF4D8-37BD-424D-9779-B0C221ACEF1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Settings.Models", "SP.Settings.Models\SP.Settings.Models.csproj", "{3079AF02-B304-4CB3-AEB9-33FB5FEEB4FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Settings.Models", "SP.Settings.Models\SP.Settings.Models.csproj", "{3079AF02-B304-4CB3-AEB9-33FB5FEEB4FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Middlewares", "SP.Middlewares\SP.Middlewares.csproj", "{23408FBF-859C-42D1-B8A7-2AFF191E251B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Utils", "SP.Utils\SP.Utils.csproj", "{9D68CB14-C5F8-48F9-BC31-BDBB176A5915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,14 @@ Global
 		{3079AF02-B304-4CB3-AEB9-33FB5FEEB4FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3079AF02-B304-4CB3-AEB9-33FB5FEEB4FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3079AF02-B304-4CB3-AEB9-33FB5FEEB4FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23408FBF-859C-42D1-B8A7-2AFF191E251B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23408FBF-859C-42D1-B8A7-2AFF191E251B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23408FBF-859C-42D1-B8A7-2AFF191E251B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23408FBF-859C-42D1-B8A7-2AFF191E251B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D68CB14-C5F8-48F9-BC31-BDBB176A5915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D68CB14-C5F8-48F9-BC31-BDBB176A5915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D68CB14-C5F8-48F9-BC31-BDBB176A5915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D68CB14-C5F8-48F9-BC31-BDBB176A5915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

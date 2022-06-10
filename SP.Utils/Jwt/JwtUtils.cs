@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
-using SP.User.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace SP.User.Service.Jwt
+namespace SP.Utils.Jwt
 {
     public class JwtUtils : IJwtUtils
     {

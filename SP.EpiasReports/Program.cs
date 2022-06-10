@@ -1,11 +1,11 @@
 using MongoDB.Driver;
 using Serilog;
 using SP.Exceptions;
+using SP.Middlewares;
 using SP.Reports.Models.Api;
 using SP.Reports.Service;
 using SP.User.Service;
-using SP.User.Service.Jwt;
-using SP.User.Service.Middlewares;
+using SP.Utils.Jwt;
 
 var root = Directory.GetCurrentDirectory();
 var dotenv = Path.Combine(root, ".env");

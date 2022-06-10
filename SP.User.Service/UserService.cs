@@ -5,7 +5,7 @@ using MongoDB.Driver;
 using SP.Exceptions;
 using SP.User.Models;
 using SP.User.Models.RequestParams;
-using SP.User.Service.Jwt;
+using SP.Utils.Jwt;
 
 namespace SP.User.Service
 {

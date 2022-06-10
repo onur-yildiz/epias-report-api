@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using SP.User.Models;
-using SP.User.Service.Jwt;
+﻿
 
-namespace SP.User.Service.Middlewares
+using Microsoft.AspNetCore.Http;
+using MongoDB.Bson;
+using SP.User.Service;
+using SP.Utils.Jwt;
+
+namespace SP.Middlewares
 {
     public class AuthMiddleware
     {
