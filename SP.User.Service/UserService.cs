@@ -105,7 +105,7 @@ namespace SP.User.Service
             var roleFilter = builder.And(emailFilter, builder.Eq("roles", r.Role));
             var isRoleExisting = _users.Find(roleFilter).Any();
             if (isRoleExisting) return;
-            var update = Builders<BsonDocument>.Update.Push("roles", r.Role);
+            var update = Builders<BsonDocument>.Update.AddToSet("roles", r.Role);
             var result = _users.UpdateOne(emailFilter, update);
 
             if (!result.IsAcknowledged)
