@@ -29,6 +29,10 @@ namespace SP.User.Models
         public bool IsActive { get; set; }
 
         [BsonRequired]
+        [BsonElement("isAdmin")]
+        public bool IsAdmin { get; set; }
+
+        [BsonRequired]
         [BsonElement("languageCode")]
         public string LanguageCode { get; set; }
 

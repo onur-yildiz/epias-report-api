@@ -24,6 +24,7 @@ namespace SP.User.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
+        public bool IsAdmin { get; set; }
         public string LanguageCode { get; set; }
         public HashSet<string> Roles { get; set; }
         public string Token { get; set; }
