@@ -84,8 +84,8 @@ else
 }
 
 app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<ReportRoleAuthMiddleware>();
 app.UseHttpsRedirection();
-app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

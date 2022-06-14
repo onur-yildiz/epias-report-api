@@ -27,10 +27,11 @@ namespace SP.Middlewares
                     var account = userService.GetAccountById((ObjectId)userId);
                     if (account != null)
                     {
-                        context.Items["UserId"] = account.Id;
                         context.Items["IsTokenValid"] = true;
+                        context.Items["UserId"] = account.Id;
                         context.Items["Roles"] = account.Roles;
                         context.Items["IsActive"] = account.IsActive;
+                        context.Items["IsAdmin"] = account.IsAdmin;
                     }
                 }
             }

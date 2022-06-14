@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SP.Reports.Models\SP.Reports.Models.csproj" />
+    <ProjectReference Include="..\SP.Settings.Service\SP.Settings.Service.csproj" />
     <ProjectReference Include="..\SP.User.Service\SP.User.Service.csproj" />
     <ProjectReference Include="..\SP.Utils\SP.Utils.csproj" />
   </ItemGroup>
