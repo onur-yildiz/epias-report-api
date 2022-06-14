@@ -5,6 +5,20 @@ namespace SP.User.Models
 {
     public class Account : IAccount
     {
+        public static explicit operator AdminServicableUserData(Account acc)
+        {
+            return new AdminServicableUserData()
+            {
+                Id = acc.Id.ToString(),
+                Name = acc.Name,
+                Roles = acc.Roles,
+                Email = acc.Email,
+                IsActive = acc.IsActive,
+                IsAdmin = acc.IsAdmin,
+                LanguageCode = acc.LanguageCode,
+            };
+        }
+
         [BsonId]
         public ObjectId Id { get; set; }
 

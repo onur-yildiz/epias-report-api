@@ -15,6 +15,7 @@ namespace SP.User.Models
             Id = account.Id.ToString();
             Name = account.Name;
             IsActive = account.IsActive;
+            IsAdmin = account.IsAdmin;
             LanguageCode = account.LanguageCode;
             Roles = account.Roles;
             Token = token;
