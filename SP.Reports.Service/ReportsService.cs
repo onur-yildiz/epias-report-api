@@ -43,10 +43,10 @@ namespace SP.Reports.Service
             var userId = authToken != null ? _jwtUtils.ValidateToken(authToken) : null;
             var user = _users.Find(u => u.Id == userId).FirstOrDefault();
 
-            var reports = _reports.Find(r => r.IsActive && (user.IsAdmin || r.Roles.Count == 0 || r.Roles.Any(role => user.Roles.Contains(role)))).ToList();
-            var reportFolders = _reportFolders.Find(_ => true).ToList();
+            var reports = _reports.Find(r => r.IsActive).ToEnumerable().Where(r => user?.IsAdmin == true || r.Roles.Count == 0 || r.Roles.Any(role => user?.Roles.Contains(role) == true));
+            var reportFolders = _reportFolders.Find(_ => true).ToEnumerable();
 
-            var listingInfo = new List<dynamic>(reports.Count + reportFolders.Count);
+            var listingInfo = new List<dynamic>(reports.Count() + reportFolders.Count());
             listingInfo.AddRange(reports);
             listingInfo.AddRange(reportFolders);
             return listingInfo;
@@ -73,6 +73,6 @@ namespace SP.Reports.Service
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
-        } 
+        }
     }
 }

@@ -31,8 +31,8 @@ namespace SP.Middlewares
 
                 if (report != null)
                 {
-                    var noRoles = report.Roles.Count > 0 && (userRoles == null || !report.Roles.Any(r => userRoles.Contains(r)));
-                    if (isUserActive != true || !report.IsActive || (noRoles && isAdmin != true))
+                    var noRoles =  report.Roles.Count > 0 && (userRoles == null || !report.Roles.Any(r => userRoles.Contains(r)));
+                    if (!report.IsActive || isAdmin != true && noRoles || isUserActive != true && report.Roles.Count > 0)
                     {
                         context.Response.StatusCode = StatusCodes.Status403Forbidden;
                         return;
