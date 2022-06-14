@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using SP.Authorization;
 using SP.Reports.Models.Api;
 using SP.Reports.Models.Dpp;
 using SP.Reports.Models.DppInjectionUnitName;
@@ -33,18 +34,13 @@ namespace SP.EpiasReport.Controllers
             _repository = repository;
         }
 
-        [HttpGet("ReportListingInfo")]
-        public ActionResult<List<ReportHierarchyItem>> GetReportListingInfo([FromHeader] string? authorization)
-        {
-            return Ok(_repository.GetReportListingInfo(authorization));
-        }
-
         [HttpGet("Role")]
         public ActionResult<Role?> GetRole([Required][FromQuery] string role)
         {
             return Ok(_repository.GetRole(role));
         }
 
+        [Authorize(AdminRestricted = true)]
         [HttpPost("Role")]
         public ActionResult CreateRole([FromBody] Role role)
         {

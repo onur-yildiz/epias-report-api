@@ -94,6 +94,36 @@ namespace SP.EpiasReport.Controllers
             return Ok(await _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName));
         }
 
+        [HttpGet("ListingInfo")]
+        public ActionResult<List<object>> GetReportListingInfo([FromHeader] string? authorization)
+        {
+            return Ok(_repository.GetReportListing(authorization));
+        }
+
+        [Authorize]
+        [HttpGet("All")]
+        public ActionResult<List<object>> GetReports()
+        {
+            return Ok(_repository.GetReports());
+        }
+
+        [Authorize(AdminRestricted = true)]
+        [HttpPost("UpdateIsActive")]
+        public ActionResult UpdateIsActive([FromBody] UpdateReportIsActiveRequestParams r)
+        {
+            _repository.UpdateIsActive(r);
+            return Ok();
+        }
+
+        [Authorize(AdminRestricted = true)]
+        [HttpPost("UpdateRoles")]
+        public ActionResult UpdateRoles([FromBody] UpdateReportRolesRequestParams r)
+        {
+            _repository.UpdateRoles(r);
+            return Ok();
+        }
+
+
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("/error-development")]
         public IActionResult HandleErrorDevelopment([FromServices] IHostEnvironment hostEnvironment)
