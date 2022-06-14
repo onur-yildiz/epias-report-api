@@ -22,6 +22,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Settings.Models", "SP.Settings.Models\SP.Settings.Models.csproj", "{3079AF02-B304-4CB3-AEB9-33FB5FEEB4FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Middlewares", "SP.Middlewares\SP.Middlewares.csproj", "{23408FBF-859C-42D1-B8A7-2AFF191E251B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E33CF4D8-37BD-424D-9779-B0C221ACEF1A} = {E33CF4D8-37BD-424D-9779-B0C221ACEF1A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.Utils", "SP.Utils\SP.Utils.csproj", "{9D68CB14-C5F8-48F9-BC31-BDBB176A5915}"
 EndProject

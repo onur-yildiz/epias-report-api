@@ -9,10 +9,10 @@ namespace SP.User.Service
         Account? GetAccountById(ObjectId id);
         AuthUserData GetUserDataByToken(string token);
         bool IsAccountExisting(string email);
-        void AssignRole(UpdateRoleRequestParams r);
         AuthUserData Login(UserLoginRequestParams r);
         AuthUserData Register(UserRegisterRequestParams r);
-        void RemoveRole(UpdateRoleRequestParams r);
-        void UpdateIsActive(UpdateIsActiveRequestParams r);
+        void UpdateAccountRoles(UpdateAccountRolesRequestParams r);
+        void UpdateIsActive(UpdateAccountIsActiveRequestParams r);
+        public IEnumerable<AdminServicableUserData> GetUsers();
     }
 }

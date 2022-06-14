@@ -11,23 +11,20 @@ namespace SP.User.Service
 {
     public class UserService : IUserService
     {
-        //readonly IMongoClient _client;
-        readonly IMongoCollection<BsonDocument> _users;
+        readonly IMongoCollection<Account> _users;
         readonly IJwtUtils _jwtUtils;
 
         public UserService(IMongoClient client, IJwtUtils jwtUtils)
         {
-            //this._client = client;
-            this._users = client.GetDatabase("cluster0").GetCollection<BsonDocument>("users");
+            this._users = client.GetDatabase("cluster0").GetCollection<Account>("users");
             _jwtUtils = jwtUtils;
         }
 
         public Account? GetAccountById(ObjectId id)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("_id", id);
-            var bsonUser = _users.Find(filter).FirstOrDefault();
-            if (bsonUser == null) return null;
-            return BsonSerializer.Deserialize<Account>(bsonUser);
+            var user = _users.Find(u => u.Id == id).FirstOrDefault();
+            if (user == null) return null;
+            return user;
         }
 
         public AuthUserData GetUserDataByToken(string token)
@@ -48,8 +45,7 @@ namespace SP.User.Service
         {
             try
             {
-                var filter = Builders<BsonDocument>.Filter.Eq("email", email);
-                var count = _users.Find(filter).CountDocuments();
+                var count = _users.Find(u => u.Email == email).CountDocuments();
                 return count > 0;
             }
             catch (Exception)
@@ -75,20 +71,17 @@ namespace SP.User.Service
                 Roles = new HashSet<string>()
             };
 
-            _users.InsertOne(user.ToBsonDocument());
+            _users.InsertOne(user);
             var token = _jwtUtils.GenerateToken(user.Id);
             return new AuthUserData(user, token);
         }
 
         public AuthUserData Login(UserLoginRequestParams r)
         {
-            var filter = Builders<BsonDocument>.Filter.Eq("email", r.Email);
-            var userBson = _users.Find(filter).FirstOrDefault();
+            var user = _users.Find(u => u.Email == r.Email).FirstOrDefault();
 
-            if (userBson == null)
+            if (user == null)
                 throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Account does not exist." });
-
-            var user = BsonSerializer.Deserialize<Account>(userBson);
 
             if (!CryptographyUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt))
                 throw new HttpResponseException(statusCode: 401, new { message = "Incorrect password." });
@@ -97,43 +90,27 @@ namespace SP.User.Service
             return new AuthUserData(user, token);
         }
 
-        // TODO DRY
-        public void AssignRole(UpdateRoleRequestParams r)
+        public void UpdateAccountRoles(UpdateAccountRolesRequestParams r)
         {
-            var builder = Builders<BsonDocument>.Filter;
-            var emailFilter = builder.Eq("email", r.AssigneeEmail);
-            var roleFilter = builder.And(emailFilter, builder.Eq("roles", r.Role));
-            var isRoleExisting = _users.Find(roleFilter).Any();
-            if (isRoleExisting) return;
-            var update = Builders<BsonDocument>.Update.AddToSet("roles", r.Role);
-            var result = _users.UpdateOne(emailFilter, update);
+            var update = Builders<Account>.Update.Set("roles", r.Roles);
+            var result = _users.UpdateOne(u => u.Email == r.AssigneeEmail, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
-        public void RemoveRole(UpdateRoleRequestParams r)
+        public void UpdateIsActive(UpdateAccountIsActiveRequestParams r)
         {
-            var builder = Builders<BsonDocument>.Filter;
-            var emailFilter = builder.Eq("email", r.AssigneeEmail);
-            var roleFilter = builder.And(emailFilter, builder.Eq("roles", r.Role));
-            var isRoleExisting = _users.Find(roleFilter).Any();
-            if (!isRoleExisting) return;
-            var update = Builders<BsonDocument>.Update.Pull("roles", r.Role);
-            var result = _users.UpdateOne(emailFilter, update);
-
-            if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not remove role." });
-        }
-
-        public void UpdateIsActive(UpdateIsActiveRequestParams r)
-        {
-            var filter = Builders<BsonDocument>.Filter.Eq("email", r.AssigneeEmail);
-            var update = Builders<BsonDocument>.Update.Set("isActive", r.IsActive);
-            var result = _users.UpdateOne(filter, update);
+            var update = Builders<Account>.Update.Set("isActive", r.IsActive);
+            var result = _users.UpdateOne(u => u.Email == r.AssigneeEmail, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
+        }
+
+        public IEnumerable<AdminServicableUserData> GetUsers()
+        {
+            return _users.Find(_ => true).ToEnumerable().Select(u => (AdminServicableUserData)u);
         }
     }
 }
