@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SP.Settings.Models
+namespace SP.Reports.Models.ReportListing
 {
     public class ReportName
     {
