@@ -8,10 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SP.Exceptions\SP.Exceptions.csproj" />
     <ProjectReference Include="..\SP.Reports.Models\SP.Reports.Models.csproj" />
+    <ProjectReference Include="..\SP.User.Models\SP.User.Models.csproj" />
+    <ProjectReference Include="..\SP.Utils\SP.Utils.csproj" />
   </ItemGroup>
 
 </Project>
