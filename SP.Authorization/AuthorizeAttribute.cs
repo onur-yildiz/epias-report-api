@@ -11,10 +11,12 @@ namespace SP.Authorization
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         public virtual string[] Roles { get; set; }
+        public virtual bool AdminRestricted { get; set; }
 
         public AuthorizeAttribute()
         {
             this.Roles = Array.Empty<string>();
+            this.AdminRestricted = false;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -26,10 +28,12 @@ namespace SP.Authorization
             // check if authorized by JwtMiddleware, account is active, and has required roles
             var isTokenValid = (bool?)context.HttpContext.Items["IsTokenValid"];
             if (isTokenValid != true) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+
             var accountRoles = (HashSet<string>?)context.HttpContext.Items["Roles"];
             var hasRoles = !Roles.Any() || (accountRoles != null && Roles.All(role => accountRoles.Contains(role)));
             var isActive = (bool?)context.HttpContext.Items["IsActive"];
-            if (isActive != true || !hasRoles) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
+            var isAdmin = (bool?)context.HttpContext.Items["IsAdmin"];
+            if (isActive != true || (AdminRestricted && isAdmin != true) || (!hasRoles && isAdmin != true)) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
 
             // Logging
             var userId = (ObjectId?)context.HttpContext.Items["UserId"];
