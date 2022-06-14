@@ -37,7 +37,7 @@ namespace SP.EpiasReport.Controllers
             return Ok(user);
         }
 
-        [Authorize()]
+        [Authorize]
         [HttpPost("RefreshToken")]
         public ActionResult<IAuthUserData> RefreshToken([FromHeader] string authorization)
         {
@@ -46,28 +46,27 @@ namespace SP.EpiasReport.Controllers
             return Ok(userData);
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" })]
-        [HttpPost("AssignRole")]
-        public ActionResult<String> AssignRole([FromBody] UpdateRoleRequestParams r)
+        [Authorize(AdminRestricted = true)]
+        [HttpPost("UpdateRoles")]
+        public ActionResult<String> UpdateRoles([FromBody] UpdateAccountRolesRequestParams r)
         {
-            _repository.AssignRole(r);
+            _repository.UpdateAccountRoles(r);
             return Ok();
         }
 
-        [Authorize(Roles = new string[] { "ADMIN" })]
-        [HttpPost("RemoveRole")]
-        public ActionResult<String> RemoveRole([FromBody] UpdateRoleRequestParams r)
-        {
-            _repository.RemoveRole(r);
-            return Ok();
-        }
-
-        [Authorize(Roles = new string[] { "ADMIN" })]
+        [Authorize(AdminRestricted = true)]
         [HttpPost("UpdateIsActive")]
-        public ActionResult<String> UpdateIsActive([FromBody] UpdateIsActiveRequestParams r)
+        public ActionResult<String> UpdateIsActive([FromBody] UpdateAccountIsActiveRequestParams r)
         {
             _repository.UpdateIsActive(r);
             return Ok();
+        }
+
+        [Authorize(AdminRestricted = true)]
+        [HttpGet("All")]
+        public ActionResult<IEnumerable<IAdminServicableUserData>> GetUsers()
+        {
+            return Ok(_repository.GetUsers());
         }
     }
 }
