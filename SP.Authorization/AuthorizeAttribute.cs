@@ -29,7 +29,7 @@ namespace SP.Authorization
             var accountRoles = (HashSet<string>?)context.HttpContext.Items["Roles"];
             var hasRoles = (accountRoles != null && Roles.Any()) && Roles.All(role => accountRoles.Contains(role));
             var isActive = (bool?)context.HttpContext.Items["IsActive"];
-            if (isActive != true || hasRoles) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
+            if (isActive != true || !hasRoles) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
 
             // Logging
             var userId = (ObjectId?)context.HttpContext.Items["UserId"];
