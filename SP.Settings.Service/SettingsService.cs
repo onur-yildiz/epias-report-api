@@ -40,7 +40,7 @@ namespace SP.Settings.Service
         public void CreateRole(Role role)
         {
             var builder = Builders<BsonDocument>.Filter;
-            var filter = builder.Eq("name", role);
+            var filter = builder.Eq("name", role.Name);
             var roleDoc = _roles.Find(filter).FirstOrDefault();
             if (roleDoc != null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new { message = "Role already exists." });
             _roles.InsertOne(role.ToBsonDocument());
