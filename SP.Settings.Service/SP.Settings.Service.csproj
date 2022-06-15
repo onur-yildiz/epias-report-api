@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SP.Exceptions\SP.Exceptions.csproj" />
+    <ProjectReference Include="..\SP.Reports.Models\SP.Reports.Models.csproj" />
     <ProjectReference Include="..\SP.Settings.Models\SP.Settings.Models.csproj" />
     <ProjectReference Include="..\SP.User.Service\SP.User.Service.csproj" />
   </ItemGroup>

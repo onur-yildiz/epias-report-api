@@ -6,6 +6,7 @@ namespace SP.Settings.Service
     {
         Role? GetRole(string role);
         void CreateRole(Role role);
+        void DeleteRole(Role role);
         IEnumerable<Role>? GetRoles();
     }
 }

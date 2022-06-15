@@ -48,6 +48,14 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        [Authorize(AdminRestricted = true)]
+        [HttpDelete("Role")]
+        public ActionResult DeleteRole([FromBody] Role role)
+        {
+            _repository.DeleteRole(role);
+            return Ok();
+        }
+
         [HttpGet("Roles")]
         public ActionResult<IEnumerable<Role>?> GetRoles()
         {
