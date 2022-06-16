@@ -6,19 +6,19 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Reports.Models.ReportListing;
-using SP.Settings.Models;
-using SP.User.Models;
+using SP.Roles.Models;
+using SP.Users.Models;
 using SP.Utils.Jwt;
 
-namespace SP.Settings.Service
+namespace SP.Roles.Service
 {
-    public class SettingsService : ISettingsService
+    public class RolesService : IRolesService
     {
         readonly IMongoCollection<BsonDocument> _roles;
         readonly IMongoCollection<Account> _users;
         readonly IMongoCollection<Report> _reports;
 
-        public SettingsService(IMongoClient client, IJwtUtils jwtUtils)
+        public RolesService(IMongoClient client, IJwtUtils jwtUtils)
         {
             var db = client.GetDatabase("cluster0");
             this._roles = db.GetCollection<BsonDocument>("roles");
@@ -33,10 +33,10 @@ namespace SP.Settings.Service
             return roles.Select(role => BsonSerializer.Deserialize<Role>(role));
         }
 
-        public Role? GetRole(string role)
+        public Role? GetRole(string roleName)
         {
             var builder = Builders<BsonDocument>.Filter;
-            var filter = builder.Eq("name", role);
+            var filter = builder.Eq("name", roleName);
             var roleDoc = _roles.Find(filter).FirstOrDefault();
             if (roleDoc == null) throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Role does not exist." });
             return BsonSerializer.Deserialize<Role>(roleDoc);
@@ -50,14 +50,14 @@ namespace SP.Settings.Service
             if (roleDoc != null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new { message = "Role already exists." });
             _roles.InsertOne(role.ToBsonDocument());
         }
-        public void DeleteRole(Role role)
+        public void DeleteRole(string roleName)
         {
             var builder = Builders<BsonDocument>.Filter;
-            var filter = builder.Eq("name", role.Name);
+            var filter = builder.Eq("name", roleName);
             var result = _roles.DeleteOne(filter);
             if (!result.IsAcknowledged) throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete role." });
-            _users.UpdateMany(u => u.Roles.Contains(role.Name), Builders<Account>.Update.Pull("roles", role.Name));
-            _reports.UpdateMany(r => r.Roles.Contains(role.Name), Builders<Report>.Update.Pull("roles", role.Name));
+            _users.UpdateMany(u => u.Roles.Contains(roleName), Builders<Account>.Update.Pull("roles", roleName));
+            _reports.UpdateMany(r => r.Roles.Contains(roleName), Builders<Report>.Update.Pull("roles", roleName));
         }
     }
 }
