@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Cryptography;
 
-namespace SP.User.Service
+namespace SP.Utils.Cryptography
 {
-    public class CryptographyUtils
+    public class CryptographyUtils : ICryptographyUtils
     {
-        static public (string, byte[]) Encrypt(string password, byte[]? salt = null)
+        public (string, byte[]) Encrypt(string password, byte[]? salt = null)
         {
             if (salt == null)
             {
@@ -24,7 +24,7 @@ namespace SP.User.Service
             return (hashed, salt);
         }
 
-        static public bool IsPasswordCorrect(string password, string hashedPassword, byte[] salt)
+        public bool IsPasswordCorrect(string password, string hashedPassword, byte[] salt)
         {
             var (hashed, _) = Encrypt(password, salt);
             return hashed.Equals(hashedPassword);
