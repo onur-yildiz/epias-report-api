@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace SP.Reports.Models.IntraDaySummary
 {
-    public class IntraDaySummaryResponse: IResponseBase<IntraDaySummaryContainer>
+    public class IntraDaySummaryResponse : IResponseBase<IntraDaySummaryContainer>
     {
         [JsonPropertyName("body")]
         public IntraDaySummaryContainer? Body { get; set; }
