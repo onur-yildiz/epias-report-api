@@ -13,6 +13,8 @@ namespace SP.Users.Service
         AuthUser Register(UserRegisterRequestBody r);
         void UpdateRoles(string userId, UpdateAccountRolesRequestBody r);
         void UpdateIsActive(string userId, UpdateAccountIsActiveRequestBody r);
+        string CreateApiKey(string token);
+        void DeleteApiKey(string apiKey, string token);
         public IEnumerable<User> GetAllUsers();
     }
 }

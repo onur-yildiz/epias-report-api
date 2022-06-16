@@ -11,5 +11,6 @@ namespace SP.Users.Models
         public bool IsAdmin { get; set; }
         public string LanguageCode { get; set; }
         public HashSet<string> Roles { get; set; }
+        public HashSet<string> ApiKeys { get; set; }
     }
 }

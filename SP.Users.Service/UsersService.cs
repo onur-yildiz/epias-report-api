@@ -6,6 +6,8 @@ using SP.Users.Models;
 using SP.Users.Models.RequestParams;
 using SP.Utils.Cryptography;
 using SP.Utils.Jwt;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace SP.Users.Service
 {
@@ -110,6 +112,46 @@ namespace SP.Users.Service
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
+        }
+
+        public string CreateApiKey(string token)
+        {
+            var uid = _jwtUtils.ValidateToken(token);
+            if (uid == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
+
+            var account = GetAccountById((ObjectId)uid);
+            if (account == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+
+            if (account.ApiKeys.Count >= 3)
+                throw new HttpResponseException(statusCode: StatusCodes.Status406NotAcceptable, new { message = "Max allowed API keys reached." });
+
+            var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)), "[^A-Za-z0-9]", "");
+            var update = Builders<Account>.Update.AddToSet("apiKeys", apiKey);
+            var result = _users.UpdateOne(u => u.Id == uid, update);
+
+            if (!result.IsAcknowledged)
+                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not create API key." });
+
+            return apiKey;
+        }
+
+        public void DeleteApiKey(string apiKey, string token)
+        {
+            var uid = _jwtUtils.ValidateToken(token);
+            if (uid == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
+
+            var account = GetAccountById((ObjectId)uid);
+            if (account == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+
+            var update = Builders<Account>.Update.Pull("apiKeys", apiKey);
+            var result = _users.UpdateOne(u => u.Id == uid, update);
+
+            if (!result.IsAcknowledged)
+                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete API key." });
         }
 
         public IEnumerable<User> GetAllUsers()

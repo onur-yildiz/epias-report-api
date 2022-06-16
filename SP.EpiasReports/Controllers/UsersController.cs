@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP.Authorization;
 using SP.Users.Models;
+using SP.Users.Models.RequestBody;
 using SP.Users.Models.RequestParams;
 using SP.Users.Service;
 
@@ -51,6 +52,21 @@ namespace SP.EpiasReport.Controllers
             var userData = _repository.RefreshToken(authorization);
             _logger.Information("{action}: {email}", "REFRESH TOKEN", userData.Email);
             return Ok(userData);
+        }
+
+        [Authorize]
+        [HttpPost("create-api-key")]
+        public ActionResult<string> CreateApiKey([FromHeader] string authorization)
+        {
+            return Ok(_repository.CreateApiKey(authorization));
+        }
+
+        [Authorize]
+        [HttpDelete("api-keys")]
+        public ActionResult DeleteApiKey([FromHeader] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        {
+            _repository.DeleteApiKey(r.ApiKey, authorization);
+            return Ok();
         }
 
         [Authorize(AdminRestricted = true)]

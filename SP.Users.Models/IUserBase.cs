@@ -9,5 +9,6 @@
         bool IsAdmin { get; set; }
         string LanguageCode { get; set; }
         HashSet<string> Roles { get; set; }
+        HashSet<string> ApiKeys { get; set; }
     }
 }

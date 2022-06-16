@@ -39,6 +39,10 @@ namespace SP.Users.Models
         public HashSet<string> Roles { get; set; }
 
         [BsonRequired]
+        [BsonElement("apiKeys")]
+        public HashSet<string> ApiKeys { get; set; }
+
+        [BsonRequired]
         [BsonElement("isActive")]
         public bool IsActive { get; set; }
 
