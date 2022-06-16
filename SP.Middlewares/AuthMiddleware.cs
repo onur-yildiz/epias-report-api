@@ -2,7 +2,7 @@
 
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
-using SP.User.Service;
+using SP.Users.Service;
 using SP.Utils.Jwt;
 
 namespace SP.Middlewares
@@ -16,7 +16,7 @@ namespace SP.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IUserService userService, IJwtUtils jwtUtils)
+        public async Task Invoke(HttpContext context, IUsersService userService, IJwtUtils jwtUtils)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token != null)

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MongoDB.Bson;
 using Serilog;
-using SP.User.Models;
 
 namespace SP.Authorization
 {
