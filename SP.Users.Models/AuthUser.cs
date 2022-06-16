@@ -1,15 +1,8 @@
-﻿using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SP.User.Models
+﻿namespace SP.Users.Models
 {
-    public class AuthUserData : IAuthUserData
+    public class AuthUser : IAuthUser
     {
-        public AuthUserData(IAccount account, string token)
+        public AuthUser(IAccount account, string token)
         {
             Email = account.Email;
             Id = account.Id.ToString();

@@ -1,6 +1,6 @@
-﻿namespace SP.User.Models.RequestParams
+﻿namespace SP.Users.Models.RequestParams
 {
-    public class UserRegisterRequestParams : IUserLoginRequestParams
+    public class UserRegisterRequestBody : IUserLoginRequestBody
     {
         public string Name { get; set; }
         public string Email { get; set; }

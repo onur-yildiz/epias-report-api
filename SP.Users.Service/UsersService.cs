@@ -1,23 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using SP.Exceptions;
-using SP.User.Models;
-using SP.User.Models.RequestParams;
+using SP.Users.Models;
+using SP.Users.Models.RequestParams;
+using SP.Utils.Cryptography;
 using SP.Utils.Jwt;
 
-namespace SP.User.Service
+namespace SP.Users.Service
 {
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
         readonly IMongoCollection<Account> _users;
         readonly IJwtUtils _jwtUtils;
+        readonly ICryptographyUtils _cryptUtils;
 
-        public UserService(IMongoClient client, IJwtUtils jwtUtils)
+        public UsersService(IMongoClient client, IJwtUtils jwtUtils, ICryptographyUtils cryptUtils)
         {
             this._users = client.GetDatabase("cluster0").GetCollection<Account>("users");
             _jwtUtils = jwtUtils;
+            _cryptUtils = cryptUtils;
         }
 
         public Account? GetAccountById(ObjectId id)
@@ -27,7 +29,7 @@ namespace SP.User.Service
             return user;
         }
 
-        public AuthUserData GetUserDataByToken(string token)
+        public AuthUser RefreshToken(string token)
         {
             var userId = _jwtUtils.ValidateToken(token);
             if (userId == null)
@@ -38,7 +40,7 @@ namespace SP.User.Service
                 throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
 
             var refreshedToken = _jwtUtils.GenerateToken(account.Id);
-            return new AuthUserData(account, refreshedToken);
+            return new AuthUser(account, refreshedToken);
         }
 
         public bool IsAccountExisting(string email)
@@ -54,11 +56,11 @@ namespace SP.User.Service
             }
         }
 
-        public AuthUserData Register(UserRegisterRequestParams r)
+        public AuthUser Register(UserRegisterRequestBody r)
         {
             if (IsAccountExisting(r.Email))
                 throw new HttpResponseException(statusCode: StatusCodes.Status409Conflict, new { message = "Account already exists." });
-            var (hashedPassword, salt) = CryptographyUtils.Encrypt(r.Password);
+            var (hashedPassword, salt) = _cryptUtils.Encrypt(r.Password);
             var user = new Account
             {
                 Id = ObjectId.GenerateNewId(),
@@ -73,44 +75,46 @@ namespace SP.User.Service
 
             _users.InsertOne(user);
             var token = _jwtUtils.GenerateToken(user.Id);
-            return new AuthUserData(user, token);
+            return new AuthUser(user, token);
         }
 
-        public AuthUserData Login(UserLoginRequestParams r)
+        public AuthUser Login(UserLoginRequestBody r)
         {
             var user = _users.Find(u => u.Email == r.Email).FirstOrDefault();
 
             if (user == null)
                 throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Account does not exist." });
 
-            if (!CryptographyUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt))
+            if (!_cryptUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt))
                 throw new HttpResponseException(statusCode: 401, new { message = "Incorrect password." });
 
             var token = _jwtUtils.GenerateToken(user.Id);
-            return new AuthUserData(user, token);
+            return new AuthUser(user, token);
         }
 
-        public void UpdateAccountRoles(UpdateAccountRolesRequestParams r)
+        public void UpdateRoles(string userId, UpdateAccountRolesRequestBody r)
         {
+            var uid = ObjectId.Parse(userId);
             var update = Builders<Account>.Update.Set("roles", r.Roles);
-            var result = _users.UpdateOne(u => u.Email == r.AssigneeEmail, update);
+            var result = _users.UpdateOne(u => u.Id == uid, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
-        public void UpdateIsActive(UpdateAccountIsActiveRequestParams r)
+        public void UpdateIsActive(string userId, UpdateAccountIsActiveRequestBody r)
         {
+            var uid = ObjectId.Parse(userId);
             var update = Builders<Account>.Update.Set("isActive", r.IsActive);
-            var result = _users.UpdateOne(u => u.Email == r.AssigneeEmail, update);
+            var result = _users.UpdateOne(u => u.Id == uid, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
         }
 
-        public IEnumerable<AdminServicableUserData> GetUsers()
+        public IEnumerable<User> GetAllUsers()
         {
-            return _users.Find(_ => true).ToEnumerable().Select(u => (AdminServicableUserData)u);
+            return _users.Find(_ => true).ToEnumerable().Select(u => (User)u);
         }
     }
 }

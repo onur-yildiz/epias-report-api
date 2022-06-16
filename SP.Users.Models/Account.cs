@@ -1,13 +1,13 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SP.User.Models
+namespace SP.Users.Models
 {
     public class Account : IAccount
     {
-        public static explicit operator AdminServicableUserData(Account acc)
+        public static explicit operator User(Account acc)
         {
-            return new AdminServicableUserData()
+            return new User()
             {
                 Id = acc.Id.ToString(),
                 Name = acc.Name,

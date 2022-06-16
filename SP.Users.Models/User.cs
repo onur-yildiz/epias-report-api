@@ -1,8 +1,8 @@
 ﻿
 
-namespace SP.User.Models
+namespace SP.Users.Models
 {
-    public class AdminServicableUserData : IAdminServicableUserData
+    public class User : IUserBase<string>
     {
         public string Email { get; set; }
         public string Id { get; set; }
