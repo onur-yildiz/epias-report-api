@@ -13,13 +13,17 @@ namespace SP.Users.Service
 {
     public class UsersService : IUsersService
     {
+        readonly IClientSessionHandle _session;
         readonly IMongoCollection<Account> _users;
+        readonly IMongoCollection<ApiKey> _apiKeys;
         readonly IJwtUtils _jwtUtils;
         readonly ICryptographyUtils _cryptUtils;
 
         public UsersService(IMongoClient client, IJwtUtils jwtUtils, ICryptographyUtils cryptUtils)
         {
-            this._users = client.GetDatabase("cluster0").GetCollection<Account>("users");
+            _session = client.StartSession();
+            _users = client.GetDatabase("cluster0").GetCollection<Account>("users");
+            _apiKeys = client.GetDatabase("cluster0").GetCollection<ApiKey>("api-keys");
             _jwtUtils = jwtUtils;
             _cryptUtils = cryptUtils;
         }
@@ -129,10 +133,16 @@ namespace SP.Users.Service
 
             var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)), "[^A-Za-z0-9]", "");
             var update = Builders<Account>.Update.AddToSet("apiKeys", apiKey);
+
+            _session.StartTransaction();
+
             var result = _users.UpdateOne(u => u.Id == uid, update);
+            _apiKeys.InsertOne(new ApiKey { App = "ExtraReports", Key = apiKey });
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not create API key." });
+
+            _session.CommitTransaction();
 
             return apiKey;
         }
@@ -147,11 +157,16 @@ namespace SP.Users.Service
             if (account == null)
                 throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
 
+            _session.StartTransaction();
+            
             var update = Builders<Account>.Update.Pull("apiKeys", apiKey);
             var result = _users.UpdateOne(u => u.Id == uid, update);
+            var deleteResult = _apiKeys.DeleteOne(a => a.Key == apiKey);
 
-            if (!result.IsAcknowledged)
+            if (!result.IsAcknowledged || !deleteResult.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete API key." });
+
+            _session.CommitTransaction();
         }
 
         public IEnumerable<User> GetAllUsers()
