@@ -21,7 +21,7 @@ namespace SP.ExtraReports.Service
         readonly IReportsService _reportsServiceRepository;
         readonly IApiPaths _apiPaths;
 
-        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsServiceRepository, IOptions<IApiPaths> options)
+        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsServiceRepository, IOptions<ApiPaths> options)
         {
             _httpClientFactory = httpClientFactory;
             _hourlyGenerations = client.GetDatabase("cluster0").GetCollection<HourlyGenerationsByType>("hourly-generations");

@@ -14,7 +14,7 @@ namespace SP.EpiasReport.Controllers
         private readonly Serilog.ILogger _logger;
         private readonly IExtraReportsService _repository;
 
-        public ExtraReportsController(Serilog.ILogger logger, ExtraReportsService repository)
+        public ExtraReportsController(Serilog.ILogger logger, IExtraReportsService repository)
         {
             _logger = logger;
             _repository = repository;
