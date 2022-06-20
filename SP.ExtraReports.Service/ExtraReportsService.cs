@@ -67,7 +67,7 @@ namespace SP.ExtraReports.Service
         public async Task<IConsumptionStatistics> GetConsumptionStatistics(string dateString)
         {
             var date = DateTime.Parse(dateString, CultureInfo.GetCultureInfo("tr-TR"));
-            var period = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
+            var period = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59));
 
             var consumptionStatistics = _consumptionStatistics.Find(s => s.Period == period).FirstOrDefault();
             // Get the data from actual source if not processed before
