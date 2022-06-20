@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using Serilog;
 using SP.AppConfig.Service;
 using SP.Exceptions;
+using SP.ExtraReports.Service;
 using SP.Middlewares;
 using SP.Reports.Models.Api;
 using SP.Reports.Service;
@@ -57,6 +58,7 @@ builder.Services.AddSingleton(_ =>
 });
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoDbConnString));
 builder.Services.AddTransient<IReportsService, ReportsService>();
+builder.Services.AddTransient<IExtraReportsService, ExtraReportsService>();
 builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddTransient<IRolesService, RolesService>();
 builder.Services.AddTransient<IAppConfigService, AppConfigService>();

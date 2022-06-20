@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SP.AppConfig.Service\SP.AppConfig.Service.csproj" />
     <ProjectReference Include="..\SP.Authorization\SP.Authorization.csproj" />
+    <ProjectReference Include="..\SP.ExtraReports.Service\SP.ExtraReports.Service.csproj" />
     <ProjectReference Include="..\SP.Middlewares\SP.Middlewares.csproj" />
     <ProjectReference Include="..\SP.Reports.Service\SP.Reports.Service.csproj" />
     <ProjectReference Include="..\SP.Roles.Models\SP.Roles.Models.csproj" />

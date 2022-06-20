@@ -21,11 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Roles.Service", "SP.Role
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Roles.Models", "SP.Roles.Models\SP.Roles.Models.csproj", "{E38F3B73-F586-471D-B3FC-5D171F212E27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.AppConfig.Service", "SP.AppConfig.Service\SP.AppConfig.Service.csproj", "{E74D962C-584A-4D7B-A553-DE2441781002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.AppConfig.Service", "SP.AppConfig.Service\SP.AppConfig.Service.csproj", "{E74D962C-584A-4D7B-A553-DE2441781002}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Users.Models", "SP.Users.Models\SP.Users.Models.csproj", "{6AA54993-B938-40CA-B924-6631BFD610C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Users.Service", "SP.Users.Service\SP.Users.Service.csproj", "{68BF03FB-9FD1-4C72-863E-3F6790713A7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.ExtraReports.Service", "SP.ExtraReports.Service\SP.ExtraReports.Service.csproj", "{C3F1F27D-A982-4D67-9517-15AAFBAEE852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.ExtraReports.Models", "SP.ExtraReports.Models\SP.ExtraReports.Models.csproj", "{78FE169C-8FB0-44C1-BB7D-A79A974494B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,14 @@ Global
 		{68BF03FB-9FD1-4C72-863E-3F6790713A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68BF03FB-9FD1-4C72-863E-3F6790713A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68BF03FB-9FD1-4C72-863E-3F6790713A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F1F27D-A982-4D67-9517-15AAFBAEE852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F1F27D-A982-4D67-9517-15AAFBAEE852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F1F27D-A982-4D67-9517-15AAFBAEE852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F1F27D-A982-4D67-9517-15AAFBAEE852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
