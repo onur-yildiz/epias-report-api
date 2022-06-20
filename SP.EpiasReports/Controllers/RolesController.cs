@@ -21,9 +21,9 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public ActionResult<IEnumerable<Role>?> GetRoles()
+        public IEnumerable<Role>? GetRoles()
         {
-            return Ok(_repository.GetRoles());
+            return _repository.GetRoles();
         }
 
         [Authorize(AdminRestricted = true)]
@@ -36,9 +36,9 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize(AdminRestricted = true)]
         [HttpGet("{name}")]
-        public ActionResult<Role?> GetRole(string name)
+        public Role? GetRole(string name)
         {
-            return Ok(_repository.GetRole(name));
+            return _repository.GetRole(name);
         }
         
         [Authorize(AdminRestricted = true)]

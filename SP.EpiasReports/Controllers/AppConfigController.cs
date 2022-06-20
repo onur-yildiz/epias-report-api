@@ -17,9 +17,9 @@ namespace SP.EpiasReport.Controllers
         }
 
         [HttpGet("report-listing-info")]
-        public ActionResult<List<object>> GetReportListingInfo([FromHeader] string? authorization)
+        public IEnumerable<dynamic>? GetReportListingInfo([FromHeader] string? authorization)
         {
-            return Ok(_repository.GetReportListing(authorization));
+            return _repository.GetReportListing(authorization);
         }
     }
 }

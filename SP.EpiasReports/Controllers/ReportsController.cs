@@ -12,6 +12,7 @@ using SP.Reports.Models.IntraDaySummary;
 using SP.Reports.Models.McpSmps;
 using SP.Reports.Models.Organizations;
 using SP.Reports.Models.RealTimeGeneration;
+using SP.Reports.Models.ReportListing;
 using SP.Reports.Models.RequestParams;
 using SP.Reports.Models.Smp;
 using SP.Reports.Service;
@@ -36,9 +37,9 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public ActionResult<List<object>> GetReports()
+        public IEnumerable<Report>? GetReports()
         {
-            return Ok(_repository.GetReports());
+            return _repository.GetReports();
         }
 
         [Authorize(AdminRestricted = true)]
@@ -58,69 +59,69 @@ namespace SP.EpiasReport.Controllers
         }
 
         //[HttpGet("McpSmp")]
-        //public async Task<ActionResult<McpSmpContainer?>> GetMcpSmp([FromQuery] DateIntervalRequestParams r)
+        //public  Task<McpSmpContainer?> GetMcpSmp([FromQuery] DateIntervalRequestParams r)
         //{
-        //    return Ok(await _repository.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp));
+        //    return _repository.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp);
         //}
 
         [HttpGet("dam-mcp")]
-        public async Task<ActionResult<DayAheadMcpContainer?>> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
+        public Task<DayAheadMcpContainer?> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp));
+            return _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp);
         }
 
         [HttpGet("rtg")]
-        public async Task<ActionResult<HourlyGenerationContainer?>> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
+        public Task<HourlyGenerationContainer?> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration));
+            return _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration);
         }
 
         [HttpGet("fdpp")]
-        public async Task<ActionResult<DppContainer?>> GetFdpp([FromQuery] DppRequestParams r)
+        public async Task<DppContainer?> GetFdpp([FromQuery] DppRequestParams r)
         {
-            return Ok(await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp));
+            return await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp);
         }
 
         [HttpGet("idm-wap")]
-        public async Task<ActionResult<IdmAofContainer?>> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
+        public Task<IdmAofContainer?> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof));
+            return _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof);
         }
 
         [HttpGet("idm-sum")]
-        public async Task<ActionResult<IntraDaySummaryContainer?>> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
+        public Task<IntraDaySummaryContainer?> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary));
+            return _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary);
         }
 
         [HttpGet("idm-mq")]
-        public async Task<ActionResult<IntraDaySummaryContainer?>> GetIntraDayMatchingQuantity([FromQuery] DateIntervalRequestParams r)
+        public Task<IntraDaySummaryContainer?> GetIntraDayMatchingQuantity([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary));
+            return _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary);
         }
 
         [HttpGet("idm-vs")]
-        public async Task<ActionResult<IdmVolumeContainer?>> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
+        public Task<IdmVolumeContainer?> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
         {
-            return Ok(await _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary));
+            return _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary);
         }
 
         [HttpGet("bpm-smp")]
-        public async Task<ActionResult<SmpContainer?>> GetSmp([FromQuery] DateIntervalRequestParams r)
+        public Task<SmpContainer?> GetSmp([FromQuery] DateIntervalRequestParams r)
         {
-            return Ok(await _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp));
+            return _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp);
         }
 
         [HttpGet("dpporg")]
-        public async Task<ActionResult<OrganizationContainer?>> GetDppOrganization()
+        public Task<OrganizationContainer?> GetDppOrganization()
         {
-            return Ok(await _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization));
+            return _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization);
         }
 
         [HttpGet("dppiun")]
-        public async Task<ActionResult<DppInjectionUnitNameContainer?>> GetDppInjectionUnitName([FromQuery] DppInjectionUnitNameRequestParams r)
+        public Task<DppInjectionUnitNameContainer?> GetDppInjectionUnitName([FromQuery] DppInjectionUnitNameRequestParams r)
         {
-            return Ok(await _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName));
+            return _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
