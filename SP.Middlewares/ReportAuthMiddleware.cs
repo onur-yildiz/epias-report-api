@@ -16,7 +16,7 @@ namespace SP.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IRolesService settingsService, IMongoClient mongo)
+        public async Task Invoke(HttpContext context, IMongoClient mongo)
         {
             var pathSections = context.Request.Path.Value[1..].Split('/');
             if (pathSections.Length == 2)
