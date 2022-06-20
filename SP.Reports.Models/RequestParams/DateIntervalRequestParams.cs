@@ -5,16 +5,16 @@ namespace SP.Reports.Models.RequestParams
 {
     public class DateIntervalRequestParams : IDateIntervalRequestParams
     {
-        public DateIntervalRequestParams(string startDate, string endDate)
-        {
-            StartDate = startDate;
-            EndDate = endDate;
-        }
-
+        /// <summary>
+        /// Start date of the period (inclusive)
+        /// </summary>
         [Required]
-        public string StartDate { get; set; }
+        public string StartDate { get; set; } = String.Empty;
 
+        /// <summary>
+        /// End date of the period (inclusive)
+        /// </summary>
         [Required]
-        public string EndDate { get; set; }
+        public string EndDate { get; set; } = String.Empty;
     }
 }

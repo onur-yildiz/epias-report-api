@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SP.Users.Models
 {
     [BsonIgnoreExtraElements]
-    public class ApiKey
+    public class ApiKey : IApiKey
     {
         public ApiKey(string key, string app)
         {

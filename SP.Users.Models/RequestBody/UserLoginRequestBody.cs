@@ -4,16 +4,16 @@ namespace SP.Users.Models.RequestParams
 {
     public class UserLoginRequestBody : IUserLoginRequestBody
     {
-        public UserLoginRequestBody(string email, string password)
-        {
-            Email = email;
-            Password = password;
-        }
-
+        /// <summary>
+        /// Account e-mail address
+        /// </summary>
         [Required]
-        public string Email { get; set; }
+        public string Email { get; set; } = String.Empty;
 
+        /// <summary>
+        /// Account password
+        /// </summary>
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = String.Empty;
     }
 }

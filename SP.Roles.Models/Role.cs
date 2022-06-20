@@ -5,16 +5,11 @@ using System.ComponentModel.DataAnnotations;
 namespace SP.Roles.Models
 {
     [BsonIgnoreExtraElements]
-    public class Role
+    public class Role : IRole
     {
-        public Role(string name)
-        {
-            Name = name;
-        }
-
         [Required]
         [BsonRequired]
         [BsonElement("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = String.Empty;
     }
 }

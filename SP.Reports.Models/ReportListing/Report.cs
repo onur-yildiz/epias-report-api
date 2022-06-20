@@ -3,8 +3,18 @@
 namespace SP.Reports.Models.ReportListing
 {
     [BsonIgnoreExtraElements]
-    public class Report
+    public class Report : IReport
     {
+        public Report(string order, string key, string endpoint, bool ısActive, HashSet<string> roles, HashSet<ReportName> name)
+        {
+            Order = order;
+            Key = key;
+            Endpoint = endpoint;
+            IsActive = ısActive;
+            Roles = roles;
+            Name = name;
+        }
+
         [BsonRequired]
         [BsonElement("order")]
         public string Order { get; set; }

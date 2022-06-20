@@ -19,9 +19,9 @@ namespace SP.ExtraReports.Service
         readonly IMongoCollection<HourlyGenerationsByType> _hourlyGenerations;
         readonly IMongoCollection<ConsumptionStatistics> _consumptionStatistics;
         readonly IReportsService _reportsServiceRepository;
-        readonly ApiPaths _apiPaths;
+        readonly IApiPaths _apiPaths;
 
-        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsServiceRepository, IOptions<ApiPaths> options)
+        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsServiceRepository, IOptions<IApiPaths> options)
         {
             _httpClientFactory = httpClientFactory;
             _hourlyGenerations = client.GetDatabase("cluster0").GetCollection<HourlyGenerationsByType>("hourly-generations");
@@ -30,7 +30,7 @@ namespace SP.ExtraReports.Service
             _apiPaths = options.Value;
         }
 
-        public async Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations(DateIntervalRequestParams r)
+        public async Task<IEnumerable<IHourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r)
         {
             var startDate = DateTime.Parse(r.StartDate, CultureInfo.GetCultureInfo("tr-TR"));
             var endDate = DateTime.Parse(r.EndDate, CultureInfo.GetCultureInfo("tr-TR"));

@@ -28,14 +28,14 @@ namespace SP.Users.Service
             _cryptUtils = cryptUtils;
         }
 
-        public Account? GetAccountById(ObjectId id)
+        public IAccount? GetAccountById(ObjectId id)
         {
             var user = _users.Find(u => u.Id == id).FirstOrDefault();
             if (user == null) return null;
             return user;
         }
 
-        public AuthUser RefreshToken(string token)
+        public IAuthUser RefreshToken(string token)
         {
             var userId = _jwtUtils.ValidateToken(token);
             if (userId == null)
@@ -62,7 +62,7 @@ namespace SP.Users.Service
             }
         }
 
-        public AuthUser Register(UserRegisterRequestBody r)
+        public IAuthUser Register(IUserRegisterRequestBody r)
         {
             if (IsAccountExisting(r.Email))
                 throw new HttpResponseException(statusCode: StatusCodes.Status409Conflict, new { message = "Account already exists." });
@@ -86,7 +86,7 @@ namespace SP.Users.Service
             return new AuthUser(user, token);
         }
 
-        public AuthUser Login(UserLoginRequestBody r)
+        public IAuthUser Login(IUserLoginRequestBody r)
         {
             var user = _users.Find(u => u.Email == r.Email).FirstOrDefault();
 
@@ -100,7 +100,7 @@ namespace SP.Users.Service
             return new AuthUser(user, token);
         }
 
-        public void UpdateRoles(string userId, UpdateAccountRolesRequestBody r)
+        public void UpdateRoles(string userId, IUpdateAccountRolesRequestBody r)
         {
             var uid = ObjectId.Parse(userId);
             var update = Builders<Account>.Update.Set("roles", r.Roles);
@@ -110,7 +110,7 @@ namespace SP.Users.Service
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
-        public void UpdateIsActive(string userId, UpdateAccountIsActiveRequestBody r)
+        public void UpdateIsActive(string userId, IUpdateAccountIsActiveRequestBody r)
         {
             var uid = ObjectId.Parse(userId);
             var update = Builders<Account>.Update.Set("isActive", r.IsActive);
@@ -171,7 +171,7 @@ namespace SP.Users.Service
             _session.CommitTransaction();
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public IEnumerable<IUserBase<string>> GetAllUsers()
         {
             return _users.Find(_ => true).ToEnumerable().Select(u => (User)u);
         }

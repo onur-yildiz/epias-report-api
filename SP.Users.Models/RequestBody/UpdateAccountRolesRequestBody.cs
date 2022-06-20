@@ -2,14 +2,12 @@
 
 namespace SP.Users.Models.RequestParams
 {
-    public class UpdateAccountRolesRequestBody
+    public class UpdateAccountRolesRequestBody : IUpdateAccountRolesRequestBody
     {
-        public UpdateAccountRolesRequestBody(string[] roles)
-        {
-            Roles = roles;
-        }
-
+        /// <summary>
+        /// List of role names
+        /// </summary>
         [Required]
-        public string[] Roles { get; set; }
+        public string[] Roles { get; set; } = Array.Empty<string>();
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Serilog;
 using SP.AppConfig.Service;
@@ -11,6 +12,7 @@ using SP.Roles.Service;
 using SP.Users.Service;
 using SP.Utils.Cryptography;
 using SP.Utils.Jwt;
+using System.Reflection;
 
 var root = Directory.GetCurrentDirectory();
 var dotenv = Path.Combine(root, ".env");
@@ -35,7 +37,20 @@ builder.Services.AddControllers(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(o => o.OperationFilter<SwaggerHeaderFilter>());
+builder.Services.AddSwaggerGen(c =>
+{
+    c.OperationFilter<SwaggerHeaderFilter>();
+    var currentAssembly = Assembly.GetExecutingAssembly();
+    var xmlDocs = currentAssembly.GetReferencedAssemblies()
+    .Union(new AssemblyName[] { currentAssembly.GetName() })
+    .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location) ?? "", $"{a.Name}.xml"))
+    .Where(f => File.Exists(f)).ToArray();
+
+    Array.ForEach(xmlDocs, (d) =>
+    {
+        c.IncludeXmlComments(d);
+    });
+});
 
 builder.Services.AddHttpClient("EpiasAPI", httpClient =>
 {

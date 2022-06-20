@@ -2,13 +2,11 @@
 
 namespace SP.Users.Models.RequestParams
 {
-    public class UpdateAccountIsActiveRequestBody
+    public class UpdateAccountIsActiveRequestBody : IUpdateAccountIsActiveRequestBody
     {
-        public UpdateAccountIsActiveRequestBody(bool isActive)
-        {
-            IsActive = isActive;
-        }
-
+        /// <summary>
+        /// Account's active state. User won't be able to login or access role-secured content
+        /// </summary>
         [Required]
         public bool IsActive { get; set; }
     }

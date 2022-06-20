@@ -27,7 +27,7 @@ namespace SP.EpiasReport.Controllers
     {
         private readonly Serilog.ILogger _logger;
         private readonly IReportsService _repository;
-        private readonly ApiPaths _paths;
+        private readonly IApiPaths _paths;
 
         public ReportsController(Serilog.ILogger logger, IReportsService repository, IOptions<ApiPaths> option)
         {
@@ -39,7 +39,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public IEnumerable<Report>? GetReports()
+        public IEnumerable<IReport>? GetReports()
         {
             return _repository.GetReports();
         }
@@ -47,7 +47,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/is-active")]
-        public ActionResult UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestBody r)
+        public IActionResult UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(reportKey, r);
             return Ok();
@@ -56,14 +56,14 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/roles")]
-        public ActionResult UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestBody r)
+        public IActionResult UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestBody r)
         {
             _repository.UpdateRoles(reportKey, r);
             return Ok();
         }
 
         //[HttpGet("McpSmp")]
-        //public  Task<McpSmpContainer?> GetMcpSmp([FromQuery] DateIntervalRequestParams r)
+        //public  Task<McpSmpContainer?> GetMcpSmp([FromQuery] IDateIntervalRequestParams r)
         //{
         //    return _repository.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp);
         //}

@@ -4,7 +4,7 @@ using SP.Reports.Models.RealTimeGeneration;
 namespace SP.ExtraReports.Models
 {
     [BsonIgnoreExtraElements]
-    public class HourlyGenerationsByType
+    public class HourlyGenerationsByType : IHourlyGenerationsByType
     {
         public HourlyGenerationsByType(HourlyGenerationModelEntity h)
         {

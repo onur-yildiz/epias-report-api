@@ -2,7 +2,7 @@
 
 namespace SP.ExtraReports.Models
 {
-    public class MostConsumedPeriod
+    public class MostConsumedPeriod : IMostConsumedPeriod
     {
         public MostConsumedPeriod(string date, double consumption, double ratio)
         {

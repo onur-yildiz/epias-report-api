@@ -2,14 +2,12 @@
 
 namespace SP.Reports.Models.RequestBody
 {
-    public class UpdateReportRolesRequestBody
+    public class UpdateReportRolesRequestBody : IUpdateReportRolesRequestBody
     {
-        public UpdateReportRolesRequestBody(string[] roles)
-        {
-            Roles = roles;
-        }
-
+        /// <summary>
+        /// List of role names
+        /// </summary>
         [Required]
-        public string[] Roles { get; set; }
+        public string[] Roles { get; set; } = Array.Empty<string>();
     }
 }

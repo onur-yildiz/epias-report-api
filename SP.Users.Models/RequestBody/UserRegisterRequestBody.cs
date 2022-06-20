@@ -2,26 +2,30 @@
 
 namespace SP.Users.Models.RequestParams
 {
-    public class UserRegisterRequestBody : IUserLoginRequestBody
+    public class UserRegisterRequestBody : IUserRegisterRequestBody
     {
-        public UserRegisterRequestBody(string name, string email, string password, string languageCode = "en")
-        {
-            Name = name;
-            Email = email;
-            Password = password;
-            LanguageCode = languageCode;
-        }
-
+        /// <summary>
+        /// User name
+        /// </summary>
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = String.Empty;
 
+        /// <summary>
+        /// Account e-mail address
+        /// </summary>
         [Required]
-        public string Email { get; set; }
+        public string Email { get; set; } = String.Empty;
 
+        /// <summary>
+        /// Account password
+        /// </summary>
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = String.Empty;
 
+        /// <summary>
+        /// User language preference
+        /// </summary>
         [Required]
-        public string LanguageCode { get; set; }
+        public string LanguageCode { get; set; } = "en";
     }
 }

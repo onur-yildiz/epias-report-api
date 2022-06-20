@@ -2,14 +2,12 @@
 
 namespace SP.Reports.Models.RequestParams
 {
-    public class DppInjectionUnitNameRequestParams
+    public class DppInjectionUnitNameRequestParams : IDppInjectionUnitNameRequestParams
     {
-        public DppInjectionUnitNameRequestParams(string organizationEIC)
-        {
-            OrganizationEIC = organizationEIC;
-        }
-
+        /// <summary>
+        /// Organization EIC. Example: 40X000000000540Y
+        /// </summary>
         [Required]
-        public string OrganizationEIC { get; set; }
+        public string OrganizationEIC { get; set; } = String.Empty;
     }
 }

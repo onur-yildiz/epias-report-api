@@ -2,14 +2,12 @@
 
 namespace SP.Users.Models.RequestBody
 {
-    public class DeleteApiKeyRequestBody
+    public class DeleteApiKeyRequestBody : IDeleteApiKeyRequestBody
     {
-        public DeleteApiKeyRequestBody(string apiKey)
-        {
-            ApiKey = apiKey;
-        }
-
+        /// <summary>
+        /// API key
+        /// </summary>
         [Required]
-        public string ApiKey { get; set; }
+        public string ApiKey { get; set; } = String.Empty;
     }
 }

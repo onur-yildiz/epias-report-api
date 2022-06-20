@@ -14,19 +14,29 @@ namespace SP.EpiasReport.Controllers
         private readonly Serilog.ILogger _logger;
         private readonly IExtraReportsService _repository;
 
-        public ExtraReportsController(Serilog.ILogger logger, IExtraReportsService repository)
+        public ExtraReportsController(Serilog.ILogger logger, ExtraReportsService repository)
         {
             _logger = logger;
             _repository = repository;
         }
 
+        /// <summary>
+        /// Hourly electric generation values categorized by renewable and non-renewable energy types.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("x-api-key", description: "API key, can be acquired by a registered user", isRequired: true)]
         [HttpGet("hourly-generations")]
-        public Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations([FromQuery] DateIntervalRequestParams r)
+        public Task<IEnumerable<IHourlyGenerationsByType>> GetHourlyGenerations([FromQuery] DateIntervalRequestParams r)
         {
             return _repository.GetHourlyGenerations(r);
         }
 
+        /// <summary>
+        /// Consumption statistics of a month for the periods which consumed the most electricity Includes hour with the highest consume for each day and top 5 electricity consumed days 
+        /// </summary>
+        /// <param name="period">Date of the period. Month is picked from the date. Any date in the desired month is accepted. (yyyy-MM-dd)</param>
+        /// <returns></returns>
         [SwaggerHeader("x-api-key", description: "API key, can be acquired by a registered user", isRequired: true)]
         [HttpGet("consumption-statistics")]
         public Task<IConsumptionStatistics> GetConsumptionStatistics([FromQuery] string period)

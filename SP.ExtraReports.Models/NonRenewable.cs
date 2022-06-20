@@ -2,7 +2,7 @@
 
 namespace SP.ExtraReports.Models
 {
-    public class NonRenewable
+    public class NonRenewable : INonRenewable
     {
         [BsonRequired]
         [BsonElement("fueloil")]

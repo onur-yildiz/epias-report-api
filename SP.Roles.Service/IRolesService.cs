@@ -4,9 +4,9 @@ namespace SP.Roles.Service
 {
     public interface IRolesService
     {
-        Role? GetRole(string roleName);
-        void CreateRole(Role role);
+        IRole? GetRole(string roleName);
+        void CreateRole(IRole role);
         void DeleteRole(string roleName);
-        IEnumerable<Role>? GetRoles();
+        IEnumerable<IRole>? GetRoles();
     }
 }

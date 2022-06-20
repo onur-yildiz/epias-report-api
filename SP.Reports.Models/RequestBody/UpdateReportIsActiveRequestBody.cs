@@ -2,13 +2,11 @@
 
 namespace SP.Reports.Models.RequestBody
 {
-    public class UpdateReportIsActiveRequestBody
+    public class UpdateReportIsActiveRequestBody : IUpdateReportIsActiveRequestBody
     {
-        public UpdateReportIsActiveRequestBody(bool isActive)
-        {
-            IsActive = isActive;
-        }
-
+        /// <summary>
+        /// Report's active state. Report won't be visible to anyone if deactivated.
+        /// </summary>
         [Required]
         public bool IsActive { get; set; }
     }

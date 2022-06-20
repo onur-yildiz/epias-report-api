@@ -2,7 +2,7 @@
 
 namespace SP.ExtraReports.Models
 {
-    public class Period
+    public class Period : IPeriod
     {
         public Period(DateTime start, DateTime end)
         {

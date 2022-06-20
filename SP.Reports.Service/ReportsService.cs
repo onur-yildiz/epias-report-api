@@ -36,12 +36,12 @@ namespace SP.Reports.Service
             return await ReportsResponseUtils.ExtractBody<TBody, TContainer>(response);
         }
 
-        public IEnumerable<Report>? GetReports()
+        public IEnumerable<IReport>? GetReports()
         {
             return _reports.Find(_ => true).ToEnumerable();
         }
 
-        public void UpdateRoles(string reportKey, UpdateReportRolesRequestBody r)
+        public void UpdateRoles(string reportKey, IUpdateReportRolesRequestBody r)
         {
             var update = Builders<Report>.Update.Set("roles", r.Roles);
             var result = _reports.UpdateOne(report => report.Key == reportKey, update);
@@ -50,7 +50,7 @@ namespace SP.Reports.Service
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
-        public void UpdateIsActive(string reportKey, UpdateReportIsActiveRequestBody r)
+        public void UpdateIsActive(string reportKey, IUpdateReportIsActiveRequestBody r)
         {
             var update = Builders<Report>.Update.Set("isActive", r.IsActive);
             var result = _reports.UpdateOne(report => report.Key == reportKey, update);

@@ -1,8 +1,6 @@
 ﻿
 
 using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Reports.Models.ReportListing;
@@ -14,45 +12,45 @@ namespace SP.Roles.Service
 {
     public class RolesService : IRolesService
     {
-        readonly IMongoCollection<BsonDocument> _roles;
+        readonly IMongoCollection<Role> _roles;
         readonly IMongoCollection<Account> _users;
         readonly IMongoCollection<Report> _reports;
 
         public RolesService(IMongoClient client, IJwtUtils jwtUtils)
         {
             var db = client.GetDatabase("cluster0");
-            this._roles = db.GetCollection<BsonDocument>("roles");
+            this._roles = db.GetCollection<Role>("roles");
             this._users = db.GetCollection<Account>("users");
             this._reports = db.GetCollection<Report>("reports");
         }
 
-        public IEnumerable<Role>? GetRoles()
+        public IEnumerable<IRole>? GetRoles()
         {
             var roles = _roles.Find(_ => true).ToList();
             if (roles == null) throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Could not find any roles." });
-            return roles.Select(role => BsonSerializer.Deserialize<Role>(role));
+            return roles;
         }
 
-        public Role? GetRole(string roleName)
+        public IRole? GetRole(string roleName)
         {
-            var builder = Builders<BsonDocument>.Filter;
+            var builder = Builders<Role>.Filter;
             var filter = builder.Eq("name", roleName);
-            var roleDoc = _roles.Find(filter).FirstOrDefault();
-            if (roleDoc == null) throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Role does not exist." });
-            return BsonSerializer.Deserialize<Role>(roleDoc);
+            var role = _roles.Find(filter).FirstOrDefault();
+            if (role == null) throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Role does not exist." });
+            return role;
         }
 
-        public void CreateRole(Role role)
+        public void CreateRole(IRole role)
         {
-            var builder = Builders<BsonDocument>.Filter;
+            var builder = Builders<Role>.Filter;
             var filter = builder.Eq("name", role.Name);
-            var roleDoc = _roles.Find(filter).FirstOrDefault();
-            if (roleDoc != null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new { message = "Role already exists." });
-            _roles.InsertOne(role.ToBsonDocument());
+            var existingRole = _roles.Find(filter).FirstOrDefault();
+            if (existingRole != null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new { message = "Role already exists." });
+            _roles.InsertOne((Role)role);
         }
         public void DeleteRole(string roleName)
         {
-            var builder = Builders<BsonDocument>.Filter;
+            var builder = Builders<Role>.Filter;
             var filter = builder.Eq("name", roleName);
             var result = _roles.DeleteOne(filter);
             if (!result.IsAcknowledged) throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete role." });

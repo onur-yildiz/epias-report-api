@@ -66,7 +66,7 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize]
         [HttpDelete("api-keys")]
-        public ActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        public IActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
         {
             _repository.DeleteApiKey(r.ApiKey, authorization);
             return Ok();
@@ -75,7 +75,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/roles")]
-        public ActionResult UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
+        public IActionResult UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
         {
             _repository.UpdateRoles(userId, r);
             return Ok();
@@ -84,7 +84,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/is-active")]
-        public ActionResult UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
+        public IActionResult UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(userId, r);
             return Ok();

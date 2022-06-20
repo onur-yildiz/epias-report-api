@@ -2,26 +2,28 @@
 
 namespace SP.Reports.Models.RequestParams
 {
-    public class DppRequestParams : IDateIntervalRequestParams
+    public class DppRequestParams : IDppRequestParams
     {
-        public DppRequestParams(string endDate, string startDate, string organizationEIC, string uevcbEIC)
-        {
-            EndDate = endDate;
-            StartDate = startDate;
-            OrganizationEIC = organizationEIC;
-            UevcbEIC = uevcbEIC;
-        }
-
+        /// <summary>
+        /// End date of the period (inclusive)
+        /// </summary>
         [Required]
-        public string EndDate { get; set; }
+        public string EndDate { get; set; } = String.Empty;
 
+        /// <summary>
+        /// Start date of the period (inclusive)
+        /// </summary>
         [Required]
-        public string StartDate { get; set; }
+        public string StartDate { get; set; } = String.Empty;
 
-        [Required]
-        public string OrganizationEIC { get; set; }
+        /// <summary>
+        /// Organization EIC. Example: 40X000000000540Y
+        /// </summary>
+        public string? OrganizationEIC { get; set; }
 
-        [Required]
-        public string UevcbEIC { get; set; } 
+        /// <summary>
+        /// EUVÇB EIC. Example: 40W0000000001960
+        /// </summary>
+        public string? UevcbEIC { get; set; }
     }
 }

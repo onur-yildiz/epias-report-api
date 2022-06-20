@@ -2,7 +2,7 @@
 
 namespace SP.ExtraReports.Models
 {
-    public class Renewable
+    public class Renewable : IRenewable
     {
         [BsonRequired]
         [BsonElement("sun")]
