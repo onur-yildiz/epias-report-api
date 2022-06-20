@@ -13,12 +13,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SP.AppConfig.Service\SP.AppConfig.Service.csproj" />
     <ProjectReference Include="..\SP.Authorization\SP.Authorization.csproj" />
+    <ProjectReference Include="..\SP.ExtraReports.Service\SP.ExtraReports.Service.csproj" />
     <ProjectReference Include="..\SP.Middlewares\SP.Middlewares.csproj" />
     <ProjectReference Include="..\SP.Reports.Service\SP.Reports.Service.csproj" />
-    <ProjectReference Include="..\SP.Settings.Service\SP.Settings.Service.csproj" />
-    <ProjectReference Include="..\SP.User.Models\SP.User.Models.csproj" />
-    <ProjectReference Include="..\SP.User.Service\SP.User.Service.csproj" />
+    <ProjectReference Include="..\SP.Roles.Models\SP.Roles.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,13 +6,13 @@ namespace SP.Reports.Service
 {
     public static class ReportsResponseUtils
     {
-        public static async Task<TBody?> ExtractBody<TBody, TContainer>(HttpResponseMessage response) where TBody: class where TContainer: IResponseBase<TBody>
+        public static async Task<TBody?> ExtractBody<TBody, TContainer>(HttpResponseMessage response) where TBody : class where TContainer : IResponseBase<TBody>
         {
             var data = await response.Content.ReadAsStreamAsync();
             return JsonSerializer.Deserialize<TContainer>(data)?.Body;
         }
 
-        public static string GenerateQueryFromObject (object r)
+        public static string GenerateQueryFromObject(object r)
         {
             var query = new StringBuilder("?");
             if (r != null)

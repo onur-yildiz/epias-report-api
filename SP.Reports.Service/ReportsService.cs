@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Reports.Models;
-using SP.Reports.Models.Api;
 using SP.Reports.Models.ReportListing;
 using SP.Reports.Models.RequestParams;
-using SP.User.Models;
+using SP.Users.Models;
 using SP.Utils.Jwt;
 
 namespace SP.Reports.Service
@@ -38,38 +36,24 @@ namespace SP.Reports.Service
             return await ReportsResponseUtils.ExtractBody<TBody, TContainer>(response);
         }
 
-        public IEnumerable<dynamic>? GetReportListing(string? authToken = null)
-        {
-            var userId = authToken != null ? _jwtUtils.ValidateToken(authToken) : null;
-            var user = _users.Find(u => u.Id == userId).FirstOrDefault();
-
-            var reports = _reports.Find(r => r.IsActive).ToEnumerable().Where(r => user?.IsAdmin == true || r.Roles.Count == 0 || r.Roles.Any(role => user?.Roles.Contains(role) == true));
-            var reportFolders = _reportFolders.Find(_ => true).ToEnumerable();
-
-            var listingInfo = new List<dynamic>(reports.Count() + reportFolders.Count());
-            listingInfo.AddRange(reports);
-            listingInfo.AddRange(reportFolders);
-            return listingInfo;
-        }
-
         public IEnumerable<Report>? GetReports()
         {
             return _reports.Find(_ => true).ToEnumerable();
         }
 
-        public void UpdateRoles(UpdateReportRolesRequestParams r)
+        public void UpdateRoles(string reportKey, UpdateReportRolesRequestParams r)
         {
             var update = Builders<Report>.Update.Set("roles", r.Roles);
-            var result = _reports.UpdateOne(report => report.Key == r.Key, update);
+            var result = _reports.UpdateOne(report => report.Key == reportKey, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
-        public void UpdateIsActive(UpdateReportIsActiveRequestParams r)
+        public void UpdateIsActive(string reportKey, UpdateReportIsActiveRequestParams r)
         {
             var update = Builders<Report>.Update.Set("isActive", r.IsActive);
-            var result = _reports.UpdateOne(report => report.Key == r.Key, update);
+            var result = _reports.UpdateOne(report => report.Key == reportKey, update);
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });

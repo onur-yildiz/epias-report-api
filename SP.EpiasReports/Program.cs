@@ -1,18 +1,21 @@
 using MongoDB.Driver;
 using Serilog;
+using SP.AppConfig.Service;
 using SP.Exceptions;
+using SP.ExtraReports.Service;
 using SP.Middlewares;
 using SP.Reports.Models.Api;
 using SP.Reports.Service;
-using SP.Settings.Service;
-using SP.User.Service;
+using SP.Roles.Service;
+using SP.Users.Service;
+using SP.Utils.Cryptography;
 using SP.Utils.Jwt;
 
 var root = Directory.GetCurrentDirectory();
 var dotenv = Path.Combine(root, ".env");
 if (File.Exists(dotenv))
 {
-    foreach(var line in File.ReadAllLines(dotenv))
+    foreach (var line in File.ReadAllLines(dotenv))
     {
         var parts = line.Split("=", StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length != 2) continue;
@@ -33,7 +36,6 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddHttpClient();
 builder.Services.AddHttpClient("EpiasAPI", httpClient =>
 {
     httpClient.BaseAddress = new Uri(Environment.GetEnvironmentVariable("EPIAS_API_BASE_URL") ?? builder.Configuration.GetValue<string>("Api:BaseUrl"));
@@ -56,9 +58,12 @@ builder.Services.AddSingleton(_ =>
 });
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoDbConnString));
 builder.Services.AddTransient<IReportsService, ReportsService>();
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<ISettingsService, SettingsService>();
+builder.Services.AddTransient<IExtraReportsService, ExtraReportsService>();
+builder.Services.AddTransient<IUsersService, UsersService>();
+builder.Services.AddTransient<IRolesService, RolesService>();
+builder.Services.AddTransient<IAppConfigService, AppConfigService>();
 builder.Services.AddTransient<IJwtUtils, JwtUtils>();
+builder.Services.AddTransient<ICryptographyUtils, CryptographyUtils>();
 
 builder.Services.Configure<ApiPaths>(builder.Configuration.GetSection("Api").GetSection("Paths"));
 builder.Services.AddOptions();
@@ -83,9 +88,10 @@ else
     app.UseExceptionHandler("/error");
 }
 
-app.UseMiddleware<AuthMiddleware>();
-app.UseMiddleware<ReportRoleAuthMiddleware>();
 app.UseHttpsRedirection();
+app.UseMiddleware<AuthMiddleware>();
+app.UseWhen(context => context.Request.Path.Value?.ToLower().StartsWith("/extrareports") == true, app => app.UseMiddleware<ExtraReportsAuthMiddleware>());
+app.UseWhen(context => context.Request.Path.Value?.ToLower().StartsWith("/reports") == true, app => app.UseMiddleware<ReportAuthMiddleware>());
 
 app.MapControllers();
 app.Run();
