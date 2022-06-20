@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Reports.Models;
 using SP.Reports.Models.ReportListing;
-using SP.Reports.Models.RequestParams;
+using SP.Reports.Models.RequestBody;
 using SP.Users.Models;
 using SP.Utils.Jwt;
 
@@ -41,7 +41,7 @@ namespace SP.Reports.Service
             return _reports.Find(_ => true).ToEnumerable();
         }
 
-        public void UpdateRoles(string reportKey, UpdateReportRolesRequestParams r)
+        public void UpdateRoles(string reportKey, UpdateReportRolesRequestBody r)
         {
             var update = Builders<Report>.Update.Set("roles", r.Roles);
             var result = _reports.UpdateOne(report => report.Key == reportKey, update);
@@ -50,7 +50,7 @@ namespace SP.Reports.Service
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
         }
 
-        public void UpdateIsActive(string reportKey, UpdateReportIsActiveRequestParams r)
+        public void UpdateIsActive(string reportKey, UpdateReportIsActiveRequestBody r)
         {
             var update = Builders<Report>.Update.Set("isActive", r.IsActive);
             var result = _reports.UpdateOne(report => report.Key == reportKey, update);

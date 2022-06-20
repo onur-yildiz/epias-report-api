@@ -10,14 +10,13 @@ using SP.Reports.Models.DppInjectionUnitName;
 using SP.Reports.Models.IdmVolume;
 using SP.Reports.Models.IntraDayAof;
 using SP.Reports.Models.IntraDaySummary;
-using SP.Reports.Models.McpSmps;
 using SP.Reports.Models.Organizations;
 using SP.Reports.Models.RealTimeGeneration;
 using SP.Reports.Models.ReportListing;
 using SP.Reports.Models.RequestParams;
+using SP.Reports.Models.RequestBody;
 using SP.Reports.Models.Smp;
 using SP.Reports.Service;
-using System.ComponentModel.DataAnnotations;
 
 namespace SP.EpiasReport.Controllers
 {
@@ -48,7 +47,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/is-active")]
-        public ActionResult UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestParams r)
+        public ActionResult UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(reportKey, r);
             return Ok();
@@ -57,7 +56,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/roles")]
-        public ActionResult UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestParams r)
+        public ActionResult UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestBody r)
         {
             _repository.UpdateRoles(reportKey, r);
             return Ok();

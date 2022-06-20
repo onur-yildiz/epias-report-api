@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SP.Reports.Models.RequestParams
+namespace SP.Reports.Models.RequestBody
 {
-    public class UpdateReportIsActiveRequestParams
+    public class UpdateReportIsActiveRequestBody
     {
-        public UpdateReportIsActiveRequestParams(bool isActive)
+        public UpdateReportIsActiveRequestBody(bool isActive)
         {
             IsActive = isActive;
         }

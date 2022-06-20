@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SP.Reports.Models.RequestParams
+namespace SP.Reports.Models.RequestBody
 {
-    public class UpdateReportRolesRequestParams
+    public class UpdateReportRolesRequestBody
     {
-        public UpdateReportRolesRequestParams(string[] roles)
+        public UpdateReportRolesRequestBody(string[] roles)
         {
             Roles = roles;
         }
