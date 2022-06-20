@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using Serilog;
 using SP.AppConfig.Service;
+using SP.EpiasReports.Swagger;
 using SP.Exceptions;
 using SP.ExtraReports.Service;
 using SP.Middlewares;
@@ -34,7 +35,7 @@ builder.Services.AddControllers(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(o => o.OperationFilter<SwaggerHeaderFilter>());
 
 builder.Services.AddHttpClient("EpiasAPI", httpClient =>
 {

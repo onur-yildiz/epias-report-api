@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP.Authorization;
+using SP.EpiasReports.Swagger;
 using SP.Users.Models;
 using SP.Users.Models.RequestBody;
 using SP.Users.Models.RequestParams;
 using SP.Users.Service;
+using System.ComponentModel.DataAnnotations;
 
 namespace SP.EpiasReport.Controllers
 {
@@ -20,6 +22,7 @@ namespace SP.EpiasReport.Controllers
             _repository = repository;
         }
 
+        [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
         public IEnumerable<IUserBase<string>> GetUsers()
@@ -29,7 +32,7 @@ namespace SP.EpiasReport.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IAuthUser Register([FromBody] UserRegisterRequestBody r)
+        public IAuthUser Register([FromBody][Required] UserRegisterRequestBody r)
         {
             var user = _repository.Register(r);
             _logger.Information("{action}: {email}", "REGISTER", r.Email);
@@ -38,7 +41,7 @@ namespace SP.EpiasReport.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IAuthUser Login([FromBody] UserLoginRequestBody r)
+        public IAuthUser Login([FromBody][Required] UserLoginRequestBody r)
         {
             var user = _repository.Login(r);
             _logger.Information("{action}: {email}", "LOGIN", r.Email);
@@ -47,7 +50,7 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize]
         [HttpPost("refresh-token")]
-        public IAuthUser RefreshToken([FromHeader] string authorization)
+        public IAuthUser RefreshToken([FromHeader][Required] string authorization)
         {
             var userData = _repository.RefreshToken(authorization);
             _logger.Information("{action}: {email}", "REFRESH TOKEN", userData.Email);
@@ -56,30 +59,32 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize]
         [HttpPost("create-api-key")]
-        public string CreateApiKey([FromHeader] string authorization)
+        public string CreateApiKey([FromHeader][Required] string authorization)
         {
             return _repository.CreateApiKey(authorization);
         }
 
         [Authorize]
         [HttpDelete("api-keys")]
-        public ActionResult DeleteApiKey([FromHeader] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        public ActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody][Required] DeleteApiKeyRequestBody r)
         {
             _repository.DeleteApiKey(r.ApiKey, authorization);
             return Ok();
         }
 
+        [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/roles")]
-        public ActionResult UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
+        public ActionResult UpdateRoles(string userId, [FromBody][Required] UpdateAccountRolesRequestBody r)
         {
             _repository.UpdateRoles(userId, r);
             return Ok();
         }
 
+        [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/is-active")]
-        public ActionResult UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
+        public ActionResult UpdateIsActive(string userId, [FromBody][Required] UpdateAccountIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(userId, r);
             return Ok();
