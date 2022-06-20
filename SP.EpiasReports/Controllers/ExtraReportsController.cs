@@ -22,7 +22,7 @@ namespace SP.EpiasReport.Controllers
 
         [SwaggerHeader("x-api-key", description: "API key, can be acquired by a registered user", isRequired: true)]
         [HttpGet("hourly-generations")]
-        public Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations([FromQuery][Required] DateIntervalRequestParams r)
+        public Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations([FromQuery] DateIntervalRequestParams r)
         {
             return _repository.GetHourlyGenerations(r);
         }

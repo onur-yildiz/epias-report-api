@@ -32,7 +32,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPost("")]
-        public ActionResult CreateRole([FromBody][Required] Role role)
+        public ActionResult CreateRole([FromBody] Role role)
         {
             _repository.CreateRole(role);
             return Ok();

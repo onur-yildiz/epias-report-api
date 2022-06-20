@@ -32,7 +32,7 @@ namespace SP.EpiasReport.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IAuthUser Register([FromBody][Required] UserRegisterRequestBody r)
+        public IAuthUser Register([FromBody] UserRegisterRequestBody r)
         {
             var user = _repository.Register(r);
             _logger.Information("{action}: {email}", "REGISTER", r.Email);
@@ -41,7 +41,7 @@ namespace SP.EpiasReport.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IAuthUser Login([FromBody][Required] UserLoginRequestBody r)
+        public IAuthUser Login([FromBody] UserLoginRequestBody r)
         {
             var user = _repository.Login(r);
             _logger.Information("{action}: {email}", "LOGIN", r.Email);
@@ -66,7 +66,7 @@ namespace SP.EpiasReport.Controllers
 
         [Authorize]
         [HttpDelete("api-keys")]
-        public ActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody][Required] DeleteApiKeyRequestBody r)
+        public ActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
         {
             _repository.DeleteApiKey(r.ApiKey, authorization);
             return Ok();
@@ -75,7 +75,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/roles")]
-        public ActionResult UpdateRoles(string userId, [FromBody][Required] UpdateAccountRolesRequestBody r)
+        public ActionResult UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
         {
             _repository.UpdateRoles(userId, r);
             return Ok();
@@ -84,7 +84,7 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/is-active")]
-        public ActionResult UpdateIsActive(string userId, [FromBody][Required] UpdateAccountIsActiveRequestBody r)
+        public ActionResult UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(userId, r);
             return Ok();

@@ -1,10 +1,27 @@
-﻿namespace SP.Reports.Models.RequestParams
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SP.Reports.Models.RequestParams
 {
     public class DppRequestParams : IDateIntervalRequestParams
     {
-        public string EndDate { get; set; } = String.Empty;
-        public string StartDate { get; set; } = String.Empty;
-        public string OrganizationEIC { get; set; } = String.Empty;
-        public string UevcbEIC { get; set; } = String.Empty;
+        public DppRequestParams(string endDate, string startDate, string organizationEIC, string uevcbEIC)
+        {
+            EndDate = endDate;
+            StartDate = startDate;
+            OrganizationEIC = organizationEIC;
+            UevcbEIC = uevcbEIC;
+        }
+
+        [Required]
+        public string EndDate { get; set; }
+
+        [Required]
+        public string StartDate { get; set; }
+
+        [Required]
+        public string OrganizationEIC { get; set; }
+
+        [Required]
+        public string UevcbEIC { get; set; } 
     }
 }

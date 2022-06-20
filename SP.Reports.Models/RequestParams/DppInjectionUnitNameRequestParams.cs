@@ -1,7 +1,15 @@
-﻿namespace SP.Reports.Models.RequestParams
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SP.Reports.Models.RequestParams
 {
     public class DppInjectionUnitNameRequestParams
     {
-        public string OrganizationEIC { get; set; } = String.Empty;
+        public DppInjectionUnitNameRequestParams(string organizationEIC)
+        {
+            OrganizationEIC = organizationEIC;
+        }
+
+        [Required]
+        public string OrganizationEIC { get; set; };
     }
 }
