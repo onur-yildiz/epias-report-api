@@ -58,7 +58,7 @@ namespace SP.EpiasReport.Controllers
         }
 
         [Authorize]
-        [HttpPost("create-api-key")]
+        [HttpPost("api-keys/create")]
         public string CreateApiKey([FromHeader][Required] string authorization)
         {
             return _repository.CreateApiKey(authorization);
