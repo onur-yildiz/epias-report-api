@@ -68,16 +68,18 @@ namespace SP.Users.Service
                 throw new HttpResponseException(statusCode: StatusCodes.Status409Conflict, new { message = "Account already exists." });
             var (hashedPassword, salt) = _cryptUtils.Encrypt(r.Password);
             var user = new Account
-            {
-                Id = ObjectId.GenerateNewId(),
-                Email = r.Email,
-                Name = r.Name,
-                Password = hashedPassword,
-                Salt = salt,
-                LanguageCode = r.LanguageCode,
-                IsActive = true,
-                Roles = new HashSet<string>()
-            };
+            (
+                id: ObjectId.GenerateNewId(),
+                email: r.Email,
+                name: r.Name,
+                password: hashedPassword,
+                salt: salt,
+                languageCode: r.LanguageCode,
+                isActive: true,
+                isAdmin: false,
+                roles: new HashSet<string>(),
+                apiKeys: new HashSet<string>()
+            );
 
             _users.InsertOne(user);
             var token = _jwtUtils.GenerateToken(user.Id);
@@ -137,7 +139,7 @@ namespace SP.Users.Service
             _session.StartTransaction();
 
             var result = _users.UpdateOne(u => u.Id == uid, update);
-            _apiKeys.InsertOne(new ApiKey { App = "ExtraReports", Key = apiKey });
+            _apiKeys.InsertOne(new ApiKey("ExtraReports", apiKey));
 
             if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not create API key." });
@@ -158,7 +160,7 @@ namespace SP.Users.Service
                 throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
 
             _session.StartTransaction();
-            
+
             var update = Builders<Account>.Update.Pull("apiKeys", apiKey);
             var result = _users.UpdateOne(u => u.Id == uid, update);
             var deleteResult = _apiKeys.DeleteOne(a => a.Key == apiKey);

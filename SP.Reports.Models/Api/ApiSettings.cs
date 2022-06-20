@@ -2,7 +2,13 @@
 {
     public class ApiSettings
     {
-        public string BaseUrl { get; set; } = String.Empty;
+        public ApiSettings(string baseUrl, ApiPaths? paths)
+        {
+            BaseUrl = baseUrl;
+            Paths = paths;
+        }
+
+        public string BaseUrl { get; set; }
         public ApiPaths? Paths { get; set; }
     }
 }

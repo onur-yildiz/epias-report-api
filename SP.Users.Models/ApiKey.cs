@@ -10,6 +10,12 @@ namespace SP.Users.Models
     [BsonIgnoreExtraElements]
     public class ApiKey
     {
+        public ApiKey(string key, string app)
+        {
+            Key = key;
+            App = app;
+        }
+
         [BsonRequired]
         [BsonElement("key")]
         public string Key { get; set; }

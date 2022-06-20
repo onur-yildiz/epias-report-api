@@ -10,6 +10,6 @@ namespace SP.Reports.Models.RequestParams
         }
 
         [Required]
-        public string OrganizationEIC { get; set; };
+        public string OrganizationEIC { get; set; }
     }
 }

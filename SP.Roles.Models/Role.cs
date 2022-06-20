@@ -7,6 +7,11 @@ namespace SP.Roles.Models
     [BsonIgnoreExtraElements]
     public class Role
     {
+        public Role(string name)
+        {
+            Name = name;
+        }
+
         [Required]
         [BsonRequired]
         [BsonElement("name")]

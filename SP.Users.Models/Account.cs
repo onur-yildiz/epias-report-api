@@ -5,18 +5,33 @@ namespace SP.Users.Models
 {
     public class Account : IAccount
     {
+        public Account(ObjectId id, string name, string email, string password, HashSet<string> roles, HashSet<string> apiKeys, bool isActive, bool isAdmin, string languageCode, byte[] salt)
+        {
+            Id = id;
+            Name = name;
+            Email = email;
+            Password = password;
+            Roles = roles;
+            ApiKeys = apiKeys;
+            IsActive = isActive;
+            IsAdmin = isAdmin;
+            LanguageCode = languageCode;
+            Salt = salt;
+        }
+
         public static explicit operator User(Account acc)
         {
-            return new User()
-            {
-                Id = acc.Id.ToString(),
-                Name = acc.Name,
-                Roles = acc.Roles,
-                Email = acc.Email,
-                IsActive = acc.IsActive,
-                IsAdmin = acc.IsAdmin,
-                LanguageCode = acc.LanguageCode,
-            };
+            return new User
+            (
+                email: acc.Email,
+                id: acc.Id.ToString(),
+                name: acc.Name,
+                roles: acc.Roles,
+                isActive: acc.IsActive,
+                isAdmin: acc.IsAdmin,
+                languageCode: acc.LanguageCode,
+                apiKeys: new HashSet<string>()
+            );
         }
 
         [BsonId]
