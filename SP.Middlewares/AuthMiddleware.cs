@@ -32,6 +32,7 @@ namespace SP.Middlewares
                         context.Items["Roles"] = account.Roles;
                         context.Items["IsActive"] = account.IsActive;
                         context.Items["IsAdmin"] = account.IsAdmin;
+                        context.Items["ApiKeys"] = account.ApiKeys;
                     }
                 }
             }

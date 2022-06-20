@@ -88,7 +88,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseMiddleware<AuthMiddleware>();
-app.UseWhen(context => context.Request.Path.Value?.StartsWith("/reports/") == true, app => app.UseMiddleware<ReportAuthMiddleware>());
+app.UseWhen(context => context.Request.Path.Value?.ToLower().StartsWith("/extrareports") == true, app => app.UseMiddleware<ExtraReportsAuthMiddleware>());
+app.UseWhen(context => context.Request.Path.Value?.ToLower().StartsWith("/reports") == true, app => app.UseMiddleware<ReportAuthMiddleware>());
 
 app.MapControllers();
 app.Run();
