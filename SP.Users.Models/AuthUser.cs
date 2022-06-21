@@ -11,7 +11,6 @@
             IsAdmin = account.IsAdmin;
             LanguageCode = account.LanguageCode;
             Roles = account.Roles;
-            ApiKeys = account.ApiKeys;
             Token = token;
         }
 
@@ -22,7 +21,6 @@
         public bool IsAdmin { get; set; }
         public string LanguageCode { get; set; }
         public HashSet<string> Roles { get; set; }
-        public HashSet<string> ApiKeys { get; set; }
         public string Token { get; set; }
     }
 }

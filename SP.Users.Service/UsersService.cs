@@ -13,7 +13,6 @@ namespace SP.Users.Service
 {
     public class UsersService : IUsersService
     {
-        readonly IClientSessionHandle _session;
         readonly IMongoCollection<Account> _users;
         readonly IMongoCollection<ApiKey> _apiKeys;
         readonly IJwtUtils _jwtUtils;
@@ -21,7 +20,6 @@ namespace SP.Users.Service
 
         public UsersService(IMongoClient client, IJwtUtils jwtUtils, ICryptographyUtils cryptUtils)
         {
-            _session = client.StartSession();
             _users = client.GetDatabase("cluster0").GetCollection<Account>("users");
             _apiKeys = client.GetDatabase("cluster0").GetCollection<ApiKey>("api-keys");
             _jwtUtils = jwtUtils;
@@ -120,7 +118,7 @@ namespace SP.Users.Service
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
         }
 
-        public string CreateApiKey(string token)
+        public IEnumerable<IApiKey> GetApiKeys(string token, string targetUserId)
         {
             var uid = _jwtUtils.ValidateToken(token);
             if (uid == null)
@@ -130,26 +128,36 @@ namespace SP.Users.Service
             if (account == null)
                 throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
 
-            if (account.ApiKeys.Count >= 3)
+            var targetUserIdParsed = ObjectId.Parse(targetUserId);
+            if (targetUserIdParsed != account.Id && !account.IsAdmin)
+                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
+
+            return _apiKeys.Find(a => a.UserId == targetUserIdParsed).ToEnumerable();
+        }
+
+        public string CreateApiKey(string token, string targetUserId)
+        {
+            var uid = _jwtUtils.ValidateToken(token);
+            if (uid == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
+
+            var account = GetAccountById((ObjectId)uid);
+            if (account == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+
+            var targetUserIdParsed = ObjectId.Parse(targetUserId);
+            if (targetUserIdParsed != account.Id && !account.IsAdmin)
+                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
+
+            if (_apiKeys.Find(a => a.UserId == account.Id).CountDocuments() >= 3)
                 throw new HttpResponseException(statusCode: StatusCodes.Status406NotAcceptable, new { message = "Max allowed API keys reached." });
 
-            var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(32)), "[^A-Za-z0-9]", "");
-            var update = Builders<Account>.Update.AddToSet("apiKeys", apiKey);
-
-            _session.StartTransaction();
-
-            var result = _users.UpdateOne(u => u.Id == uid, update);
-            _apiKeys.InsertOne(new ApiKey("ExtraReports", apiKey));
-
-            if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not create API key." });
-
-            _session.CommitTransaction();
-
+            var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(128)), "[^A-Za-z0-9]", "");
+            _apiKeys.InsertOne(new ApiKey(targetUserIdParsed, "ExtraReports", apiKey));
             return apiKey;
         }
 
-        public void DeleteApiKey(string apiKey, string token)
+        public void DeleteApiKey(string apiKey, string token, string targetUserId)
         {
             var uid = _jwtUtils.ValidateToken(token);
             if (uid == null)
@@ -159,16 +167,13 @@ namespace SP.Users.Service
             if (account == null)
                 throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
 
-            _session.StartTransaction();
+            var targetUserIdParsed = ObjectId.Parse(targetUserId);
+            if (targetUserIdParsed != account.Id && !account.IsAdmin)
+                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
 
-            var update = Builders<Account>.Update.Pull("apiKeys", apiKey);
-            var result = _users.UpdateOne(u => u.Id == uid, update);
-            var deleteResult = _apiKeys.DeleteOne(a => a.Key == apiKey);
-
-            if (!result.IsAcknowledged || !deleteResult.IsAcknowledged)
+            var result = _apiKeys.DeleteOne(a => a.Key == apiKey && a.UserId == targetUserIdParsed);
+            if (!result.IsAcknowledged)
                 throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete API key." });
-
-            _session.CommitTransaction();
         }
 
         public IEnumerable<IUserBase<string>> GetAllUsers()

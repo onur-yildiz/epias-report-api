@@ -13,8 +13,9 @@ namespace SP.Users.Service
         IAuthUser Register(IUserRegisterRequestBody r);
         void UpdateRoles(string userId, IUpdateAccountRolesRequestBody r);
         void UpdateIsActive(string userId, IUpdateAccountIsActiveRequestBody r);
-        string CreateApiKey(string token);
-        void DeleteApiKey(string apiKey, string token);
+        IEnumerable<IApiKey> GetApiKeys(string token, string targetUserId);
+        string CreateApiKey(string token, string targetUserId);
+        void DeleteApiKey(string apiKey, string token, string targetUserId);
         public IEnumerable<IUserBase<string>> GetAllUsers();
     }
 }

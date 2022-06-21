@@ -12,7 +12,6 @@ namespace SP.Users.Models
             Email = email;
             Password = password;
             Roles = roles;
-            ApiKeys = apiKeys;
             IsActive = isActive;
             IsAdmin = isAdmin;
             LanguageCode = languageCode;
@@ -52,10 +51,6 @@ namespace SP.Users.Models
         [BsonRequired]
         [BsonElement("roles")]
         public HashSet<string> Roles { get; set; }
-
-        [BsonRequired]
-        [BsonElement("apiKeys")]
-        public HashSet<string> ApiKeys { get; set; }
 
         [BsonRequired]
         [BsonElement("isActive")]

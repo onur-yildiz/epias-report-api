@@ -80,25 +80,42 @@ namespace SP.EpiasReport.Controllers
         /// Create a new API key for the account.
         /// </summary>
         /// <param name="authorization">Auth token</param>
+        /// <param name="userId">User ID</param>
         /// <returns></returns>
         [Authorize]
-        [HttpPost("api-keys/create")]
-        public string CreateApiKey([FromHeader][Required] string authorization)
+        [HttpPost("{userId}/api-keys/create")]
+        public string CreateApiKey(string userId, [FromHeader][Required] string authorization)
         {
-            return _repository.CreateApiKey(authorization);
+            return _repository.CreateApiKey(authorization, userId);
+        }
+
+        /// <summary>
+        /// Get account's API keys. Admins can get any account's keys.
+        /// </summary>
+        /// <param name="authorization">Auth token</param>
+        /// <param name="userId">User ID</param>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("{userId}/api-keys")]
+        public IActionResult GetApiKeys(string userId, [FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        {
+            _repository.GetApiKeys(authorization, userId);
+            return Ok();
         }
 
         /// <summary>
         /// Delete an API key. Non-Admin accounts can only delete their own API keys.
         /// </summary>
         /// <param name="authorization">Auth token</param>
+        /// <param name="userId">User ID</param>
         /// <param name="r"></param>
         /// <returns></returns>
         [Authorize]
-        [HttpDelete("api-keys")]
-        public IActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        [HttpDelete("{userId}/api-keys")]
+        public IActionResult DeleteApiKey(string userId, [FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
         {
-            _repository.DeleteApiKey(r.ApiKey, authorization);
+            _repository.DeleteApiKey(r.ApiKey, authorization, userId);
             return Ok();
         }
 

@@ -36,10 +36,5 @@
         /// Account roles
         /// </summary>
         HashSet<string> Roles { get; set; }
-
-        /// <summary>
-        /// API keys bound to account
-        /// </summary>
-        HashSet<string> ApiKeys { get; set; }
     }
 }
