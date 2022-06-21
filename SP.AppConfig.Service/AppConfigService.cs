@@ -7,7 +7,6 @@ namespace SP.AppConfig.Service
 {
     public class AppConfigService : IAppConfigService
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         readonly IJwtUtils _jwtUtils;
         readonly IMongoCollection<Account> _users;
         readonly IMongoCollection<Report> _reports;
@@ -19,7 +18,6 @@ namespace SP.AppConfig.Service
             this._users = db.GetCollection<Account>("users");
             this._reports = db.GetCollection<Report>("reports");
             this._reportFolders = db.GetCollection<ReportFolder>("report-folders");
-            _httpClientFactory = httpClientFactory;
             _jwtUtils = jwtUtils;
         }
 
