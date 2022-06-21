@@ -1,4 +1,3 @@
-using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Serilog;
 using SP.AppConfig.Service;

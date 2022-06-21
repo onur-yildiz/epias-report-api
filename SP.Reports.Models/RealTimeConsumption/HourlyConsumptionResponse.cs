@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace SP.Reports.Models.RealTimeConsumption
 {
-    public class HourlyConsumptionResponse: IResponseBase<HourlyConsumptionContainer>
+    public class HourlyConsumptionResponse : IResponseBase<HourlyConsumptionContainer>
     {
         [JsonPropertyName("body")]
         public HourlyConsumptionContainer? Body { get; set; }

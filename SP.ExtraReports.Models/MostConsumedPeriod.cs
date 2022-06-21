@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace SP.ExtraReports.Models
-{    
+{
     /// <summary>
     /// Period which has consumed the most electricity
     /// </summary>

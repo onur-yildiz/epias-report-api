@@ -3,7 +3,6 @@ using SP.Authorization;
 using SP.EpiasReports.Swagger;
 using SP.Roles.Models;
 using SP.Roles.Service;
-using System.ComponentModel.DataAnnotations;
 
 namespace SP.EpiasReport.Controllers
 {

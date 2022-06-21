@@ -2,8 +2,6 @@
 
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
-using SP.Reports.Models.ReportListing;
-using SP.Roles.Service;
 using SP.Users.Models;
 
 namespace SP.Middlewares

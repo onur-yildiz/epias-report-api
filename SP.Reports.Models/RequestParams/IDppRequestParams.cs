@@ -1,6 +1,6 @@
 ﻿namespace SP.Reports.Models.RequestParams
 {
-    public interface IDppRequestParams: IDateIntervalRequestParams
+    public interface IDppRequestParams : IDateIntervalRequestParams
     {
         string? OrganizationEIC { get; set; }
 

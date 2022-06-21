@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using SP.Reports.Models.ReportListing;
-using SP.Roles.Service;
 
 namespace SP.Middlewares
 {

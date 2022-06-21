@@ -48,6 +48,7 @@ namespace SP.Roles.Service
             if (existingRole != null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new { message = "Role already exists." });
             _roles.InsertOne((Role)role);
         }
+
         public void DeleteRole(string roleName)
         {
             var builder = Builders<Role>.Filter;

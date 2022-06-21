@@ -1,15 +1,15 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using SP.Exceptions;
 using SP.ExtraReports.Models;
+using SP.Reports.Models.Api;
+using SP.Reports.Models.RealTimeConsumption;
+using SP.Reports.Models.RealTimeGeneration;
 using SP.Reports.Models.RequestParams;
 using SP.Reports.Service;
-using SP.Reports.Models.RealTimeGeneration;
-using SP.Reports.Models.Api;
-using Microsoft.Extensions.Options;
 using System.Globalization;
 using System.Text.Json;
-using SP.Reports.Models.RealTimeConsumption;
-using Microsoft.AspNetCore.Http;
-using SP.Exceptions;
 
 namespace SP.ExtraReports.Service
 {

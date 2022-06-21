@@ -3,7 +3,6 @@ using SP.EpiasReports.Swagger;
 using SP.ExtraReports.Models;
 using SP.ExtraReports.Service;
 using SP.Reports.Models.RequestParams;
-using System.ComponentModel.DataAnnotations;
 
 namespace SP.EpiasReport.Controllers
 {
