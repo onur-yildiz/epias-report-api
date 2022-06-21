@@ -98,10 +98,9 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpGet("{userId}/api-keys")]
-        public IActionResult GetApiKeys(string userId, [FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        public IEnumerable<IApiKey> GetApiKeys(string userId, [FromHeader][Required] string authorization)
         {
-            _repository.GetApiKeys(authorization, userId);
-            return Ok();
+            return _repository.GetApiKeys(authorization, userId);
         }
 
         /// <summary>
