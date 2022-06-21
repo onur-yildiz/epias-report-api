@@ -21,6 +21,10 @@ namespace SP.EpiasReport.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Serves all roles.
+        /// </summary>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
@@ -29,6 +33,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetRoles();
         }
 
+        /// <summary>
+        /// Create a new role.
+        /// </summary>
+        /// <param name="role">New role</param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPost("")]
@@ -38,6 +47,11 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Get a specific role.
+        /// </summary>
+        /// <param name="name">Role name</param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("{name}")]
@@ -46,6 +60,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetRole(name);
         }
 
+        /// <summary>
+        /// Delete a role.
+        /// </summary>
+        /// <param name="name">Role name</param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpDelete("{name}")]

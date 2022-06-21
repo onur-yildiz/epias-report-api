@@ -16,6 +16,11 @@ namespace SP.EpiasReport.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Serves the menu hierarchy for EpiasReports App
+        /// </summary>
+        /// <param name="authorization">Auth token. Menu items get filtered by user's auth level</param>
+        /// <returns></returns>
         [HttpGet("report-listing-info")]
         public IEnumerable<dynamic>? GetReportListingInfo([FromHeader] string? authorization)
         {

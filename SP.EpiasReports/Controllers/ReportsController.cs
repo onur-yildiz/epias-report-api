@@ -36,6 +36,10 @@ namespace SP.EpiasReport.Controllers
             _paths = option.Value;
         }
 
+        /// <summary>
+        /// Serves all reports' info.
+        /// </summary>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
@@ -44,6 +48,12 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetReports();
         }
 
+        /// <summary>
+        /// Update a report's active state.
+        /// </summary>
+        /// <param name="reportKey">Key assigned for the report (ex: dam-mcp, bpm-smp, idm-wap)</param>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/is-active")]
@@ -53,6 +63,12 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Update authorized roles for the report.
+        /// </summary>
+        /// <param name="reportKey">Key assigned for the report (ex: dam-mcp, bpm-smp, idm-wap)</param>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/roles")]
@@ -68,6 +84,11 @@ namespace SP.EpiasReport.Controllers
         //    return _repository.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp);
         //}
 
+        /// <summary>
+        /// Day Ahead Markets - Market Clearing Price Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dam-mcp")]
         public Task<DayAheadMcpContainer?> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
@@ -75,6 +96,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp);
         }
 
+        /// <summary>
+        /// Real-time Generation Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("rtg")]
         public Task<HourlyGenerationContainer?> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
@@ -82,6 +108,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration);
         }
 
+        /// <summary>
+        /// Final Daily Production Program Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("fdpp")]
         public async Task<DppContainer?> GetFdpp([FromQuery] DppRequestParams r)
@@ -89,6 +120,11 @@ namespace SP.EpiasReport.Controllers
             return await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp);
         }
 
+        /// <summary>
+        /// Intra-day Markets - Weighted Average Price Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-wap")]
         public Task<IdmAofContainer?> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
@@ -96,6 +132,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof);
         }
 
+        /// <summary>
+        /// Intra-day Markets - Summary Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-sum")]
         public Task<IntraDaySummaryContainer?> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
@@ -103,6 +144,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary);
         }
 
+        /// <summary>
+        /// Intra-day Markets - Matching Quantity Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-mq")]
         public Task<IntraDaySummaryContainer?> GetIntraDayMatchingQuantity([FromQuery] DateIntervalRequestParams r)
@@ -110,6 +156,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary);
         }
 
+        /// <summary>
+        /// Intra-day Markets - Volume Summary Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-vs")]
         public Task<IdmVolumeContainer?> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
@@ -117,6 +168,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary);
         }
 
+        /// <summary>
+        /// Balancing Power Market - System Marginal Price Report
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("bpm-smp")]
         public Task<SmpContainer?> GetSmp([FromQuery] DateIntervalRequestParams r)
@@ -124,6 +180,10 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp);
         }
 
+        /// <summary>
+        /// Serves FDPP Organizations.
+        /// </summary>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dpporg")]
         public Task<OrganizationContainer?> GetDppOrganization()
@@ -131,6 +191,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization);
         }
 
+        /// <summary>
+        /// Serves FDPP Injection Unit Names.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dppiun")]
         public Task<DppInjectionUnitNameContainer?> GetDppInjectionUnitName([FromQuery] DppInjectionUnitNameRequestParams r)

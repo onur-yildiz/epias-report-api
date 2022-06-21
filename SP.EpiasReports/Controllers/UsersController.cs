@@ -22,6 +22,10 @@ namespace SP.EpiasReport.Controllers
             _repository = repository;
         }
 
+        /// <summary>
+        /// Serves all users' info.
+        /// </summary>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
@@ -30,6 +34,11 @@ namespace SP.EpiasReport.Controllers
             return _repository.GetAllUsers();
         }
 
+        /// <summary>
+        /// Register a new account.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("register")]
         public IAuthUser Register([FromBody] UserRegisterRequestBody r)
@@ -39,6 +48,11 @@ namespace SP.EpiasReport.Controllers
             return user;
         }
 
+        /// <summary>
+        /// Log into an account.
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("login")]
         public IAuthUser Login([FromBody] UserLoginRequestBody r)
@@ -48,6 +62,11 @@ namespace SP.EpiasReport.Controllers
             return user;
         }
 
+        /// <summary>
+        /// Refresh auth token with a new one.
+        /// </summary>
+        /// <param name="authorization">Auth token</param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost("refresh-token")]
         public IAuthUser RefreshToken([FromHeader][Required] string authorization)
@@ -57,6 +76,11 @@ namespace SP.EpiasReport.Controllers
             return userData;
         }
 
+        /// <summary>
+        /// Create a new API key for the account.
+        /// </summary>
+        /// <param name="authorization">Auth token</param>
+        /// <returns></returns>
         [Authorize]
         [HttpPost("api-keys/create")]
         public string CreateApiKey([FromHeader][Required] string authorization)
@@ -64,6 +88,12 @@ namespace SP.EpiasReport.Controllers
             return _repository.CreateApiKey(authorization);
         }
 
+        /// <summary>
+        /// Delete an API key. Non-Admin accounts can only delete their own API keys.
+        /// </summary>
+        /// <param name="authorization">Auth token</param>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpDelete("api-keys")]
         public IActionResult DeleteApiKey([FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
@@ -72,6 +102,12 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Update account's roles.
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/roles")]
@@ -81,6 +117,12 @@ namespace SP.EpiasReport.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Update account's active state
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <param name="r"></param>
+        /// <returns></returns>
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/is-active")]
