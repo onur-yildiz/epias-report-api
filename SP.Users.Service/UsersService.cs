@@ -26,6 +26,22 @@ namespace SP.Users.Service
             _cryptUtils = cryptUtils;
         }
 
+        IAccount ValidateAccount(string token, ObjectId? targetUserId = null)
+        {
+            var uid = _jwtUtils.ValidateToken(token);
+            if (uid == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
+
+            var account = GetAccountById((ObjectId)uid);
+            if (account == null)
+                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+
+            if (targetUserId != null && targetUserId != account.Id && !account.IsAdmin)
+                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
+
+            return account;
+        }
+
         public IAccount? GetAccountById(ObjectId id)
         {
             var user = _users.Find(u => u.Id == id).FirstOrDefault();
@@ -35,14 +51,7 @@ namespace SP.Users.Service
 
         public IAuthUser RefreshToken(string token)
         {
-            var userId = _jwtUtils.ValidateToken(token);
-            if (userId == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
-
-            var account = GetAccountById((ObjectId)userId);
-            if (account == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
-
+            var account = ValidateAccount(token);
             var refreshedToken = _jwtUtils.GenerateToken(account.Id);
             return new AuthUser(account, refreshedToken);
         }
@@ -120,34 +129,15 @@ namespace SP.Users.Service
 
         public IEnumerable<IApiKey> GetApiKeys(string token, string targetUserId)
         {
-            var uid = _jwtUtils.ValidateToken(token);
-            if (uid == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
-
-            var account = GetAccountById((ObjectId)uid);
-            if (account == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
-
             var targetUserIdParsed = ObjectId.Parse(targetUserId);
-            if (targetUserIdParsed != account.Id && !account.IsAdmin)
-                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
-
+            ValidateAccount(token, targetUserIdParsed);
             return _apiKeys.Find(a => a.UserId == targetUserIdParsed).ToEnumerable();
         }
 
         public string CreateApiKey(string token, string targetUserId)
         {
-            var uid = _jwtUtils.ValidateToken(token);
-            if (uid == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
-
-            var account = GetAccountById((ObjectId)uid);
-            if (account == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
-
             var targetUserIdParsed = ObjectId.Parse(targetUserId);
-            if (targetUserIdParsed != account.Id && !account.IsAdmin)
-                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
+            var account = ValidateAccount(token, targetUserIdParsed);
 
             if (_apiKeys.Find(a => a.UserId == account.Id).CountDocuments() >= 3)
                 throw new HttpResponseException(statusCode: StatusCodes.Status406NotAcceptable, new { message = "Max allowed API keys reached." });
@@ -159,17 +149,8 @@ namespace SP.Users.Service
 
         public void DeleteApiKey(string apiKey, string token, string targetUserId)
         {
-            var uid = _jwtUtils.ValidateToken(token);
-            if (uid == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
-
-            var account = GetAccountById((ObjectId)uid);
-            if (account == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
-
             var targetUserIdParsed = ObjectId.Parse(targetUserId);
-            if (targetUserIdParsed != account.Id && !account.IsAdmin)
-                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
+            ValidateAccount(token, targetUserIdParsed);
 
             var result = _apiKeys.DeleteOne(a => a.Key == apiKey && a.UserId == targetUserIdParsed);
             if (!result.IsAcknowledged)
