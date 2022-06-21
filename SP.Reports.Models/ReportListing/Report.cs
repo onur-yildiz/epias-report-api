@@ -5,12 +5,11 @@ namespace SP.Reports.Models.ReportListing
     [BsonIgnoreExtraElements]
     public class Report : IReport
     {
-        public Report(string order, string key, string endpoint, bool ısActive, HashSet<string> roles, HashSet<ReportName> name)
+        public Report(string order, string key, bool isActive, HashSet<string> roles, HashSet<ReportName> name)
         {
             Order = order;
             Key = key;
-            Endpoint = endpoint;
-            IsActive = ısActive;
+            IsActive = isActive;
             Roles = roles;
             Name = name;
         }
@@ -22,10 +21,6 @@ namespace SP.Reports.Models.ReportListing
         [BsonRequired]
         [BsonElement("key")]
         public string Key { get; set; }
-
-        [BsonRequired]
-        [BsonElement("endpoint")]
-        public string Endpoint { get; set; }
 
         [BsonRequired]
         [BsonElement("isActive")]

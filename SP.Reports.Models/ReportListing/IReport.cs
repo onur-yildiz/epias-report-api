@@ -2,8 +2,6 @@
 {
     public interface IReport
     {
-        string Endpoint { get; set; }
-
         /// <summary>
         /// Report's active state
         /// </summary>
