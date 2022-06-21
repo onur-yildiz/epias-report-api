@@ -142,7 +142,7 @@ namespace SP.Users.Service
             if (_apiKeys.Find(a => a.UserId == account.Id).CountDocuments() >= 3)
                 throw new HttpResponseException(statusCode: StatusCodes.Status406NotAcceptable, new { message = "Max allowed API keys reached." });
 
-            var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(128)), "[^A-Za-z0-9]", "");
+            var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), "[^A-Za-z0-9]", "");
             _apiKeys.InsertOne(new ApiKey(userId: targetUserIdParsed, key: apiKey, app: "ExtraReports"));
             return apiKey;
         }
