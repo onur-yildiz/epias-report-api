@@ -1,8 +1,5 @@
 ﻿namespace SP.ExtraReports.Models
 {
-    /// <summary>
-    /// Generated electricity by renewable sources
-    /// </summary>
     public interface IRenewable
     {
         double Biomass { get; set; }

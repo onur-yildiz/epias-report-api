@@ -1,8 +1,5 @@
 ﻿namespace SP.ExtraReports.Models
 {
-    /// <summary>
-    /// Generated electricity by non-renewable sources
-    /// </summary>
     public interface INonRenewable
     {
         double AsphaltiteCoal { get; set; }

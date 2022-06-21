@@ -2,6 +2,9 @@
 
 namespace SP.ExtraReports.Models
 {
+    /// <summary>
+    /// Generated electricity by renewable sources
+    /// </summary>
     public class Renewable : IRenewable
     {
         [BsonRequired]
