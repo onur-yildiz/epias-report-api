@@ -12,7 +12,7 @@ namespace SP.AppConfig.Service
         readonly IMongoCollection<Report> _reports;
         readonly IMongoCollection<ReportFolder> _reportFolders;
 
-        public AppConfigService(IHttpClientFactory httpClientFactory, IMongoClient client, IJwtUtils jwtUtils)
+        public AppConfigService(IMongoClient client, IJwtUtils jwtUtils)
         {
             var db = client.GetDatabase("cluster0");
             this._users = db.GetCollection<Account>("users");
