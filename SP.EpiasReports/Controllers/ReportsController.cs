@@ -114,8 +114,8 @@ namespace SP.EpiasReport.Controllers
         /// <param name="r"></param>
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
-        [HttpGet("fdpp")]
-        public async Task<DppContainer?> GetFdpp([FromQuery] DppRequestParams r)
+        [HttpGet("dpp")]
+        public async Task<DppContainer?> GetDpp([FromQuery] DppRequestParams r)
         {
             return await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp);
         }
@@ -182,7 +182,7 @@ namespace SP.EpiasReport.Controllers
         }
 
         /// <summary>
-        /// Serves FDPP Organizations.
+        /// Serves DPP Organizations.
         /// </summary>
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
@@ -193,7 +193,7 @@ namespace SP.EpiasReport.Controllers
         }
 
         /// <summary>
-        /// Serves FDPP Injection Unit Names.
+        /// Serves DPP Injection Unit Names.
         /// </summary>
         /// <param name="r"></param>
         /// <returns></returns>
