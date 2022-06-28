@@ -30,7 +30,7 @@ namespace SP.ExtraReports.Service
             _apiPaths = options.Value;
         }
 
-        public async Task<IEnumerable<IHourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r)
+        public async Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r)
         {
             var startDate = DateTime.Parse(r.StartDate, CultureInfo.GetCultureInfo("tr-TR"));
             var endDate = DateTime.Parse(r.EndDate, CultureInfo.GetCultureInfo("tr-TR"));
@@ -64,7 +64,7 @@ namespace SP.ExtraReports.Service
             return hourlyGenerationsByType;
         }
 
-        public async Task<IConsumptionStatistics> GetConsumptionStatistics(string dateString)
+        public async Task<ConsumptionStatistics> GetConsumptionStatistics(string dateString)
         {
             var date = DateTime.Parse(dateString, CultureInfo.GetCultureInfo("tr-TR"));
             var period = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59));

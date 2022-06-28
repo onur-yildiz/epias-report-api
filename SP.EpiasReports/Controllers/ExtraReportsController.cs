@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SP.EpiasReports.Models;
 using SP.EpiasReports.Swagger;
 using SP.ExtraReports.Models;
 using SP.ExtraReports.Service;
@@ -26,9 +27,9 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("x-api-key", description: "API key, can be acquired by a registered user", isRequired: true)]
         [HttpGet("hourly-generations")]
-        public Task<IEnumerable<IHourlyGenerationsByType>> GetHourlyGenerations([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<IEnumerable<HourlyGenerationsByType>>> GetHourlyGenerations([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetHourlyGenerations(r);
+            return ApiResponse<IEnumerable<HourlyGenerationsByType>>.Success(await _repository.GetHourlyGenerations(r));
         }
 
         /// <summary>
@@ -38,9 +39,9 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("x-api-key", description: "API key, can be acquired by a registered user", isRequired: true)]
         [HttpGet("consumption-statistics")]
-        public Task<IConsumptionStatistics> GetConsumptionStatistics([FromQuery] string period)
+        public async Task<ApiResponse<ConsumptionStatistics>> GetConsumptionStatistics([FromQuery] string period)
         {
-            return _repository.GetConsumptionStatistics(period);
+            return ApiResponse<ConsumptionStatistics>.Success(await _repository.GetConsumptionStatistics(period));
         }
     }
 }

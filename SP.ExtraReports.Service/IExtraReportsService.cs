@@ -5,7 +5,7 @@ namespace SP.ExtraReports.Service
 {
     public interface IExtraReportsService
     {
-        Task<IConsumptionStatistics> GetConsumptionStatistics(string dateString);
-        Task<IEnumerable<IHourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r);
+        Task<ConsumptionStatistics> GetConsumptionStatistics(string dateString);
+        Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r);
     }
 }
