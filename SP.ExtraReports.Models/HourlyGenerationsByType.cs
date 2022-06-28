@@ -3,6 +3,9 @@ using SP.Reports.Models.RealTimeGeneration;
 
 namespace SP.ExtraReports.Models
 {
+    /// <summary>
+    /// Hourly electric generation values categorized by renewable and non-renewable energy types.
+    /// </summary>
     [BsonIgnoreExtraElements]
     public class HourlyGenerationsByType : IHourlyGenerationsByType
     {
@@ -39,30 +42,51 @@ namespace SP.ExtraReports.Models
             Date = DateTime.Parse(h.Date!);
         }
 
+        /// <summary>
+        /// Renewable energy sources
+        /// </summary>
         [BsonRequired]
         [BsonElement("renewable")]
         public Renewable Renewable { get; set; }
 
+        /// <summary>
+        /// Non-renewable energy sources
+        /// </summary>
         [BsonRequired]
         [BsonElement("nonRenewable")]
         public NonRenewable NonRenewable { get; set; }
 
+        /// <summary>
+        /// Import/export values from unknown sources
+        /// </summary>
         [BsonRequired]
         [BsonElement("importExport")]
         public double ImportExport { get; set; }
 
+        /// <summary>
+        /// Total generated renewable electricity
+        /// </summary>
         [BsonRequired]
         [BsonElement("renewableTotal")]
         public double RenewableTotal { get; set; }
 
+        /// <summary>
+        /// Total generated non-renewable electricity
+        /// </summary>
         [BsonRequired]
         [BsonElement("nonRenewableTotal")]
         public double NonRenewableTotal { get; set; }
 
+        /// <summary>
+        /// Total generated electricity
+        /// </summary>
         [BsonRequired]
         [BsonElement("total")]
         public double Total { get; set; }
 
+        /// <summary>
+        /// Date
+        /// </summary>
         [BsonRequired]
         [BsonDateTimeOptions(Kind = DateTimeKind.Utc, Representation = MongoDB.Bson.BsonType.DateTime)]
         [BsonElement("date")]

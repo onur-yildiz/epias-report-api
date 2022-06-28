@@ -16,6 +16,10 @@
         /// Report name
         /// </summary>
         HashSet<ReportName> Name { get; set; }
+
+        /// <summary>
+        /// Report's location in menu hierarchy
+        /// </summary>
         string Order { get; set; }
 
         /// <summary>
