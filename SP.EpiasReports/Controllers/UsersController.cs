@@ -58,7 +58,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("login")]
         public ApiResponse<AuthUser> Login([FromBody] UserLoginRequestBody r)
         {
-            var user = (AuthUser)_repository.Login(r);
+            var user = _repository.Login(r);
             _logger.Information("{action}: {email}", "LOGIN", r.Email);
             return ApiResponse<AuthUser>.Success(user);
         }
@@ -72,7 +72,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("refresh-token")]
         public ApiResponse<AuthUser> RefreshToken([FromHeader][Required] string authorization)
         {
-            var user = (AuthUser)_repository.RefreshToken(authorization);
+            var user = _repository.RefreshToken(authorization);
             _logger.Information("{action}: {email}", "REFRESH TOKEN", user.Email);
             return ApiResponse<AuthUser>.Success(user);
         }
@@ -98,9 +98,9 @@ namespace SP.EpiasReport.Controllers
         [Authorize]
         [MatchAccount(AdminAllowed = true)]
         [HttpGet("{userId}/api-keys")]
-        public ApiResponse<IEnumerable<IApiKey>> GetApiKeys(string userId)
+        public ApiResponse<IEnumerable<ApiKey>> GetApiKeys(string userId)
         {
-            return ApiResponse<IEnumerable<IApiKey>>.Success(_repository.GetApiKeys(userId));
+            return ApiResponse<IEnumerable<ApiKey>>.Success(_repository.GetApiKeys(userId));
         }
 
         /// <summary>
