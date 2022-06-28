@@ -28,8 +28,7 @@ namespace SP.Users.Models
                 roles: acc.Roles,
                 isActive: acc.IsActive,
                 isAdmin: acc.IsAdmin,
-                languageCode: acc.LanguageCode,
-                apiKeys: new HashSet<string>()
+                languageCode: acc.LanguageCode
             );
         }
 

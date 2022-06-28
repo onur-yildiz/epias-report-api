@@ -7,7 +7,7 @@ namespace SP.Users.Models
     public class User : IUserBase<string>
     {
 
-        public User(string email, string id, string name, bool isActive, bool isAdmin, string languageCode, HashSet<string> roles, HashSet<string> apiKeys)
+        public User(string email, string id, string name, bool isActive, bool isAdmin, string languageCode, HashSet<string> roles)
         {
             Email = email;
             Id = id;
@@ -16,7 +16,6 @@ namespace SP.Users.Models
             IsAdmin = isAdmin;
             LanguageCode = languageCode;
             Roles = roles;
-            ApiKeys = apiKeys;
         }
 
         [JsonPropertyName("email")]
@@ -33,7 +32,5 @@ namespace SP.Users.Models
         public string LanguageCode { get; set; }
         [JsonPropertyName("roles")]
         public HashSet<string> Roles { get; set; }
-        [JsonPropertyName("apiKeys")]
-        public HashSet<string> ApiKeys { get; set; }
     }
 }
