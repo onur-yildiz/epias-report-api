@@ -35,13 +35,18 @@ namespace SP.ExtraReports.Service
             var startDate = DateTime.Parse(r.StartDate, CultureInfo.GetCultureInfo("tr-TR"));
             var endDate = DateTime.Parse(r.EndDate, CultureInfo.GetCultureInfo("tr-TR"));
 
+            if (startDate > endDate)
+                throw new HttpResponseException(StatusCodes.Status400BadRequest, "Start date cannot be after the end date");
+            if (endDate > DateTime.Today)
+                throw new HttpResponseException(StatusCodes.Status400BadRequest, "End date cannot be in the future");
+
             var hourlyGenerationsByType = _hourlyGenerations.Find(h => h.Date >= startDate && h.Date < endDate.AddDays(1)).ToList();
             if (hourlyGenerationsByType.Count != ((endDate - startDate).Days + 1) * 24)
             {
                 var res = await _reportsServiceRepository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _apiPaths.RealTimeGeneration);
 
                 if (res?.HourlyGenerations == null)
-                   throw HttpResponseException.DatabaseError();
+                    throw HttpResponseException.DatabaseError();
 
                 hourlyGenerationsByType = new List<HourlyGenerationsByType>();
                 foreach (var h in res.HourlyGenerations)
