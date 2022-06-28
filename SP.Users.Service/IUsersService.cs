@@ -6,16 +6,16 @@ namespace SP.Users.Service
 {
     public interface IUsersService
     {
-        IAccount? GetAccountById(ObjectId id);
-        IAuthUser RefreshToken(string token);
+        Account GetAccountById(ObjectId id);
+        AuthUser RefreshToken(string token);
         bool IsAccountExisting(string email);
-        IAuthUser Login(IUserLoginRequestBody r);
-        IAuthUser Register(IUserRegisterRequestBody r);
+        AuthUser Login(IUserLoginRequestBody r);
+        AuthUser Register(IUserRegisterRequestBody r);
         void UpdateRoles(string userId, IUpdateAccountRolesRequestBody r);
         void UpdateIsActive(string userId, IUpdateAccountIsActiveRequestBody r);
-        IEnumerable<IApiKey> GetApiKeys(string token, string targetUserId);
-        string CreateApiKey(string token, string targetUserId);
-        void DeleteApiKey(string apiKey, string token, string targetUserId);
-        public IEnumerable<IUserBase<string>> GetAllUsers();
+        IEnumerable<ApiKey> GetApiKeys( string targetUserId);
+        string CreateApiKey( string targetUserId);
+        void DeleteApiKey(string apiKey,  string targetUserId);
+        public IEnumerable<User> GetAllUsers();
     }
 }

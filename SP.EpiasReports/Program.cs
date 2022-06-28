@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Diagnostics;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Serilog;
 using SP.AppConfig.Service;
+using SP.EpiasReports.Models;
 using SP.EpiasReports.Swagger;
 using SP.Exceptions;
 using SP.ExtraReports.Service;
@@ -8,6 +11,7 @@ using SP.Middlewares;
 using SP.Reports.Models.Api;
 using SP.Reports.Service;
 using SP.Roles.Service;
+using SP.Users.Models;
 using SP.Users.Service;
 using SP.Utils.Cryptography;
 using SP.Utils.Jwt;
@@ -30,10 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddCors();
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<HttpResponseExceptionFilter>();
-});
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -92,8 +93,45 @@ app.UseCors(builder =>
 );
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) app.UseExceptionHandler("/error-development");
-else app.UseExceptionHandler("/error");
+if (app.Environment.IsDevelopment()) app.UseExceptionHandler(builder =>
+{
+    builder.Run(async context =>
+    {
+        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+        var logger = (Serilog.ILogger)context.RequestServices.GetService(typeof(Serilog.ILogger))!;
+
+        logger.Error("{@error}", exceptionHandlerFeature?.Error);
+
+        var statusCode = exceptionHandlerFeature?.Error is HttpResponseException error ? error.ResponseCode : 500;
+        context.Response.StatusCode = statusCode;
+        await context.Response.WriteAsJsonAsync(
+            new ApiResponse<string>(
+                statusCode,
+                exceptionHandlerFeature?.Error.Message ?? "",
+                exceptionHandlerFeature?.Error.ToString()
+            )
+        );
+    });
+});
+else app.UseExceptionHandler(builder =>
+{
+    builder.Run(async context =>
+    {
+        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+        var logger = (Serilog.ILogger)context.RequestServices.GetService(typeof(Serilog.ILogger))!;
+
+        logger.Error("{@error}", exceptionHandlerFeature?.Error);
+
+        var statusCode = exceptionHandlerFeature?.Error is HttpResponseException error ? error.ResponseCode : 500;
+        context.Response.StatusCode = statusCode;
+        await context.Response.WriteAsJsonAsync(
+            new ApiResponse<object?>(
+                statusCode,
+                exceptionHandlerFeature?.Error.Message ?? ""
+            )
+        );
+    });
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();

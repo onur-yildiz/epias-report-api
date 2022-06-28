@@ -26,30 +26,27 @@ namespace SP.Users.Service
             _cryptUtils = cryptUtils;
         }
 
-        IAccount ValidateAccount(string token, ObjectId? targetUserId = null)
+        Account ValidateAccount(string token)
         {
             var uid = _jwtUtils.ValidateToken(token);
+
             if (uid == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status400BadRequest, new { message = "Be sure to provide an elligible token." });
+                throw HttpResponseException.InvalidToken();
 
-            var account = GetAccountById((ObjectId)uid);
+            return GetAccountById((ObjectId)uid);
+        }
+
+        public Account GetAccountById(ObjectId id)
+        {
+            var account = _users.Find(u => u.Id == id).FirstOrDefault();
+
             if (account == null)
-                throw new HttpResponseException(statusCode: StatusCodes.Status404NotFound, new { message = "Account does not exist." });
-
-            if (targetUserId != null && targetUserId != account.Id && !account.IsAdmin)
-                throw new HttpResponseException(statusCode: StatusCodes.Status403Forbidden, new { message = "Account mismatch." });
+                throw HttpResponseException.NotExists("Account");
 
             return account;
         }
 
-        public IAccount? GetAccountById(ObjectId id)
-        {
-            var user = _users.Find(u => u.Id == id).FirstOrDefault();
-            if (user == null) return null;
-            return user;
-        }
-
-        public IAuthUser RefreshToken(string token)
+        public AuthUser RefreshToken(string token)
         {
             var account = ValidateAccount(token);
             var refreshedToken = _jwtUtils.GenerateToken(account.Id);
@@ -69,10 +66,10 @@ namespace SP.Users.Service
             }
         }
 
-        public IAuthUser Register(IUserRegisterRequestBody r)
+        public AuthUser Register(IUserRegisterRequestBody r)
         {
             if (IsAccountExisting(r.Email))
-                throw new HttpResponseException(statusCode: StatusCodes.Status409Conflict, new { message = "Account already exists." });
+                throw HttpResponseException.AlreadyExists("Account");
             var (hashedPassword, salt) = _cryptUtils.Encrypt(r.Password);
             var user = new Account
             (
@@ -93,15 +90,15 @@ namespace SP.Users.Service
             return new AuthUser(user, token);
         }
 
-        public IAuthUser Login(IUserLoginRequestBody r)
+        public AuthUser Login(IUserLoginRequestBody r)
         {
             var user = _users.Find(u => u.Email == r.Email).FirstOrDefault();
 
             if (user == null)
-                throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Account does not exist." });
+                throw HttpResponseException.NotExists("Account");
 
             if (!_cryptUtils.IsPasswordCorrect(r.Password, user.Password, user.Salt))
-                throw new HttpResponseException(statusCode: 401, new { message = "Incorrect password." });
+                throw HttpResponseException.IncorrectPassword();
 
             var token = _jwtUtils.GenerateToken(user.Id);
             return new AuthUser(user, token);
@@ -114,7 +111,7 @@ namespace SP.Users.Service
             var result = _users.UpdateOne(u => u.Id == uid, update);
 
             if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
+                throw HttpResponseException.DatabaseError("Could not assign role.");
         }
 
         public void UpdateIsActive(string userId, IUpdateAccountIsActiveRequestBody r)
@@ -124,40 +121,37 @@ namespace SP.Users.Service
             var result = _users.UpdateOne(u => u.Id == uid, update);
 
             if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
+                throw HttpResponseException.DatabaseError("Could not update active state.");
         }
 
-        public IEnumerable<IApiKey> GetApiKeys(string token, string targetUserId)
+        public IEnumerable<ApiKey> GetApiKeys(string targetUserId)
         {
             var targetUserIdParsed = ObjectId.Parse(targetUserId);
-            ValidateAccount(token, targetUserIdParsed);
             return _apiKeys.Find(a => a.UserId == targetUserIdParsed).ToEnumerable();
         }
 
-        public string CreateApiKey(string token, string targetUserId)
+        public string CreateApiKey(string targetUserId)
         {
             var targetUserIdParsed = ObjectId.Parse(targetUserId);
-            var account = ValidateAccount(token, targetUserIdParsed);
 
-            if (_apiKeys.Find(a => a.UserId == account.Id).CountDocuments() >= 3)
-                throw new HttpResponseException(statusCode: StatusCodes.Status406NotAcceptable, new { message = "Max allowed API keys reached." });
+            if (_apiKeys.Find(a => a.UserId == targetUserIdParsed).CountDocuments() >= 3)
+                throw HttpResponseException.MaxApiKeys();
 
             var apiKey = Regex.Replace(Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), "[^A-Za-z0-9]", "");
             _apiKeys.InsertOne(new ApiKey(userId: targetUserIdParsed, key: apiKey, app: "ExtraReports"));
             return apiKey;
         }
 
-        public void DeleteApiKey(string apiKey, string token, string targetUserId)
+        public void DeleteApiKey(string apiKey, string targetUserId)
         {
             var targetUserIdParsed = ObjectId.Parse(targetUserId);
-            ValidateAccount(token, targetUserIdParsed);
-
             var result = _apiKeys.DeleteOne(a => a.Key == apiKey && a.UserId == targetUserIdParsed);
+
             if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete API key." });
+                throw HttpResponseException.DatabaseError("Could not delete API key.");
         }
 
-        public IEnumerable<IUserBase<string>> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             return _users.Find(_ => true).ToEnumerable().Select(u => (User)u);
         }

@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SP.Authorization;
+using SP.EpiasReports.Models;
 using SP.EpiasReports.Swagger;
+using SP.Exceptions;
 using SP.Reports.Models.Api;
 using SP.Reports.Models.DayAheadMcp;
 using SP.Reports.Models.Dpp;
@@ -43,9 +45,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public IEnumerable<IReport>? GetReports()
+        public ApiResponse<IEnumerable<IReport>> GetReports()
         {
-            return _repository.GetReports();
+            return ApiResponse<IEnumerable<IReport>>.Success(_repository.GetReports());
         }
 
         /// <summary>
@@ -57,10 +59,10 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/is-active")]
-        public IActionResult UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestBody r)
+        public ApiResponse<dynamic> UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(reportKey, r);
-            return Ok();
+            return ApiResponse<dynamic>.Success();
         }
 
         /// <summary>
@@ -72,10 +74,10 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{reportKey}/roles")]
-        public IActionResult UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestBody r)
+        public ApiResponse<dynamic> UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestBody r)
         {
             _repository.UpdateRoles(reportKey, r);
-            return Ok();
+            return ApiResponse<dynamic>.Success();
         }
 
         //[HttpGet("McpSmp")]
@@ -91,9 +93,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dam-mcp")]
-        public Task<DayAheadMcpContainer?> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<DayAheadMcpContainer>> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp);
+            return ApiResponse<DayAheadMcpContainer>.Success(
+                await _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp)
+            );
         }
 
         /// <summary>
@@ -103,9 +107,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("rtg")]
-        public Task<HourlyGenerationContainer?> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<HourlyGenerationContainer>> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration);
+            return ApiResponse<HourlyGenerationContainer>.Success(
+                await _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration)
+            );
         }
 
         /// <summary>
@@ -115,9 +121,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dpp")]
-        public async Task<DppContainer?> GetDpp([FromQuery] DppRequestParams r)
+        public async Task<ApiResponse<DppContainer>> GetDpp([FromQuery] DppRequestParams r)
         {
-            return await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp);
+            return ApiResponse<DppContainer>.Success(
+                await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp)
+            );
         }
 
         /// <summary>
@@ -127,9 +135,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-wap")]
-        public Task<IdmAofContainer?> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<IdmAofContainer>> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof);
+            return ApiResponse<IdmAofContainer>.Success(
+                await _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof)
+            );
         }
 
         /// <summary>
@@ -139,9 +149,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-sum")]
-        public Task<IntraDaySummaryContainer?> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<IntraDaySummaryContainer>> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary);
+            return ApiResponse<IntraDaySummaryContainer>.Success(
+                await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary)
+            );
         }
 
         // TODO RETURN ONLY THE MATCHING QUANTITY DATA
@@ -152,9 +164,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-mq")]
-        public Task<IntraDaySummaryContainer?> GetIntraDayMatchingQuantity([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<IntraDaySummaryContainer>> GetIntraDayMatchingQuantity([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary);
+            return ApiResponse<IntraDaySummaryContainer>.Success(
+                await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary)
+            );
         }
 
         /// <summary>
@@ -164,9 +178,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("idm-vs")]
-        public Task<IdmVolumeContainer?> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
+        public async Task<ApiResponse<IdmVolumeContainer>> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
         {
-            return _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary);
+            return ApiResponse<IdmVolumeContainer>.Success(
+                await _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary)
+            );
         }
 
         /// <summary>
@@ -176,9 +192,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("bpm-smp")]
-        public Task<SmpContainer?> GetSmp([FromQuery] DateIntervalRequestParams r)
+        public async Task<ApiResponse<SmpContainer>> GetSmp([FromQuery] DateIntervalRequestParams r)
         {
-            return _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp);
+            return ApiResponse<SmpContainer>.Success(
+                await _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp)
+            );
         }
 
         /// <summary>
@@ -187,9 +205,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dpporg")]
-        public Task<OrganizationContainer?> GetDppOrganization()
+        public async Task<ApiResponse<OrganizationContainer>> GetDppOrganization()
         {
-            return _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization);
+            return ApiResponse<OrganizationContainer>.Success(
+                await _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization)
+            );
         }
 
         /// <summary>
@@ -199,36 +219,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [SwaggerHeader("Authorization")]
         [HttpGet("dppiun")]
-        public Task<DppInjectionUnitNameContainer?> GetDppInjectionUnitName([FromQuery] DppInjectionUnitNameRequestParams r)
+        public async Task<ApiResponse<DppInjectionUnitNameContainer>> GetDppInjectionUnitNameAsync([FromQuery] DppInjectionUnitNameRequestParams r)
         {
-            return _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName);
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [Route("/error-development")]
-        public IActionResult HandleErrorDevelopment([FromServices] IHostEnvironment hostEnvironment)
-        {
-            if (!hostEnvironment.IsDevelopment())
-            {
-                return NotFound();
-            }
-
-            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
-
-            _logger.Error("{@error}", exceptionHandlerFeature.Error);
-            return Problem(
-                detail: exceptionHandlerFeature.Error.StackTrace,
-                title: exceptionHandlerFeature.Error.Message
+            return ApiResponse<DppInjectionUnitNameContainer>.Success(
+                await _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName)
             );
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [Route("/error")]
-        public IActionResult HandleError()
-        {
-            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
-            _logger.Error("{@error}", exceptionHandlerFeature.Error);
-            return Problem();
         }
     }
 }

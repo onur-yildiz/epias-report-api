@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP.Authorization;
+using SP.EpiasReports.Models;
 using SP.EpiasReports.Swagger;
 using SP.Roles.Models;
 using SP.Roles.Service;
@@ -27,9 +28,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public IEnumerable<IRole>? GetRoles()
+        public ApiResponse<IEnumerable<IRole>> GetRoles()
         {
-            return _repository.GetRoles();
+            return ApiResponse<IEnumerable<IRole>>.Success(_repository.GetRoles());
         }
 
         /// <summary>
@@ -40,10 +41,10 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPost("")]
-        public IActionResult CreateRole([FromBody] Role role)
+        public ApiResponse<dynamic> CreateRole([FromBody] Role role)
         {
             _repository.CreateRole(role);
-            return Ok();
+            return ApiResponse<dynamic>.Success();
         }
 
         /// <summary>
@@ -54,9 +55,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("{name}")]
-        public IRole? GetRole(string name)
+        public ApiResponse<IRole> GetRole(string name)
         {
-            return _repository.GetRole(name);
+            return ApiResponse<IRole>.Success(_repository.GetRole(name));
         }
 
         /// <summary>
@@ -67,10 +68,10 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpDelete("{name}")]
-        public IActionResult DeleteRole(string name)
+        public ApiResponse<dynamic> DeleteRole(string name)
         {
             _repository.DeleteRole(name);
-            return Ok();
+            return ApiResponse<dynamic>.Success();
         }
     }
 }

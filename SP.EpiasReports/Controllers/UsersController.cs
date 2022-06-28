@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP.Authorization;
+using SP.EpiasReports.Models;
 using SP.EpiasReports.Swagger;
 using SP.Users.Models;
 using SP.Users.Models.RequestBody;
@@ -29,9 +30,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public IEnumerable<IUserBase<string>> GetUsers()
+        public ApiResponse<IEnumerable<IUserBase<string>>> GetUsers()
         {
-            return _repository.GetAllUsers();
+            return ApiResponse<IEnumerable<IUserBase<string>>>.Success(_repository.GetAllUsers());
         }
 
         /// <summary>
@@ -41,11 +42,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("register")]
-        public IAuthUser Register([FromBody] UserRegisterRequestBody r)
+        public ApiResponse<AuthUser> Register([FromBody] UserRegisterRequestBody r)
         {
             var user = _repository.Register(r);
             _logger.Information("{action}: {email}", "REGISTER", r.Email);
-            return user;
+            return ApiResponse<AuthUser>.Success(user);
         }
 
         /// <summary>
@@ -55,11 +56,11 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public IAuthUser Login([FromBody] UserLoginRequestBody r)
+        public ApiResponse<AuthUser> Login([FromBody] UserLoginRequestBody r)
         {
-            var user = _repository.Login(r);
+            var user = (AuthUser)_repository.Login(r);
             _logger.Information("{action}: {email}", "LOGIN", r.Email);
-            return user;
+            return ApiResponse<AuthUser>.Success(user);
         }
 
         /// <summary>
@@ -69,53 +70,52 @@ namespace SP.EpiasReport.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost("refresh-token")]
-        public IAuthUser RefreshToken([FromHeader][Required] string authorization)
+        public ApiResponse<AuthUser> RefreshToken([FromHeader][Required] string authorization)
         {
-            var userData = _repository.RefreshToken(authorization);
-            _logger.Information("{action}: {email}", "REFRESH TOKEN", userData.Email);
-            return userData;
+            var user = (AuthUser)_repository.RefreshToken(authorization);
+            _logger.Information("{action}: {email}", "REFRESH TOKEN", user.Email);
+            return ApiResponse<AuthUser>.Success(user);
         }
 
         /// <summary>
         /// Create a new API key for the account.
         /// </summary>
-        /// <param name="authorization">Auth token</param>
         /// <param name="userId">User ID</param>
         /// <returns></returns>
         [Authorize]
+        [MatchAccount(AdminAllowed = true)]
         [HttpPost("{userId}/api-keys/create")]
-        public string CreateApiKey(string userId, [FromHeader][Required] string authorization)
+        public ApiResponse<string> CreateApiKey(string userId)
         {
-            return _repository.CreateApiKey(authorization, userId);
+            return ApiResponse<string>.Success(_repository.CreateApiKey(userId));
         }
 
         /// <summary>
         /// Get account's API keys. Admins can get any account's keys.
         /// </summary>
-        /// <param name="authorization">Auth token</param>
         /// <param name="userId">User ID</param>
-        /// <param name="r"></param>
         /// <returns></returns>
         [Authorize]
+        [MatchAccount(AdminAllowed = true)]
         [HttpGet("{userId}/api-keys")]
-        public IEnumerable<IApiKey> GetApiKeys(string userId, [FromHeader][Required] string authorization)
+        public ApiResponse<IEnumerable<IApiKey>> GetApiKeys(string userId)
         {
-            return _repository.GetApiKeys(authorization, userId);
+            return ApiResponse<IEnumerable<IApiKey>>.Success(_repository.GetApiKeys(userId));
         }
 
         /// <summary>
         /// Delete an API key. Non-Admin accounts can only delete their own API keys.
         /// </summary>
-        /// <param name="authorization">Auth token</param>
         /// <param name="userId">User ID</param>
         /// <param name="r"></param>
         /// <returns></returns>
         [Authorize]
+        [MatchAccount(AdminAllowed = true)]
         [HttpDelete("{userId}/api-keys")]
-        public IActionResult DeleteApiKey(string userId, [FromHeader][Required] string authorization, [FromBody] DeleteApiKeyRequestBody r)
+        public ApiResponse<dynamic> DeleteApiKey(string userId, [FromBody] DeleteApiKeyRequestBody r)
         {
-            _repository.DeleteApiKey(r.ApiKey, authorization, userId);
-            return Ok();
+            _repository.DeleteApiKey(r.ApiKey, userId);
+            return ApiResponse<dynamic>.Success();
         }
 
         /// <summary>
@@ -127,10 +127,10 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/roles")]
-        public IActionResult UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
+        public ApiResponse<dynamic> UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
         {
             _repository.UpdateRoles(userId, r);
-            return Ok();
+            return ApiResponse<dynamic>.Success();
         }
 
         /// <summary>
@@ -142,10 +142,10 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpPatch("{userId}/is-active")]
-        public IActionResult UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
+        public ApiResponse<dynamic> UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
         {
             _repository.UpdateIsActive(userId, r);
-            return Ok();
+            return ApiResponse<dynamic>.Success();
         }
 
     }

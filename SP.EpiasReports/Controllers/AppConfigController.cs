@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SP.AppConfig.Service;
+using SP.EpiasReports.Models;
 
 namespace SP.EpiasReport.Controllers
 {
@@ -22,9 +23,9 @@ namespace SP.EpiasReport.Controllers
         /// <param name="authorization">Auth token. Menu items get filtered by user's auth level</param>
         /// <returns></returns>
         [HttpGet("report-listing-info")]
-        public IEnumerable<dynamic>? GetReportListingInfo([FromHeader] string? authorization)
+        public ApiResponse<IEnumerable<dynamic>> GetReportListingInfo([FromHeader] string? authorization)
         {
-            return _repository.GetReportListing(authorization);
+            return ApiResponse<IEnumerable<dynamic>>.Success(_repository.GetReportListing(authorization));
         }
     }
 }

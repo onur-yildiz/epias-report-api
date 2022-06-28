@@ -41,7 +41,7 @@ namespace SP.ExtraReports.Service
                 var res = await _reportsServiceRepository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _apiPaths.RealTimeGeneration);
 
                 if (res?.HourlyGenerations == null)
-                    throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not get the data." });
+                   throw HttpResponseException.DatabaseError();
 
                 hourlyGenerationsByType = new List<HourlyGenerationsByType>();
                 foreach (var h in res.HourlyGenerations)
@@ -79,7 +79,7 @@ namespace SP.ExtraReports.Service
                 var consumptions = JsonSerializer.Deserialize<HourlyConsumptionResponse>(data)?.Body?.HourlyConsumptions;
 
                 if (consumptions == null)
-                    throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not get the data." });
+                    throw new HttpResponseException(StatusCodes.Status502BadGateway, "Could not get the data.");
 
                 var dailyStats = from c in consumptions
                                  group c by c.Date != null ? DateTime.Parse(c.Date).Day : -1

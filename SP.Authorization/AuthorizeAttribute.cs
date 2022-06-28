@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using MongoDB.Bson;
 using Serilog;
+using SP.Exceptions;
 
 namespace SP.Authorization
 {
@@ -26,14 +27,13 @@ namespace SP.Authorization
 
             // check if authorized by JwtMiddleware, account is active, and has required roles
             var isTokenValid = (bool?)context.HttpContext.Items["IsTokenValid"];
-            if (isTokenValid != true) context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            if (isTokenValid != true) throw HttpResponseException.Unauthorized();
 
             var accountRoles = (HashSet<string>?)context.HttpContext.Items["Roles"];
             var hasRoles = !Roles.Any() || (accountRoles != null && Roles.All(role => accountRoles.Contains(role)));
             var isActive = (bool?)context.HttpContext.Items["IsActive"];
             var isAdmin = (bool?)context.HttpContext.Items["IsAdmin"];
-            if (isActive != true || (AdminRestricted && isAdmin != true) || (!hasRoles && isAdmin != true)) context.Result = new JsonResult(new { message = "Forbidden" }) { StatusCode = StatusCodes.Status403Forbidden };
-
+            if (isActive != true || (AdminRestricted && isAdmin != true) || (!hasRoles && isAdmin != true)) throw HttpResponseException.Forbidden();
             // Logging
             var userId = (ObjectId?)context.HttpContext.Items["UserId"];
             var logger = (ILogger)context.HttpContext.RequestServices.GetService(typeof(ILogger))!;

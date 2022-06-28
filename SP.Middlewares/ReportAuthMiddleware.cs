@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
+using SP.Exceptions;
 using SP.Reports.Models.ReportListing;
 
 namespace SP.Middlewares
@@ -24,10 +25,7 @@ namespace SP.Middlewares
                 var report = reports.Find(r => r.Key == pathSections[1]).FirstOrDefault();
 
                 if (report == null)
-                {
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    return;
-                }
+                    throw HttpResponseException.NotExists("Report");
 
                 var userRoles = (HashSet<string>?)context.Items["Roles"];
                 var isUserActive = (bool?)context.Items["IsActive"];
@@ -35,10 +33,7 @@ namespace SP.Middlewares
 
                 var noRoles = report.Roles.Count > 0 && (userRoles == null || !report.Roles.Any(r => userRoles.Contains(r)));
                 if (!report.IsActive || isAdmin != true && noRoles || isUserActive != true && report.Roles.Count > 0)
-                {
-                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    return;
-                }
+                    throw HttpResponseException.Forbidden();
             }
             await _next(context);
         }

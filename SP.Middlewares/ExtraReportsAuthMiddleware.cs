@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
+using SP.Exceptions;
 using SP.Users.Models;
 
 namespace SP.Middlewares
@@ -20,10 +21,7 @@ namespace SP.Middlewares
             var apiKey = context.Request.Headers["x-api-key"].FirstOrDefault();
 
             if (apiKey == null || !mongo.GetDatabase("cluster0").GetCollection<ApiKey>("api-keys").Find(a => a.Key == apiKey).Any())
-            {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                return;
-            }
+                throw HttpResponseException.Forbidden("API key does not exist or none provided.");
 
             await _next(context);
         }

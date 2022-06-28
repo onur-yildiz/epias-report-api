@@ -27,9 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Users.Models", "SP.Users
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.Users.Service", "SP.Users.Service\SP.Users.Service.csproj", "{68BF03FB-9FD1-4C72-863E-3F6790713A7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.ExtraReports.Service", "SP.ExtraReports.Service\SP.ExtraReports.Service.csproj", "{C3F1F27D-A982-4D67-9517-15AAFBAEE852}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.ExtraReports.Service", "SP.ExtraReports.Service\SP.ExtraReports.Service.csproj", "{C3F1F27D-A982-4D67-9517-15AAFBAEE852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.ExtraReports.Models", "SP.ExtraReports.Models\SP.ExtraReports.Models.csproj", "{78FE169C-8FB0-44C1-BB7D-A79A974494B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SP.ExtraReports.Models", "SP.ExtraReports.Models\SP.ExtraReports.Models.csproj", "{78FE169C-8FB0-44C1-BB7D-A79A974494B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SP.EpiasReports.Models", "SP.EpiasReports.Models\SP.EpiasReports.Models.csproj", "{F788ECCA-2834-4FA2-9248-63C2611FC792}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,10 @@ Global
 		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78FE169C-8FB0-44C1-BB7D-A79A974494B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F788ECCA-2834-4FA2-9248-63C2611FC792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F788ECCA-2834-4FA2-9248-63C2611FC792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F788ECCA-2834-4FA2-9248-63C2611FC792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F788ECCA-2834-4FA2-9248-63C2611FC792}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

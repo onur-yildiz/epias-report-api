@@ -36,7 +36,7 @@ namespace SP.Reports.Service
             return await ReportsResponseUtils.ExtractBody<TBody, TContainer>(response);
         }
 
-        public IEnumerable<IReport>? GetReports()
+        public IEnumerable<Report> GetReports()
         {
             return _reports.Find(_ => true).ToEnumerable();
         }
@@ -47,7 +47,7 @@ namespace SP.Reports.Service
             var result = _reports.UpdateOne(report => report.Key == reportKey, update);
 
             if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not assign role." });
+                throw HttpResponseException.DatabaseError("Could not assign role.");
         }
 
         public void UpdateIsActive(string reportKey, IUpdateReportIsActiveRequestBody r)
@@ -56,7 +56,7 @@ namespace SP.Reports.Service
             var result = _reports.UpdateOne(report => report.Key == reportKey, update);
 
             if (!result.IsAcknowledged)
-                throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not update active state." });
+                throw HttpResponseException.DatabaseError("Could not update active state.");
         }
     }
 }

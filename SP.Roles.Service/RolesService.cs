@@ -24,19 +24,19 @@ namespace SP.Roles.Service
             this._reports = db.GetCollection<Report>("reports");
         }
 
-        public IEnumerable<IRole>? GetRoles()
+        public IEnumerable<Role> GetRoles()
         {
             var roles = _roles.Find(_ => true).ToList();
-            if (roles == null) throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Could not find any roles." });
+            if (roles == null) throw  HttpResponseException.NoRolesExist();
             return roles;
         }
 
-        public IRole? GetRole(string roleName)
+        public Role GetRole(string roleName)
         {
             var builder = Builders<Role>.Filter;
             var filter = builder.Eq("name", roleName);
             var role = _roles.Find(filter).FirstOrDefault();
-            if (role == null) throw new HttpResponseException(StatusCodes.Status404NotFound, new { message = "Role does not exist." });
+            if (role == null) throw HttpResponseException.NotExists("Role");
             return role;
         }
 
@@ -45,7 +45,7 @@ namespace SP.Roles.Service
             var builder = Builders<Role>.Filter;
             var filter = builder.Eq("name", role.Name);
             var existingRole = _roles.Find(filter).FirstOrDefault();
-            if (existingRole != null) throw new HttpResponseException(StatusCodes.Status400BadRequest, new { message = "Role already exists." });
+            if (existingRole != null) throw HttpResponseException.AlreadyExists("Role");
             _roles.InsertOne((Role)role);
         }
 
@@ -54,7 +54,7 @@ namespace SP.Roles.Service
             var builder = Builders<Role>.Filter;
             var filter = builder.Eq("name", roleName);
             var result = _roles.DeleteOne(filter);
-            if (!result.IsAcknowledged) throw new HttpResponseException(StatusCodes.Status502BadGateway, new { message = "Could not delete role." });
+            if (!result.IsAcknowledged) throw HttpResponseException.DatabaseError("Could not delete role.");
             _users.UpdateMany(u => u.Roles.Contains(roleName), Builders<Account>.Update.Pull("roles", roleName));
             _reports.UpdateMany(r => r.Roles.Contains(roleName), Builders<Report>.Update.Pull("roles", roleName));
         }
