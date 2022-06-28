@@ -45,9 +45,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public ApiResponse<IEnumerable<IReport>> GetReports()
+        public ApiResponse<IEnumerable<Report>> GetReports()
         {
-            return ApiResponse<IEnumerable<IReport>>.Success(_repository.GetReports());
+            return ApiResponse<IEnumerable<Report>>.Success(_repository.GetReports());
         }
 
         /// <summary>

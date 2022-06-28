@@ -28,9 +28,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public ApiResponse<IEnumerable<IRole>> GetRoles()
+        public ApiResponse<IEnumerable<Role>> GetRoles()
         {
-            return ApiResponse<IEnumerable<IRole>>.Success(_repository.GetRoles());
+            return ApiResponse<IEnumerable<Role>>.Success(_repository.GetRoles());
         }
 
         /// <summary>
@@ -55,9 +55,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("{name}")]
-        public ApiResponse<IRole> GetRole(string name)
+        public ApiResponse<Role> GetRole(string name)
         {
-            return ApiResponse<IRole>.Success(_repository.GetRole(name));
+            return ApiResponse<Role>.Success(_repository.GetRole(name));
         }
 
         /// <summary>
