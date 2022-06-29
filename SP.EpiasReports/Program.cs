@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Diagnostics;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Serilog;
 using SP.AppConfig.Service;
@@ -11,7 +10,6 @@ using SP.Middlewares;
 using SP.Reports.Models.Api;
 using SP.Reports.Service;
 using SP.Roles.Service;
-using SP.Users.Models;
 using SP.Users.Service;
 using SP.Utils.Cryptography;
 using SP.Utils.Jwt;

@@ -32,16 +32,16 @@ namespace SP.ExtraReports.Service
 
         public async Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r)
         {
-            var startDate = DateTime.Parse(r.StartDate, CultureInfo.GetCultureInfo("tr-TR"));
-            var endDate = DateTime.Parse(r.EndDate, CultureInfo.GetCultureInfo("tr-TR"));
+            var startDate = DateTime.Parse(r.StartDate).ToUniversalTime();
+            var endDate = DateTime.Parse(r.EndDate).AddDays(1).ToUniversalTime();
 
             if (startDate > endDate)
                 throw new HttpResponseException(StatusCodes.Status400BadRequest, "Start date cannot be after the end date");
-            if (endDate > DateTime.Today)
+            if (endDate > DateTime.Today.AddDays(1))
                 throw new HttpResponseException(StatusCodes.Status400BadRequest, "End date cannot be in the future");
 
-            var hourlyGenerationsByType = _hourlyGenerations.Find(h => h.Date >= startDate && h.Date < endDate.AddDays(1)).ToList();
-            if (hourlyGenerationsByType.Count != ((endDate - startDate).Days + 1) * 24)
+            var hourlyGenerationsByType = _hourlyGenerations.Find(h => h.Date >= startDate && h.Date < endDate).ToList();
+            if (hourlyGenerationsByType.Count != (endDate - startDate).Days * 24)
             {
                 var res = await _reportsServiceRepository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _apiPaths.RealTimeGeneration);
 
@@ -71,7 +71,7 @@ namespace SP.ExtraReports.Service
 
         public async Task<ConsumptionStatistics> GetConsumptionStatistics(string dateString)
         {
-            var date = DateTime.Parse(dateString, CultureInfo.GetCultureInfo("tr-TR"));
+            var date = DateTime.Parse(dateString);
             var period = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59));
 
             var consumptionStatistics = _consumptionStatistics.Find(s => s.Period == period).FirstOrDefault();

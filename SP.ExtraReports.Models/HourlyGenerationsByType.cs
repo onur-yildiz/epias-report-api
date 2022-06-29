@@ -39,7 +39,7 @@ namespace SP.ExtraReports.Models
             RenewableTotal = Renewable.GetType().GetProperties().Aggregate(0.0, (prev, curr) => prev + (double?)curr.GetValue(Renewable, null) ?? 0);
             NonRenewableTotal = NonRenewable.GetType().GetProperties().Aggregate(0.0, (prev, curr) => prev + (double?)curr.GetValue(NonRenewable, null) ?? 0);
             Total = RenewableTotal + NonRenewableTotal;
-            Date = DateTime.Parse(h.Date!);
+            Date = DateTime.Parse(h.Date!).ToUniversalTime();
         }
 
         /// <summary>

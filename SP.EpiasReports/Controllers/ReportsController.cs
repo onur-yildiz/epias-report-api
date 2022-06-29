@@ -1,10 +1,8 @@
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SP.Authorization;
 using SP.EpiasReports.Models;
 using SP.EpiasReports.Swagger;
-using SP.Exceptions;
 using SP.Reports.Models.Api;
 using SP.Reports.Models.DayAheadMcp;
 using SP.Reports.Models.Dpp;

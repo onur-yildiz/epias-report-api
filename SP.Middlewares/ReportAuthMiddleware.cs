@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using SP.Exceptions;
-using SP.Reports.Models.ReportListing;
 using SP.Reports.Service;
 
 namespace SP.Middlewares

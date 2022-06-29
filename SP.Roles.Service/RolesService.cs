@@ -1,7 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Reports.Models.ReportListing;
 using SP.Roles.Models;
@@ -27,7 +24,7 @@ namespace SP.Roles.Service
         public IEnumerable<Role> GetRoles()
         {
             var roles = _roles.Find(_ => true).ToList();
-            if (roles == null) throw  HttpResponseException.NoRolesExist();
+            if (roles == null) throw HttpResponseException.NoRolesExist();
             return roles;
         }
 

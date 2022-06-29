@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Users.Models;

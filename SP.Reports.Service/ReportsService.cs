@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using SP.Exceptions;
 using SP.Reports.Models;
 using SP.Reports.Models.ReportListing;

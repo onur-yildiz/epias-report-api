@@ -2,7 +2,7 @@
 
 namespace SP.EpiasReports.Models
 {
-    public class ApiResponse<T> : IApiResponse<T>  where T : class
+    public class ApiResponse<T> : IApiResponse<T> where T : class
     {
         public ApiResponse(int statusCode, string message = "", T? value = default)
         {
