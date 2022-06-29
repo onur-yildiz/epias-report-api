@@ -40,6 +40,12 @@ namespace SP.Reports.Service
         {
             return _reports.Find(_ => true).ToEnumerable();
         }
+        public Report GetReportByKey(string key)
+        {
+            var report = _reports.Find(r => r.Key == key).FirstOrDefault();
+            if (report == null) throw HttpResponseException.NotExists("Report");
+            return report;
+        }
 
         public void UpdateRoles(string reportKey, IUpdateReportRolesRequestBody r)
         {

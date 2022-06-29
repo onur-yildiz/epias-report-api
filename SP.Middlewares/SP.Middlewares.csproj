@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SP.Reports.Models\SP.Reports.Models.csproj" />
+    <ProjectReference Include="..\SP.Reports.Service\SP.Reports.Service.csproj" />
     <ProjectReference Include="..\SP.Roles.Service\SP.Roles.Service.csproj" />
     <ProjectReference Include="..\SP.Users.Service\SP.Users.Service.csproj" />
     <ProjectReference Include="..\SP.Utils\SP.Utils.csproj" />

@@ -150,6 +150,10 @@ namespace SP.Users.Service
             if (!result.IsAcknowledged)
                 throw HttpResponseException.DatabaseError("Could not delete API key.");
         }
+        public bool CheckIfApiKeyExists(string apiKey)
+        {
+            return _apiKeys.Find(a => a.Key == apiKey).Any();
+        }
 
         public IEnumerable<User> GetAllUsers()
         {

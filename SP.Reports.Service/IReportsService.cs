@@ -10,5 +10,6 @@ namespace SP.Reports.Service
         IEnumerable<Report> GetReports();
         void UpdateRoles(string reportKey, IUpdateReportRolesRequestBody r);
         void UpdateIsActive(string reportKey, IUpdateReportIsActiveRequestBody r);
+        Report GetReportByKey(string key);
     }
 }
