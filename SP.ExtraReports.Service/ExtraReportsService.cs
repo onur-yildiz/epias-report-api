@@ -32,8 +32,8 @@ namespace SP.ExtraReports.Service
 
         public async Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r)
         {
-            var startDate = DateTime.Parse(r.StartDate).ToUniversalTime();
-            var endDate = DateTime.Parse(r.EndDate).AddDays(1).ToUniversalTime();
+            var startDate = DateTime.ParseExact(r.StartDate + " +3", "yyyy-MM-dd z", default).ToUniversalTime(); // utc+3
+            var endDate = DateTime.ParseExact(r.EndDate + " +3", "yyyy-MM-dd z", default).AddDays(1).ToUniversalTime(); // utc+3
 
             if (startDate > endDate)
                 throw new HttpResponseException(StatusCodes.Status400BadRequest, "Start date cannot be after the end date");
@@ -72,14 +72,15 @@ namespace SP.ExtraReports.Service
         public async Task<ConsumptionStatistics> GetConsumptionStatistics(string dateString)
         {
             var date = DateTime.Parse(dateString);
-            var period = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 59, 59));
+            var periodNoTimezone = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 00, 00));
+            var period = new Period(periodNoTimezone.Start.AddHours(-3), periodNoTimezone.End.AddHours(-3)); // fake utc+3 to utc
 
             var consumptionStatistics = _consumptionStatistics.Find(s => s.Period == period).FirstOrDefault();
             // Get the data from actual source if not processed before
             if (consumptionStatistics == null)
             {
                 var httpClient = _httpClientFactory.CreateClient("EpiasAPI");
-                var response = await httpClient.GetAsync($"consumption/real-time-consumption?startDate={period.Start:yyyy-MM-dd}&endDate={period.End:yyyy-MM-dd}");
+                var response = await httpClient.GetAsync($"consumption/real-time-consumption?startDate={periodNoTimezone.Start:yyyy-MM-dd}&endDate={periodNoTimezone.End:yyyy-MM-dd}");
                 var data = await response.Content.ReadAsStreamAsync();
                 var consumptions = JsonSerializer.Deserialize<HourlyConsumptionResponse>(data)?.Body?.HourlyConsumptions;
 

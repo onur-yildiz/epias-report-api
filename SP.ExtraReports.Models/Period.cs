@@ -12,8 +12,8 @@ namespace SP.ExtraReports.Models
         /// </summary>
         public Period(DateTime start, DateTime end)
         {
-            Start = start;
-            End = end;
+            Start = start.ToUniversalTime();
+            End = end.ToUniversalTime();
         }
 
         /// <summary>
