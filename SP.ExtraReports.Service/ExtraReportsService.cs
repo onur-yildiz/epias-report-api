@@ -72,15 +72,21 @@ namespace SP.ExtraReports.Service
         public async Task<ConsumptionStatistics> GetConsumptionStatistics(string dateString)
         {
             var date = DateTime.Parse(dateString);
-            var periodNoTimezone = new Period(new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month), 23, 00, 00));
-            var period = new Period(periodNoTimezone.Start.AddHours(-3), periodNoTimezone.End.AddHours(-3)); // fake utc+3 to utc
+            var startNoTZ = new DateTime(date.Year, date.Month, 1);
+            var endNoTZ = new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
+            var period = new Period(
+                DateTime.ParseExact($"{startNoTZ:yyyy-MM-dd} +3", $"yyyy-MM-dd z", default), // utc+3
+                DateTime.ParseExact($"{endNoTZ:yyyy-MM-dd} +3", $"yyyy-MM-dd z", default) // utc+3
+                    .AddDays(1) // add 1 day to include last day
+                    .AddHours(-1) //decrement 1 hour to exclude next month's first hour
+            );
 
             var consumptionStatistics = _consumptionStatistics.Find(s => s.Period == period).FirstOrDefault();
             // Get the data from actual source if not processed before
             if (consumptionStatistics == null)
             {
                 var httpClient = _httpClientFactory.CreateClient("EpiasAPI");
-                var response = await httpClient.GetAsync($"consumption/real-time-consumption?startDate={periodNoTimezone.Start:yyyy-MM-dd}&endDate={periodNoTimezone.End:yyyy-MM-dd}");
+                var response = await httpClient.GetAsync($"consumption/real-time-consumption?startDate={startNoTZ:yyyy-MM-dd}&endDate={endNoTZ:yyyy-MM-dd}");
                 var data = await response.Content.ReadAsStreamAsync();
                 var consumptions = JsonSerializer.Deserialize<HourlyConsumptionResponse>(data)?.Body?.HourlyConsumptions;
 
