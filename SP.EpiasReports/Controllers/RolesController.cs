@@ -13,12 +13,12 @@ namespace SP.EpiasReport.Controllers
     public class RolesController : ControllerBase
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IRolesService _repository;
+        private readonly IRolesService _service;
 
-        public RolesController(Serilog.ILogger logger, IRolesService repository)
+        public RolesController(Serilog.ILogger logger, IRolesService service)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("")]
         public ApiResponse<IEnumerable<Role>> GetRoles()
         {
-            return ApiResponse<IEnumerable<Role>>.Success(_repository.GetRoles());
+            return ApiResponse<IEnumerable<Role>>.Success(_service.GetRoles());
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("")]
         public ApiResponse<dynamic> CreateRole([FromBody] Role role)
         {
-            _repository.CreateRole(role);
+            _service.CreateRole(role);
             return ApiResponse<dynamic>.Success();
         }
 
@@ -57,7 +57,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("{name}")]
         public ApiResponse<Role> GetRole(string name)
         {
-            return ApiResponse<Role>.Success(_repository.GetRole(name));
+            return ApiResponse<Role>.Success(_service.GetRole(name));
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace SP.EpiasReport.Controllers
         [HttpDelete("{name}")]
         public ApiResponse<dynamic> DeleteRole(string name)
         {
-            _repository.DeleteRole(name);
+            _service.DeleteRole(name);
             return ApiResponse<dynamic>.Success();
         }
     }

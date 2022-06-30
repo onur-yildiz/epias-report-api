@@ -18,15 +18,15 @@ namespace SP.ExtraReports.Service
         readonly IHttpClientFactory _httpClientFactory;
         readonly IMongoCollection<HourlyGenerationsByType> _hourlyGenerations;
         readonly IMongoCollection<ConsumptionStatistics> _consumptionStatistics;
-        readonly IReportsService _reportsServiceRepository;
+        readonly IReportsService _reportsService;
         readonly IApiPaths _apiPaths;
 
-        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsServiceRepository, IOptions<ApiPaths> options)
+        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsService, IOptions<ApiPaths> options)
         {
             _httpClientFactory = httpClientFactory;
             _hourlyGenerations = client.GetDatabase("cluster0").GetCollection<HourlyGenerationsByType>("hourly-generations");
             _consumptionStatistics = client.GetDatabase("cluster0").GetCollection<ConsumptionStatistics>("consumption-statistics");
-            _reportsServiceRepository = reportsServiceRepository;
+            _reportsService = reportsService;
             _apiPaths = options.Value;
         }
 
@@ -43,7 +43,7 @@ namespace SP.ExtraReports.Service
             var hourlyGenerationsByType = _hourlyGenerations.Find(h => h.Date >= startDate && h.Date < endDate).ToList();
             if (hourlyGenerationsByType.Count != (endDate - startDate).Days * 24)
             {
-                var res = await _reportsServiceRepository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _apiPaths.RealTimeGeneration);
+                var res = await _reportsService.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _apiPaths.RealTimeGeneration);
 
                 if (res?.HourlyGenerations == null)
                     throw HttpResponseException.DatabaseError();

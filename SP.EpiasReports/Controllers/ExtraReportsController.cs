@@ -12,12 +12,12 @@ namespace SP.EpiasReport.Controllers
     public class ExtraReportsController : ControllerBase
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IExtraReportsService _repository;
+        private readonly IExtraReportsService _service;
 
-        public ExtraReportsController(Serilog.ILogger logger, IExtraReportsService repository)
+        public ExtraReportsController(Serilog.ILogger logger, IExtraReportsService service)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("hourly-generations")]
         public async Task<ApiResponse<IEnumerable<HourlyGenerationsByType>>> GetHourlyGenerations([FromQuery] DateIntervalRequestParams r)
         {
-            return ApiResponse<IEnumerable<HourlyGenerationsByType>>.Success(await _repository.GetHourlyGenerations(r));
+            return ApiResponse<IEnumerable<HourlyGenerationsByType>>.Success(await _service.GetHourlyGenerations(r));
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("consumption-statistics")]
         public async Task<ApiResponse<ConsumptionStatistics>> GetConsumptionStatistics([FromQuery] string period)
         {
-            return ApiResponse<ConsumptionStatistics>.Success(await _repository.GetConsumptionStatistics(period));
+            return ApiResponse<ConsumptionStatistics>.Success(await _service.GetConsumptionStatistics(period));
         }
     }
 }

@@ -15,12 +15,12 @@ namespace SP.EpiasReport.Controllers
     public class UsersController : Controller
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IUsersService _repository;
+        private readonly IUsersService _service;
 
-        public UsersController(Serilog.ILogger logger, IUsersService repository)
+        public UsersController(Serilog.ILogger logger, IUsersService service)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("")]
         public ApiResponse<IEnumerable<IUserBase<string>>> GetUsers()
         {
-            return ApiResponse<IEnumerable<IUserBase<string>>>.Success(_repository.GetAllUsers());
+            return ApiResponse<IEnumerable<IUserBase<string>>>.Success(_service.GetAllUsers());
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("register")]
         public ApiResponse<AuthUser> Register([FromBody] UserRegisterRequestBody r)
         {
-            var user = _repository.Register(r);
+            var user = _service.Register(r);
             _logger.Information("{action}: {email}", "REGISTER", r.Email);
             return ApiResponse<AuthUser>.Success(user);
         }
@@ -58,7 +58,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("login")]
         public ApiResponse<AuthUser> Login([FromBody] UserLoginRequestBody r)
         {
-            var user = _repository.Login(r);
+            var user = _service.Login(r);
             _logger.Information("{action}: {email}", "LOGIN", r.Email);
             return ApiResponse<AuthUser>.Success(user);
         }
@@ -72,7 +72,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("refresh-token")]
         public ApiResponse<AuthUser> RefreshToken([FromHeader][Required] string authorization)
         {
-            var user = _repository.RefreshToken(authorization);
+            var user = _service.RefreshToken(authorization);
             _logger.Information("{action}: {email}", "REFRESH TOKEN", user.Email);
             return ApiResponse<AuthUser>.Success(user);
         }
@@ -87,7 +87,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPost("{userId}/api-keys/create")]
         public ApiResponse<string> CreateApiKey(string userId)
         {
-            return ApiResponse<string>.Success(_repository.CreateApiKey(userId));
+            return ApiResponse<string>.Success(_service.CreateApiKey(userId));
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("{userId}/api-keys")]
         public ApiResponse<IEnumerable<ApiKey>> GetApiKeys(string userId)
         {
-            return ApiResponse<IEnumerable<ApiKey>>.Success(_repository.GetApiKeys(userId));
+            return ApiResponse<IEnumerable<ApiKey>>.Success(_service.GetApiKeys(userId));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SP.EpiasReport.Controllers
         [HttpDelete("{userId}/api-keys")]
         public ApiResponse<dynamic> DeleteApiKey(string userId, [FromBody] DeleteApiKeyRequestBody r)
         {
-            _repository.DeleteApiKey(r.ApiKey, userId);
+            _service.DeleteApiKey(r.ApiKey, userId);
             return ApiResponse<dynamic>.Success();
         }
 
@@ -129,7 +129,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPatch("{userId}/roles")]
         public ApiResponse<dynamic> UpdateRoles(string userId, [FromBody] UpdateAccountRolesRequestBody r)
         {
-            _repository.UpdateRoles(userId, r);
+            _service.UpdateRoles(userId, r);
             return ApiResponse<dynamic>.Success();
         }
 
@@ -144,7 +144,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPatch("{userId}/is-active")]
         public ApiResponse<dynamic> UpdateIsActive(string userId, [FromBody] UpdateAccountIsActiveRequestBody r)
         {
-            _repository.UpdateIsActive(userId, r);
+            _service.UpdateIsActive(userId, r);
             return ApiResponse<dynamic>.Success();
         }
 

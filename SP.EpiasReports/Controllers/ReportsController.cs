@@ -26,13 +26,13 @@ namespace SP.EpiasReport.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IReportsService _repository;
+        private readonly IReportsService _service;
         private readonly IApiPaths _paths;
 
-        public ReportsController(Serilog.ILogger logger, IReportsService repository, IOptions<ApiPaths> option)
+        public ReportsController(Serilog.ILogger logger, IReportsService service, IOptions<ApiPaths> option)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
             _paths = option.Value;
         }
 
@@ -45,7 +45,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("")]
         public ApiResponse<IEnumerable<Report>> GetReports()
         {
-            return ApiResponse<IEnumerable<Report>>.Success(_repository.GetReports());
+            return ApiResponse<IEnumerable<Report>>.Success(_service.GetReports());
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SP.EpiasReport.Controllers
         [HttpPatch("{reportKey}/is-active")]
         public ApiResponse<dynamic> UpdateIsActive(string reportKey, [FromBody] UpdateReportIsActiveRequestBody r)
         {
-            _repository.UpdateIsActive(reportKey, r);
+            _service.UpdateIsActive(reportKey, r);
             return ApiResponse<dynamic>.Success();
         }
 
@@ -74,14 +74,14 @@ namespace SP.EpiasReport.Controllers
         [HttpPatch("{reportKey}/roles")]
         public ApiResponse<dynamic> UpdateRoles(string reportKey, [FromBody] UpdateReportRolesRequestBody r)
         {
-            _repository.UpdateRoles(reportKey, r);
+            _service.UpdateRoles(reportKey, r);
             return ApiResponse<dynamic>.Success();
         }
 
         //[HttpGet("McpSmp")]
         //public  Task<McpSmpContainer?> GetMcpSmp([FromQuery] IDateIntervalRequestParams r)
         //{
-        //    return _repository.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp);
+        //    return _service.GetData<McpSmpContainer, McpSmpResponse>(r, _paths.McpSmp);
         //}
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<DayAheadMcpContainer>> GetDayAheadMcp([FromQuery] DateIntervalRequestParams r)
         {
             return ApiResponse<DayAheadMcpContainer>.Success(
-                await _repository.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp)
+                await _service.GetData<DayAheadMcpContainer, DayAheadMcpResponse>(r, _paths.DayAheadMcp)
             );
         }
 
@@ -108,7 +108,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<HourlyGenerationContainer>> GetRealTimeGeneration([FromQuery] DateIntervalRequestParams r)
         {
             return ApiResponse<HourlyGenerationContainer>.Success(
-                await _repository.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration)
+                await _service.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _paths.RealTimeGeneration)
             );
         }
 
@@ -122,7 +122,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<DppContainer>> GetDpp([FromQuery] DppRequestParams r)
         {
             return ApiResponse<DppContainer>.Success(
-                await _repository.GetData<DppContainer, DppResponse>(r, _paths.Dpp)
+                await _service.GetData<DppContainer, DppResponse>(r, _paths.Dpp)
             );
         }
 
@@ -136,7 +136,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<IdmAofContainer>> GetIntraDayAof([FromQuery] DateIntervalRequestParams r)
         {
             return ApiResponse<IdmAofContainer>.Success(
-                await _repository.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof)
+                await _service.GetData<IdmAofContainer, IntraDayAofResponse>(r, _paths.IntraDayAof)
             );
         }
 
@@ -150,7 +150,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<IntraDaySummaryContainer>> GetIntraDaySummary([FromQuery] DateIntervalRequestParams r)
         {
             return ApiResponse<IntraDaySummaryContainer>.Success(
-                await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary)
+                await _service.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary)
             );
         }
 
@@ -165,7 +165,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<IntraDaySummaryContainer>> GetIntraDayMatchingQuantity([FromQuery] DateIntervalRequestParams r)
         {
             return ApiResponse<IntraDaySummaryContainer>.Success(
-                await _repository.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary)
+                await _service.GetData<IntraDaySummaryContainer, IntraDaySummaryResponse>(r, _paths.IntraDaySummary)
             );
         }
 
@@ -179,7 +179,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<IdmVolumeContainer>> GetIntraDayVolumeSummary([FromQuery] IdmVolumeSummaryRequestParams r)
         {
             return ApiResponse<IdmVolumeContainer>.Success(
-                await _repository.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary)
+                await _service.GetData<IdmVolumeContainer, IdmVolumeResponse>(r, _paths.IntraDayVolumeSummary)
             );
         }
 
@@ -193,7 +193,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<SmpContainer>> GetSmp([FromQuery] DateIntervalRequestParams r)
         {
             return ApiResponse<SmpContainer>.Success(
-                await _repository.GetData<SmpContainer, SmpResponse>(r, _paths.Smp)
+                await _service.GetData<SmpContainer, SmpResponse>(r, _paths.Smp)
             );
         }
 
@@ -206,7 +206,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<OrganizationContainer>> GetDppOrganization()
         {
             return ApiResponse<OrganizationContainer>.Success(
-                await _repository.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization)
+                await _service.GetData<OrganizationContainer, OrganizationResponse>(null, _paths.DppOrganization)
             );
         }
 
@@ -220,7 +220,7 @@ namespace SP.EpiasReport.Controllers
         public async Task<ApiResponse<DppInjectionUnitNameContainer>> GetDppInjectionUnitNameAsync([FromQuery] DppInjectionUnitNameRequestParams r)
         {
             return ApiResponse<DppInjectionUnitNameContainer>.Success(
-                await _repository.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName)
+                await _service.GetData<DppInjectionUnitNameContainer, DppInjectionUnitNameResponse>(r, _paths.DppInjectionUnitName)
             );
         }
     }

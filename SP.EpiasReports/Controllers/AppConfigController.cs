@@ -9,12 +9,12 @@ namespace SP.EpiasReport.Controllers
     public class AppConfigController : ControllerBase
     {
         private readonly Serilog.ILogger _logger;
-        private readonly IAppConfigService _repository;
+        private readonly IAppConfigService _service;
 
-        public AppConfigController(Serilog.ILogger logger, IAppConfigService repository)
+        public AppConfigController(Serilog.ILogger logger, IAppConfigService service)
         {
             _logger = logger;
-            _repository = repository;
+            _service = service;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace SP.EpiasReport.Controllers
         [HttpGet("report-listing-info")]
         public ApiResponse<IEnumerable<dynamic>> GetReportListingInfo([FromHeader] string? authorization)
         {
-            return ApiResponse<IEnumerable<dynamic>>.Success(_repository.GetReportListing(authorization));
+            return ApiResponse<IEnumerable<dynamic>>.Success(_service.GetReportListing(authorization));
         }
     }
 }
