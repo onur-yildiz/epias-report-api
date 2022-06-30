@@ -8,7 +8,6 @@ using SP.Reports.Models.RealTimeConsumption;
 using SP.Reports.Models.RealTimeGeneration;
 using SP.Reports.Models.RequestParams;
 using SP.Reports.Service;
-using System.Globalization;
 using System.Text.Json;
 
 namespace SP.ExtraReports.Service
