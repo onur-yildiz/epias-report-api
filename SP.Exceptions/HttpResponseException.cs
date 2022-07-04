@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace SP.Exceptions
 {
     [Serializable]
-    public class HttpResponseException : Exception
+    public class HttpResponseException : Exception, IHttpResponseException
     {
         public HttpResponseException(int statusCode, string message, object? value = null) : base(message) =>
             (ResponseCode, Value) = (statusCode, value);
