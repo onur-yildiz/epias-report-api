@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using SP.DAL.Interfaces;
 using SP.Exceptions;
 using SP.ExtraReports.Models;
 using SP.Reports.Models.Api;
@@ -15,21 +16,25 @@ namespace SP.ExtraReports.Service
     public class ExtraReportsService : IExtraReportsService
     {
         readonly IHttpClientFactory _httpClientFactory;
-        readonly IMongoCollection<HourlyGenerationsByType> _hourlyGenerations;
-        readonly IMongoCollection<ConsumptionStatistics> _consumptionStatistics;
+        readonly IHourlyGenerationsRepository _hourlyGenerationsRepository;
+        readonly IConsumptionStatisticsRepository _consumptionStatisticsRepository;
         readonly IReportsService _reportsService;
         readonly IApiPaths _apiPaths;
 
-        public ExtraReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IReportsService reportsService, IOptions<ApiPaths> options)
+        public ExtraReportsService(IHttpClientFactory httpClientFactory,
+            IHourlyGenerationsRepository hourlyGenerationsRepository,
+            IConsumptionStatisticsRepository consumptionStatisticsRepository,
+            IReportsService reportsService,
+            IOptions<ApiPaths> options)
         {
             _httpClientFactory = httpClientFactory;
-            _hourlyGenerations = client.GetDatabase("cluster0").GetCollection<HourlyGenerationsByType>("hourly-generations");
-            _consumptionStatistics = client.GetDatabase("cluster0").GetCollection<ConsumptionStatistics>("consumption-statistics");
+            _hourlyGenerationsRepository = hourlyGenerationsRepository;
+            _consumptionStatisticsRepository = consumptionStatisticsRepository;
             _reportsService = reportsService;
             _apiPaths = options.Value;
         }
 
-        public async Task<IEnumerable<HourlyGenerationsByType>> GetHourlyGenerations(IDateIntervalRequestParams r)
+        public async Task<IEnumerable<HourlyGenerations>> GetHourlyGenerations(IDateIntervalRequestParams r)
         {
             var startDate = DateTime.ParseExact(r.StartDate + " +3", "yyyy-MM-dd z", default).ToUniversalTime(); // utc+3
             var endDate = DateTime.ParseExact(r.EndDate + " +3", "yyyy-MM-dd z", default).AddDays(1).ToUniversalTime(); // utc+3
@@ -39,7 +44,7 @@ namespace SP.ExtraReports.Service
             if (endDate > DateTime.Today.AddDays(1))
                 throw new HttpResponseException(StatusCodes.Status400BadRequest, "End date cannot be in the future");
 
-            var hourlyGenerationsByType = _hourlyGenerations.Find(h => h.Date >= startDate && h.Date < endDate).ToList();
+            var hourlyGenerationsByType = _hourlyGenerationsRepository.Get(h => h.Date >= startDate && h.Date < endDate).ToList();
             if (hourlyGenerationsByType.Count != (endDate - startDate).Days * 24)
             {
                 var res = await _reportsService.GetData<HourlyGenerationContainer, HourlyGenerationResponse>(r, _apiPaths.RealTimeGeneration);
@@ -47,21 +52,12 @@ namespace SP.ExtraReports.Service
                 if (res?.HourlyGenerations == null)
                     throw HttpResponseException.DatabaseError();
 
-                hourlyGenerationsByType = new List<HourlyGenerationsByType>();
+                hourlyGenerationsByType = new List<HourlyGenerations>();
                 foreach (var h in res.HourlyGenerations)
                 {
-                    var hByType = new HourlyGenerationsByType(h);
+                    var hByType = new HourlyGenerations(h);
                     hourlyGenerationsByType.Add(hByType);
-                    _hourlyGenerations.UpdateOne(h => h.Date == hByType.Date,
-                        Builders<HourlyGenerationsByType>.Update
-                        .SetOnInsert("importExport", hByType.ImportExport)
-                        .SetOnInsert("renewable", hByType.Renewable)
-                        .SetOnInsert("renewableTotal", hByType.RenewableTotal)
-                        .SetOnInsert("nonRenewable", hByType.NonRenewable)
-                        .SetOnInsert("nonRenewableTotal", hByType.NonRenewableTotal)
-                        .SetOnInsert("total", hByType.Total)
-                        .SetOnInsert("date", hByType.Date)
-                    , new UpdateOptions { IsUpsert = true });
+                    _hourlyGenerationsRepository.ReplaceOne_Upsert(h => h.Date == hByType.Date, hByType);
                 }
             }
 
@@ -80,7 +76,7 @@ namespace SP.ExtraReports.Service
                     .AddHours(-1) //decrement 1 hour to exclude next month's first hour
             );
 
-            var consumptionStatistics = _consumptionStatistics.Find(s => s.Period == period).FirstOrDefault();
+            var consumptionStatistics = _consumptionStatisticsRepository.Get(s => s.Period == period).FirstOrDefault();
             // Get the data from actual source if not processed before
             if (consumptionStatistics == null)
             {
@@ -123,7 +119,7 @@ namespace SP.ExtraReports.Service
                     mostConsumedDays: dailyConsumptions.OrderByDescending(d => d.Consumption).Take(5)
                 );
 
-                _consumptionStatistics.InsertOne(consumptionStatistics);
+                _consumptionStatisticsRepository.AddOne(consumptionStatistics);
             }
 
             return consumptionStatistics;
