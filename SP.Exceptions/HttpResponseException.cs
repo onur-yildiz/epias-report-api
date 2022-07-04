@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace SP.Exceptions
 {
     [Serializable]
-    public class HttpResponseException : Exception
+    public class HttpResponseException : Exception, IHttpResponseException
     {
         public HttpResponseException(int statusCode, string message, object? value = null) : base(message) =>
             (ResponseCode, Value) = (statusCode, value);
@@ -26,7 +26,7 @@ namespace SP.Exceptions
         public static HttpResponseException IncorrectPassword() => new(StatusCodes.Status401Unauthorized, "Incorrect password");
         public static HttpResponseException NotExists(string item = "Item") => new(StatusCodes.Status404NotFound, $"{item} does not exist");
         public static HttpResponseException AlreadyExists(string item = "Item") => new(StatusCodes.Status409Conflict, $"{item} already exists");
-        public static HttpResponseException InvalidToken() => new(StatusCodes.Status400BadRequest, "Invalid token");
+        public static HttpResponseException InvalidToken(string? details = null) => new(StatusCodes.Status400BadRequest, AppendDetails("Invalid token", details));
         public static HttpResponseException NoRolesExist() => new(StatusCodes.Status404NotFound, "Could not find any roles");
         public static HttpResponseException Forbidden(string? details = null) => new(StatusCodes.Status403Forbidden, AppendDetails("Forbidden", details));
         public static HttpResponseException Unauthorized(string? details = null) => new(StatusCodes.Status401Unauthorized, AppendDetails("Unauthorized", details));

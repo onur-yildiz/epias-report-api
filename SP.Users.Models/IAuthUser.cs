@@ -1,6 +1,6 @@
 ﻿namespace SP.Users.Models
 {
-    public interface IAuthUser : IUserBase<string>
+    public interface IAuthUser : IUser
     {
         /// <summary>
         /// Auth token

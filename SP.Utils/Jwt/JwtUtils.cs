@@ -31,9 +31,6 @@ namespace SP.Utils.Jwt
 
         public ObjectId? ValidateToken(string token)
         {
-            if (token == null)
-                return null;
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_secret);
             try

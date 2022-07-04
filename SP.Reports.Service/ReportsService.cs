@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using SP.DAL.Interfaces;
 using SP.Exceptions;
 using SP.Reports.Models;
 using SP.Reports.Models.ReportListing;
@@ -11,19 +12,12 @@ namespace SP.Reports.Service
     public class ReportsService : IReportsService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        readonly IJwtUtils _jwtUtils;
-        readonly IMongoCollection<Account> _users;
-        readonly IMongoCollection<Report> _reports;
-        readonly IMongoCollection<ReportFolder> _reportFolders;
+        readonly IReportRepository _reportRepository;
 
-        public ReportsService(IHttpClientFactory httpClientFactory, IMongoClient client, IJwtUtils jwtUtils)
+        public ReportsService(IHttpClientFactory httpClientFactory, IReportRepository reportRepository)
         {
-            var db = client.GetDatabase("cluster0");
-            this._users = db.GetCollection<Account>("users");
-            this._reports = db.GetCollection<Report>("reports");
-            this._reportFolders = db.GetCollection<ReportFolder>("report-folders");
+            _reportRepository = reportRepository;
             _httpClientFactory = httpClientFactory;
-            _jwtUtils = jwtUtils;
         }
 
         public async Task<TBody?> GetData<TBody, TContainer>(object? r, string endpoint) where TBody : class where TContainer : IResponseBase<TBody>
@@ -37,31 +31,30 @@ namespace SP.Reports.Service
 
         public IEnumerable<Report> GetReports()
         {
-            return _reports.Find(_ => true).ToEnumerable();
+            return _reportRepository.Get();
         }
+
         public Report GetReportByKey(string key)
         {
-            var report = _reports.Find(r => r.Key == key).FirstOrDefault();
+            var report = _reportRepository.GetFirst(r => r.Key == key);
             if (report == null) throw HttpResponseException.NotExists("Report");
             return report;
         }
 
         public void UpdateRoles(string reportKey, IUpdateReportRolesRequestBody r)
         {
-            var update = Builders<Report>.Update.Set("roles", r.Roles);
-            var result = _reports.UpdateOne(report => report.Key == reportKey, update);
+            var report = _reportRepository.UpdateOne_Set(report => report.Key == reportKey, "roles", r.Roles);
 
-            if (!result.IsAcknowledged)
-                throw HttpResponseException.DatabaseError("Could not assign role.");
+            if (report == null)
+                throw HttpResponseException.DatabaseError();
         }
 
         public void UpdateIsActive(string reportKey, IUpdateReportIsActiveRequestBody r)
         {
-            var update = Builders<Report>.Update.Set("isActive", r.IsActive);
-            var result = _reports.UpdateOne(report => report.Key == reportKey, update);
+            var report = _reportRepository.UpdateOne_Set(report => report.Key == reportKey, "isActive", r.IsActive);
 
-            if (!result.IsAcknowledged)
-                throw HttpResponseException.DatabaseError("Could not update active state.");
+            if (report == null)
+                throw HttpResponseException.DatabaseError();
         }
     }
 }

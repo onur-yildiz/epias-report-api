@@ -1,6 +1,6 @@
-﻿using MongoDB.Driver;
-using SP.Reports.Models.ReportListing;
-using SP.Users.Models;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using SP.DAL.Interfaces;
 using SP.Utils.Jwt;
 
 namespace SP.AppConfig.Service
@@ -8,31 +8,30 @@ namespace SP.AppConfig.Service
     public class AppConfigService : IAppConfigService
     {
         readonly IJwtUtils _jwtUtils;
-        readonly IMongoCollection<Account> _users;
-        readonly IMongoCollection<Report> _reports;
-        readonly IMongoCollection<ReportFolder> _reportFolders;
+        readonly IUserRepository _userRepository;
+        readonly IReportRepository _reportRepository;
+        readonly IReportFolderRepository _reportFolderRepository;
 
-        public AppConfigService(IMongoClient client, IJwtUtils jwtUtils)
+        public AppConfigService(IUserRepository userRepository, IReportRepository reportRepository, IReportFolderRepository reportFolderRepository, IJwtUtils jwtUtils)
         {
-            var db = client.GetDatabase("cluster0");
-            this._users = db.GetCollection<Account>("users");
-            this._reports = db.GetCollection<Report>("reports");
-            this._reportFolders = db.GetCollection<ReportFolder>("report-folders");
+            _userRepository = userRepository;
+            _reportRepository = reportRepository;
+            _reportFolderRepository = reportFolderRepository;
             _jwtUtils = jwtUtils;
         }
 
         public IEnumerable<dynamic>? GetReportListing(string? authToken = null)
         {
-            var userId = authToken != null ? _jwtUtils.ValidateToken(authToken) : null;
-            var user = _users.Find(u => u.Id == userId).FirstOrDefault();
+            var userId = authToken == null ? null : _jwtUtils.ValidateToken(authToken);
+            var user = userId == null ? null : _userRepository.GetById((ObjectId)userId);
 
-            var reports = _reports.Find(r => r.IsActive).ToEnumerable().Where(r => user?.IsAdmin == true || r.Roles.Count == 0 || r.Roles.Any(role => user?.Roles.Contains(role) == true));
-            var reportFolders = _reportFolders.Find(_ => true).ToEnumerable();
+            var reports = _reportRepository.Get(r => r.IsActive).Where(r => user?.IsAdmin == true || r.Roles.Count == 0 || r.Roles.Any(role => user?.Roles.Contains(role) == true));
+            var reportFolders = _reportFolderRepository.Get();
 
-            var listingInfo = new List<dynamic>(reports.Count() + reportFolders.Count());
-            listingInfo.AddRange(reports);
-            listingInfo.AddRange(reportFolders);
-            return listingInfo;
+            var reportListing = new List<dynamic>(reports.Count() + reportFolders.Count());
+            reportListing.AddRange(reports);
+            reportListing.AddRange(reportFolders);
+            return reportListing;
         }
 
     }

@@ -3,7 +3,7 @@
     /// <summary>
     /// Hourly electric generation values categorized by renewable and non-renewable energy types.
     /// </summary>
-    public interface IHourlyGenerationsByType
+    public interface IHourlyGenerations
     {
         /// <summary>
         /// Date

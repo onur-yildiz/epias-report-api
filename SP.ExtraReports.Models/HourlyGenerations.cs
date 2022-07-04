@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using SP.EpiasReports.Models;
 using SP.Reports.Models.RealTimeGeneration;
 
 namespace SP.ExtraReports.Models
@@ -6,10 +7,9 @@ namespace SP.ExtraReports.Models
     /// <summary>
     /// Hourly electric generation values categorized by renewable and non-renewable energy types.
     /// </summary>
-    [BsonIgnoreExtraElements]
-    public class HourlyGenerationsByType : IHourlyGenerationsByType
+    public class HourlyGenerations : MongoDbEntity, IHourlyGenerations
     {
-        public HourlyGenerationsByType(HourlyGenerationModelEntity h)
+        public HourlyGenerations(HourlyGenerationModelEntity h)
         {
             Renewable = new Renewable
             {

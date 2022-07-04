@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SP.EpiasReports.Models;
 
 namespace SP.Users.Models
 {
-    [BsonIgnoreExtraElements]
-    public class ApiKey : IApiKey
+    public class ApiKey : MongoDbEntity, IApiKey
     {
         public ApiKey(ObjectId userId, string key, string app)
         {

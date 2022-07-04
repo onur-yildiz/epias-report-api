@@ -2,7 +2,8 @@
 
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
-using SP.Users.Service;
+using SP.DAL.Interfaces;
+using SP.Exceptions;
 using SP.Utils.Jwt;
 
 namespace SP.Middlewares
@@ -16,7 +17,7 @@ namespace SP.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IUsersService userService, IJwtUtils jwtUtils)
+        public async Task Invoke(HttpContext context, IUserRepository userRepository, IJwtUtils jwtUtils)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             if (token != null)
@@ -24,15 +25,15 @@ namespace SP.Middlewares
                 var userId = jwtUtils.ValidateToken(token);
                 if (userId != null)
                 {
-                    var account = userService.GetAccountById((ObjectId)userId);
-                    if (account != null)
-                    {
-                        context.Items["IsTokenValid"] = true;
-                        context.Items["UserId"] = account.Id;
-                        context.Items["Roles"] = account.Roles;
-                        context.Items["IsActive"] = account.IsActive;
-                        context.Items["IsAdmin"] = account.IsAdmin;
-                    }
+                    var account = userRepository.GetById((ObjectId)userId);
+                    if (account == null)
+                        throw HttpResponseException.InvalidToken("Account does not exist");
+                    
+                    context.Items["IsTokenValid"] = true;
+                    context.Items["UserId"] = account.Id;
+                    context.Items["Roles"] = account.Roles;
+                    context.Items["IsActive"] = account.IsActive;
+                    context.Items["IsAdmin"] = account.IsAdmin;
                 }
             }
 
