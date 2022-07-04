@@ -71,6 +71,17 @@ builder.Services.AddSingleton(_ =>
     return Log.Logger;
 });
 builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoDbConnString));
+
+    #region DB Repositories
+    builder.Services.AddTransient<IUserRepository, UserRepository>();
+    builder.Services.AddTransient<IApiKeyRepository, ApiKeyRepository>();
+    builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+    builder.Services.AddTransient<IReportRepository, ReportRepository>();
+    builder.Services.AddTransient<IReportFolderRepository, ReportFolderRepository>();
+    builder.Services.AddTransient<IHourlyGenerationsRepository, HourlyGenerationsRepository>();
+    builder.Services.AddTransient<IConsumptionStatisticsRepository, ConsumptionStatisticsRepository>();
+    #endregion
+
 builder.Services.AddTransient<IReportsService, ReportsService>();
 builder.Services.AddTransient<IExtraReportsService, ExtraReportsService>();
 builder.Services.AddTransient<IUsersService, UsersService>();
