@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using SP.EpiasReports.Models;
 
 namespace SP.ExtraReports.Models
 {
@@ -6,7 +7,7 @@ namespace SP.ExtraReports.Models
     /// Consumption statistics of a month for the periods which consumed the most electricity Includes hour with the highest consume for each day and top 5 electricity consumed days. 
     /// </summary>
     [BsonIgnoreExtraElements]
-    public class ConsumptionStatistics : IConsumptionStatistics
+    public class ConsumptionStatistics : MongoDbEntity, IConsumptionStatistics
     {
         public ConsumptionStatistics(Period period, IEnumerable<MostConsumedPeriod> mostConsumedHours, IEnumerable<MostConsumedPeriod> mostConsumedDays)
         {
