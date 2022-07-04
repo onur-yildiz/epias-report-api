@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SP.ExtraReports.Models\SP.ExtraReports.Models.csproj" />
+    <ProjectReference Include="..\SP.Reports.Models\SP.Reports.Models.csproj" />
+    <ProjectReference Include="..\SP.Roles.Models\SP.Roles.Models.csproj" />
+    <ProjectReference Include="..\SP.Users.Models\SP.Users.Models.csproj" />
+  </ItemGroup>
+
+</Project>
