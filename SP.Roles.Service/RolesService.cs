@@ -1,59 +1,48 @@
-﻿using MongoDB.Driver;
+﻿using SP.DAL.Interfaces;
 using SP.Exceptions;
-using SP.Reports.Models.ReportListing;
 using SP.Roles.Models;
-using SP.Users.Models;
-using SP.Utils.Jwt;
 
 namespace SP.Roles.Service
 {
     public class RolesService : IRolesService
     {
-        readonly IMongoCollection<Role> _roles;
-        readonly IMongoCollection<Account> _users;
-        readonly IMongoCollection<Report> _reports;
+        readonly IRoleRepository _roleRepository;
+        readonly IUserRepository _userRepository;
+        readonly IReportRepository _reportRepository;
 
-        public RolesService(IMongoClient client, IJwtUtils jwtUtils)
+        public RolesService(IRoleRepository roleRepository, IUserRepository userRepository, IReportRepository reportRepository)
         {
-            var db = client.GetDatabase("cluster0");
-            this._roles = db.GetCollection<Role>("roles");
-            this._users = db.GetCollection<Account>("users");
-            this._reports = db.GetCollection<Report>("reports");
+            _roleRepository = roleRepository;
+            _userRepository = userRepository;
+            _reportRepository = reportRepository;
         }
 
         public IEnumerable<Role> GetRoles()
         {
-            var roles = _roles.Find(_ => true).ToList();
-            if (roles == null) throw HttpResponseException.NoRolesExist();
+            var roles = _roleRepository.Get();
             return roles;
         }
 
         public Role GetRole(string roleName)
         {
-            var builder = Builders<Role>.Filter;
-            var filter = builder.Eq("name", roleName);
-            var role = _roles.Find(filter).FirstOrDefault();
+            var role = _roleRepository.GetFirst(r => r.Name == roleName);
             if (role == null) throw HttpResponseException.NotExists("Role");
             return role;
         }
 
         public void CreateRole(IRole role)
         {
-            var builder = Builders<Role>.Filter;
-            var filter = builder.Eq("name", role.Name);
-            var existingRole = _roles.Find(filter).FirstOrDefault();
+            var existingRole = _roleRepository.GetFirst(r => r.Name == role.Name);
             if (existingRole != null) throw HttpResponseException.AlreadyExists("Role");
-            _roles.InsertOne((Role)role);
+            _roleRepository.AddOne((Role)role);
         }
 
         public void DeleteRole(string roleName)
         {
-            var builder = Builders<Role>.Filter;
-            var filter = builder.Eq("name", roleName);
-            var result = _roles.DeleteOne(filter);
-            if (!result.IsAcknowledged) throw HttpResponseException.DatabaseError("Could not delete role.");
-            _users.UpdateMany(u => u.Roles.Contains(roleName), Builders<Account>.Update.Pull("roles", roleName));
-            _reports.UpdateMany(r => r.Roles.Contains(roleName), Builders<Report>.Update.Pull("roles", roleName));
+            var removedRole = _roleRepository.RemoveOne(r => r.Name == roleName);
+            if (removedRole == null) throw HttpResponseException.DatabaseError();
+            _userRepository.UpdateMany_Pull(u => u.Roles.Contains(roleName), "roles", roleName);
+            _reportRepository.UpdateMany_Pull(r => r.Roles.Contains(roleName), "roles", roleName);
         }
     }
 }
