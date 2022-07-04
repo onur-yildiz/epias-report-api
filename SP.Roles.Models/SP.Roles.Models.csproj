@@ -12,4 +12,8 @@
     <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SP.EpiasReports.Models\SP.EpiasReports.Models.csproj" />
+  </ItemGroup>
+
 </Project>
