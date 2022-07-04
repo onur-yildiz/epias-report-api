@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using SP.EpiasReports.Models;
 
 namespace SP.Reports.Models.ReportListing
 {
-    [BsonIgnoreExtraElements]
-    public class Report : IReport
+    public class Report : MongoDbEntity, IReport
     {
         public Report(string order, string key, bool isActive, HashSet<string> roles, HashSet<ReportName> name)
         {

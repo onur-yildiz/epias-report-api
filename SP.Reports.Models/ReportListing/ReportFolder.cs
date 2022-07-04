@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using SP.EpiasReports.Models;
 
 namespace SP.Reports.Models.ReportListing
 {
-    [BsonIgnoreExtraElements]
-    public class ReportFolder : IReportFolder
+    public class ReportFolder : MongoDbEntity, IReportFolder
     {
         public ReportFolder(string order, HashSet<ReportName> name)
         {
