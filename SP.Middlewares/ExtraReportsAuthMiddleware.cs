@@ -2,8 +2,8 @@
 
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
+using SP.DAL.Interfaces;
 using SP.Exceptions;
-using SP.Users.Service;
 
 namespace SP.Middlewares
 {
@@ -16,11 +16,11 @@ namespace SP.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IUsersService usersService)
+        public async Task Invoke(HttpContext context, IApiKeyRepository apiKeyRepository)
         {
             var apiKey = context.Request.Headers["x-api-key"].FirstOrDefault();
 
-            if (apiKey == null || !usersService.CheckIfApiKeyExists(apiKey))
+            if (apiKey == null || !apiKeyRepository.Get(a => a.Key == apiKey).Any())
                 throw HttpResponseException.Forbidden("API key does not exist or none provided.");
 
             await _next(context);
