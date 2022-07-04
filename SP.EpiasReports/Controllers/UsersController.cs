@@ -30,9 +30,9 @@ namespace SP.EpiasReport.Controllers
         [SwaggerHeader("Authorization", isRequired: true)]
         [Authorize(AdminRestricted = true)]
         [HttpGet("")]
-        public ApiResponse<IEnumerable<IUserBase<string>>> GetUsers()
+        public ApiResponse<IEnumerable<User>> GetUsers()
         {
-            return ApiResponse<IEnumerable<IUserBase<string>>>.Success(_service.GetAllUsers());
+            return ApiResponse<IEnumerable<User>>.Success(_service.GetAllUsers());
         }
 
         /// <summary>
