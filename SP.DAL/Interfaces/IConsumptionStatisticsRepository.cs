@@ -2,7 +2,7 @@
 
 namespace SP.DAL.Interfaces
 {
-    public interface IConsumptionStatisticsRepository: IGenericRepository<ConsumptionStatisticsEntity>
+    public interface IConsumptionStatisticsRepository: IGenericRepository<ConsumptionStatistics>
     {
     }
 }

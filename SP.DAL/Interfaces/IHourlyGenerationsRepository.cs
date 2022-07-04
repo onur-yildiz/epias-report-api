@@ -2,7 +2,7 @@
 
 namespace SP.DAL.Interfaces
 {
-    public interface IHourlyGenerationsRepository: IGenericRepository<HourlyGenerationsEntity>
+    public interface IHourlyGenerationsRepository: IGenericRepository<HourlyGenerations>
     {
     }
 }

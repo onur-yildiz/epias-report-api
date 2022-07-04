@@ -4,7 +4,7 @@ using SP.ExtraReports.Models;
 
 namespace SP.DAL
 {
-    public class ConsumptionStatisticsRepository: GenericRepository<ConsumptionStatisticsEntity>, IConsumptionStatisticsRepository
+    public class ConsumptionStatisticsRepository: GenericRepository<ConsumptionStatistics>, IConsumptionStatisticsRepository
     {
         public ConsumptionStatisticsRepository(IMongoDatabase database) : base(database, "consumption-statistics")
         {
