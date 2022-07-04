@@ -1,11 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SP.EpiasReports.Models;
 
 namespace SP.Users.Models
 {
-    public class Account : IAccount
+    public class Account : MongoDbEntity, IAccount
     {
-        public Account(ObjectId id, string name, string email, string password, HashSet<string> roles, HashSet<string> apiKeys, bool isActive, bool isAdmin, string languageCode, byte[] salt)
+        public Account(ObjectId id, string name, string email, string password, HashSet<string> roles, bool isActive, bool isAdmin, string languageCode, byte[] salt)
         {
             Id = id;
             Name = name;
@@ -31,9 +32,6 @@ namespace SP.Users.Models
                 languageCode: acc.LanguageCode
             );
         }
-
-        [BsonId]
-        public ObjectId Id { get; set; }
 
         [BsonRequired]
         [BsonElement("name")]

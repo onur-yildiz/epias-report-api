@@ -1,16 +1,11 @@
 ﻿namespace SP.Users.Models
 {
-    public interface IUserBase<T>
+    public interface IUserBase
     {
         /// <summary>
         /// Account E-mail
         /// </summary>
         string Email { get; set; }
-
-        /// <summary>
-        /// User ID
-        /// </summary>
-        T Id { get; set; }
 
         /// <summary>
         /// Username

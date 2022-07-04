@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace SP.Users.Models
 {
-    public class User : IUserBase<string>
+    public class User : IUser
     {
 
         public User(string email, string id, string name, bool isActive, bool isAdmin, string languageCode, HashSet<string> roles)
