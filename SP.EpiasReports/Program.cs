@@ -134,7 +134,7 @@ else app.UseExceptionHandler(builder =>
         var statusCode = exceptionHandlerFeature?.Error is HttpResponseException error ? error.ResponseCode : 500;
         context.Response.StatusCode = statusCode;
         await context.Response.WriteAsJsonAsync(
-            new ApiResponse<object?>(
+            new ApiResponse<object>(
                 statusCode,
                 exceptionHandlerFeature?.Error.Message ?? ""
             )
